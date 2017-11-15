@@ -1,0 +1,17 @@
+.nav-element {
+    margin-left: 20px; 
+}
+
+.time-input {
+    width: 100px;
+    max-width: 100px;
+    margin-right: 20px;
+}
+
+.main-container {
+    margin-top: 20px;
+}
+
+.form-section {
+    margin-top: 50px;
+}

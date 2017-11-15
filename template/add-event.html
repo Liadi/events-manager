@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Add an event</title>
+
+    
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="./font-awesome-4.7.0/css/font-awesome.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./styles/add-event.css">
+    
+
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light p-big">
+        <a class="navbar-brand" href="#">EM</a>
+        
+        <div class="collapse navbar-collapse justify-content-end">
+            <ul class="navbar-nav">
+                <li class="nav-item nav-element">
+                    <a class="nav-link" href="#">Event centers</a>
+                </li>
+                <li class="nav-item dropdown nav-element">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Company
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                      <a class="dropdown-item" href="#">About</a>
+                      <a class="dropdown-item" href="#">Team</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Contact</a>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown nav-element">
+                    <a class="nav-link  btn btn-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-user-circle fa-lg" aria-hidden="true"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                      <a class="dropdown-item" href="#">Manage my Events</a>
+                      <a class="dropdown-item" href="#">Add Events</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Log out</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container main-container">
+    <form>
+    <div class="form-row">
+        <div class="form-group col-md-6 form-section">
+            <label for="inputCenter">
+                <h3>Center</h3>
+            </label>
+            <input type="search" class="form-control" id="inputCenter" placeholder="Search">
+            <small id="centerCapacity" class="form-text text-muted">Capacity: 1000</small>
+        </div>
+        
+    </div>
+    <div class="form-group form-section">
+        <label for="timeGroup">
+            <h3>Time of event</h3>
+        </label>
+        <div class="form-row" id="timeGroup">
+            <div class="form-group col-md-6">
+                <label for="inputStartGroup">
+                    <h5>Start</h5>
+                </label>
+                <div class="form-group d-flex flex-wrap justify-content-center" id="inputStartGroup">
+                    <div class="form-group time-input">
+                        <label for="inputStartYear">Year</label>
+                        <select class="custom-select" id="inputStartYear">
+                            <option selected value="1">2017</option>
+                            <option value="2">2018</option>
+                            <option value="3">2019</option>
+                        </select>    
+                    </div>
+                    <div class="form-group time-input">
+                        <label for="inputStartMonth">Month</label>
+                        <select class="custom-select" id="inputStartMonth">
+                            <option selected value="1">Jan</option>
+                            <option value="2">Feb</option>
+                            <option value="3">Mar</option>
+                            <option value="4">Apr</option>
+                            <option value="5">May</option>
+                            <option value="6">Jun</option>
+                            <option value="7">Jul</option>
+                            <option value="8">Aug</option>
+                            <option value="9">Sep</option>
+                            <option value="10">Oct</option>
+                            <option value="11">Nov</option>
+                            <option value="12">Dec</option>
+                        </select>   
+                    </div>
+                    <div class="form-group time-input">
+                        <label for="inputStartDay" class="d-block">Day</label>
+                        <select class="custom-select" id="inputStartDay">
+                            <option selected value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                            <option value="24">24</option>
+                            <option value="25">25</option>
+                            <option value="26">26</option>
+                            <option value="27">27</option>
+                            <option value="28">28</option>
+                            <option value="29">29</option>
+                            <option value="30">30</option>
+                            <option value="31">31</option>
+                        </select>
+                    </div>
+                    <div class="form-group time-input">
+                        <label for="inputStartTime" class="d-block">Time</label>
+                        <select class="custom-select" id="inputStartTime" data-size="5">
+                            <option selected value="0">00:00</option>
+                            <option value="1">01:00</option>
+                            <option value="2">02:00</option>
+                            <option value="3">03:00</option>
+                            <option value="4">04:00</option>
+                            <option value="5">05:00</option>
+                            <option value="6">06:00</option>
+                            <option value="7">07:00</option>
+                            <option value="8">08:00</option>
+                            <option value="9">09:00</option>
+                            <option value="10">10:00</option>
+                            <option value="11">11:00</option>
+                            <option value="12">12:00</option>
+                            <option value="13">13:00</option>
+                            <option value="14">14:00</option>
+                            <option value="15">15:00</option>
+                            <option value="16">16:00</option>
+                            <option value="17">17:00</option>
+                            <option value="18">18:00</option>
+                            <option value="19">19:00</option>
+                            <option value="20">20:00</option>
+                            <option value="21">21:00</option>
+                            <option value="22">22:00</option>
+                            <option value="23">23:00</option>
+                        </select>        
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputEndGroup">
+                    <h5>End</h5>
+                </label>
+                <div class="form-group d-flex flex-wrap justify-content-center" id="inputEndGroup">
+                    <div class="form-group time-input">
+                        <label for="inputEndYear">Year</label>
+                        <select class="custom-select" id="inputEndYear">
+                            <option selected value="1">2017</option>
+                            <option value="2">2018</option>
+                            <option value="3">2019</option>
+                        </select>    
+                    </div>
+                    <div class="form-group time-input">
+                        <label for="inputEndMonth">Month</label>
+                        <select class="custom-select" id="inputEndMonth">
+                            <option selected value="1">Jan</option>
+                            <option value="2">Feb</option>
+                            <option value="3">Mar</option>
+                            <option value="4">Apr</option>
+                            <option value="5">May</option>
+                            <option value="6">Jun</option>
+                            <option value="7">Jul</option>
+                            <option value="8">Aug</option>
+                            <option value="9">Sep</option>
+                            <option value="10">Oct</option>
+                            <option value="11">Nov</option>
+                            <option value="12">Dec</option>
+                        </select>   
+                    </div>
+                    <div class="form-group time-input">
+                        <label for="inputEndDay" class="d-block">Day</label>
+                        <select class="custom-select" id="inputEndDay">
+                            <option selected value="1" class="d-block">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                            <option value="24">24</option>
+                            <option value="25">25</option>
+                            <option value="26">26</option>
+                            <option value="27">27</option>
+                            <option value="28">28</option>
+                            <option value="29">29</option>
+                            <option value="30">30</option>
+                            <option value="31">31</option>
+                        </select>
+                    </div>
+                    <div class="form-group time-input">
+                        <label for="inputEndTime">Time</label>
+                        <select class="custom-select" id="inputEndTime">
+                            <option selected value="0">00:00</option>
+                            <option value="1">01:00</option>
+                            <option value="2">02:00</option>
+                            <option value="3">03:00</option>
+                            <option value="4">04:00</option>
+                            <option value="5">05:00</option>
+                            <option value="6">06:00</option>
+                            <option value="7">07:00</option>
+                            <option value="8">08:00</option>
+                            <option value="9">09:00</option>
+                            <option value="10">10:00</option>
+                            <option value="11">11:00</option>
+                            <option value="12">12:00</option>
+                            <option value="13">13:00</option>
+                            <option value="14">14:00</option>
+                            <option value="15">15:00</option>
+                            <option value="16">16:00</option>
+                            <option value="17">17:00</option>
+                            <option value="18">18:00</option>
+                            <option value="19">19:00</option>
+                            <option value="20">20:00</option>
+                            <option value="21">21:00</option>
+                            <option value="22">22:00</option>
+                            <option value="23">23:00</option>
+                        </select>        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-group form-section">
+        <label for="servicesTextareaInput">
+            <h3>Do you need added services?</h3>
+        </label>
+        <textarea class="form-control" id="servicesTextareaInput" rows="4" placeholder="Services like ushering, catering, decoration, utensils..." style="resize: none;"></textarea>
+    </div>
+    <div class="form-group form-section">
+        <div class="alert alert-primary d-inline-block" role="alert" style="margin-bottom:0%;">
+            Cost: #50,000
+        </div>
+        <small id="note" class="form-text text-muted">*does not include added service</small>
+    </div>
+    <button type="submit" class="btn btn-primary form-section">Sign in</button>
+</form>
+        </div>
+    </main>
+
+
+
+
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+  </body>
+</html>
