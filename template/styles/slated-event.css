@@ -1,9 +1,13 @@
 .center-img {
-    max-width: 300px;
-    max-height: 300px;
+    max-width: 310px;
+    max-height: 310px;
 }
 
 /* .center-descrip {
     padding-left: 10%;
     padding-right: 10%;
 } */
+
+.navbar-item {
+    padding-left: 20px;
+}
