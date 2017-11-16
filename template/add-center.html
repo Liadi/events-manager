@@ -140,9 +140,6 @@
                 document.getElementById('imagesContainer').appendChild(img);
             }
 
-            imgArray.forEach(function(element) {
-                alert(element);
-            }, this);            
         }
 
         function getAmenity(key){
@@ -150,8 +147,6 @@
                 let li = document.createElement('li');
                 li.innerHTML = document.getElementById('inputCenterAmenities').getAttribute("value");
                 ul.appendChild(li)
-                alert("yippeee!!");
-                alert(document.getElementById('inputCenterAmenities').getAttribute("value"));
                 document.getElementById('inputCenterAmenities').setAttribute("value", "");
                 document.getElementById('inputCenterRate').setAttribute("value", "fucking")
 
