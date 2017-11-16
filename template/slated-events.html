@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Slated Events</title>
+
+    
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    
+        <!-- Fontawesome -->
+        <link rel="stylesheet" href="./font-awesome-4.7.0/css/font-awesome.min.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="./styles/slated-event.css">
+    
+
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light p-big">
+            <a class="navbar-brand" href="#">EM</a>
+        
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav">
+                    <li class="nav-item nav-element">
+                        <a class="nav-link" href="#">Event centers</a>
+                    </li>
+                    <li class="nav-item dropdown nav-element">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Company
+                        </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">About</a>
+                        <a class="dropdown-item" href="#">Team</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Contact</a>
+                    </div>
+                    </li>
+
+                    <li class="nav-item dropdown nav-element">
+                        <a class="nav-link  btn btn-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-user-circle fa-lg" aria-hidden="true"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#">Manage my Events</a>
+                            <a class="dropdown-item" href="#">Add Events</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Log out</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="container">
+            <form style="margin: 30px;">
+                <div class="form-row">
+                    <div class="col-7">
+                        <input type="text" class="form-control" placeholder="Search for centers">
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-primary">Advance Search</button>
+                    </div>
+                </div>
+            </form>
+
+            <label class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" onchange="toggleShow()" id="toggle">
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description">Show slated events</span>
+            </label>
+
+            <div class="card">
+                <div class="card-center d-flex flex-wrap flex-row-reverse justify-content-around" id="center-descrip">
+                    <img src="./images\image_1.jpg" class="img-fluid center-img" alt="Responsive image">
+                    <div class="card-body">
+                        <h4 class="card-title">Ventura Event Center</h4>
+                        <h6 class="card-subtitle mb-2 text-muted">Center address</h6>
+                        <p class="card-text" style="max-width:500px;" >5, Adebowale street, Idumota, Lagos Nigeria</p>
+                        <h6 class="card-subtitle mb-2 text-muted">Center Capacity</h6>
+                        <p class="card-text" style="max-width:500px;" >1500</p>
+                        <h6 class="card-subtitle mb-2 text-muted">Rate per hour</h6>
+                        <p class="card-text" style="max-width:500px;" >#20,000</p>
+                        <h6 class="card-subtitle mb-2 text-muted">Amenities</h6>
+                        <p class="card-text" style="max-width:500px;" >Generator, Toilets,..</p>
+
+                    </div>
+                </div>
+                <table class="table table-striped" id="eventTable" hidden>
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Start</th>
+                            <th scope="col">End</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>12 Dec, 2017 (11:00)</td>
+                            <td>12 Dec, 2017 (17:00)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>26 Dev, 2017 (5:00)</td>
+                            <td>26 Nov, 2017 (15:00)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td>31 Nov, 2017 (16:00)</td>
+                            <td>01 Jan, 2018 (09:00)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+        <script>
+            const card = document.getElementById('center-descrip');
+            const toggle = document.getElementById('toggle');
+            window.onresize = function() {
+                if(window.innerWidth > 720) {
+                    card.className = 'justify-content-around card-center d-flex flex-wrap flex-row-reverse';
+                }else {
+                    card.className = 'justify-content-center card-center d-flex flex-wrap flex-row-reverse';
+                }
+            };
+            function toggleShow(){
+                // alert("here")
+                if (toggle.checked == true) {
+                   
+                    document.getElementById('eventTable').hidden = false;
+                }
+                else {
+                    document.getElementById('eventTable').hidden = true;
+                }
+            }
+        </script>
+    </body>
+</html>
