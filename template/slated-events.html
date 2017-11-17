@@ -22,25 +22,28 @@
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light p-big">
             <a class="navbar-brand" href="#">EM</a>
-        
-            <div class="collapse navbar-collapse justify-content-end">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                 <ul class="navbar-nav">
-                    <li class="nav-item nav-element">
+                    <li class="nav-item nav-element  navbar-item mx-auto navbar-item">
                         <a class="nav-link" href="#">Event centers</a>
                     </li>
-                    <li class="nav-item dropdown nav-element">
+                    <li class="nav-item dropdown nav-element navbar-item mx-auto navbar-item">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Company
                         </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="#">About</a>
                         <a class="dropdown-item" href="#">Team</a>
+                        <a class="dropdown-item" href="#">All Centers</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Contact</a>
                     </div>
                     </li>
 
-                    <li class="nav-item dropdown nav-element">
+                    <li class="nav-item dropdown nav-element  navbar-item mx-auto navbar-item">
                         <a class="nav-link  btn btn-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-user-circle fa-lg" aria-hidden="true"></i>
                         </a>
@@ -56,20 +59,59 @@
         </nav>
 
         <main class="container">
-            <form style="margin: 30px;">
-                <div class="form-row">
-                    <div class="col-7">
-                        <input type="text" class="form-control" placeholder="Search for centers">
-                    </div>
-                    <div class="col">
-                        <button type="submit" class="btn btn-primary">Search</button>
-                    </div>
-                    <div class="col">
-                        <button class="btn btn-primary">Advance Search</button>
-                    </div>
-                </div>
-            </form>
-
+                <form style="margin: 30px;">
+                        <div class="form-row">
+                            <div class="col-7 input-group">
+                                <input type="text" class="form-control" placeholder="Search">
+                                <span class="input-group-addon" id="basic-addon1" style="padding: 0px;">
+                                    <button type="submit" class="btn btn-primary" style="border-radius:0px; border-style:none">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </button>        
+                                </span>
+                            </div>
+                            <button type="button" class="btn btn-link" onclick="toggleAdvancedSearch()">Advanced Search</button>            
+                        </div>
+                        <div id= "advancedSearchFrame" hidden>
+                        <div class="form-row mx-auto">
+                            
+                            <div class="form-group col-md-4">
+                                <label for="searchCountry" class="form-label-sm">Country</label>
+                                <input type="text" class="form-control form-control-sm" id="searchCountry" placeholder="Nigeria" disabled>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="searchState" class="form-label-sm">State</label>
+                                <input type="text" class="form-control form-control-sm" id="searchState">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="searchCity" class="form-label-sm">City</label>
+                                <input type="text" class="form-control form-control-sm" id="searchCity">
+                            </div>
+                        </div>
+                        <div class="row container">
+                            <div class="form-group card col-sm-6" style="padding: 5px;">
+                                <label for="searchPrice"><h6>Price Range</h6></label>
+                                <div class="form-row" id="searchPrice" style="padding-left:20px; padding-right:20px;">
+                                    <div class="form-group col-6">
+                                        <label for="searchPriceLower" class="form-label-sm">From</label>
+                                        <input type="text" class="form-control form-control-sm" id="searchPriceLower" style="max-width: 100px;">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="searchPriceUpper" class="form-label-sm">To</label>
+                                        <input type="text" class="form-control form-control-sm" id="searchPriceUpper" style="max-width: 100px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="searchCapacity" class="form-label-sm">Capacity</label>
+                                <input type="text" class="form-control form-control-sm col-md-4" id="searchCapacity">
+                            </div>
+                        </div>
+                        
+                        <button class="btn" type="reset">Reset</button>
+                        </div>
+                        
+                    </form>
+        
             <label class="custom-control custom-checkbox">
                 <input type="checkbox" class="custom-control-input" onchange="toggleShow()" id="toggle">
                 <span class="custom-control-indicator"></span>
@@ -77,8 +119,8 @@
             </label>
 
             <div class="card">
-                <div class="card-center d-flex flex-wrap flex-row-reverse justify-content-around" id="center-descrip">
-                    <img src="./images\image_1.jpg" class="img-fluid center-img" alt="Responsive image">
+                <div class="card-center d-flex flex-wrap flex-row-reverse justify-content-around" id="center-descrip" style="padding-bottom:0px;">
+                    <img src="./images/pic1.jpg" class="img-fluid center-img" alt="Responsive image">
                     <div class="card-body">
                         <h4 class="card-title">Ventura Event Center</h4>
                         <h6 class="card-subtitle mb-2 text-muted">Center address</h6>
@@ -146,6 +188,14 @@
                 else {
                     document.getElementById('eventTable').hidden = true;
                 }
+            }
+        </script>
+        <script>
+            const searchFrame = document.getElementById('advancedSearchFrame');
+            let bol = false;
+            function toggleAdvancedSearch() {
+                bol = !bol
+                searchFrame.hidden = bol;
             }
         </script>
     </body>
