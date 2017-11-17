@@ -60,7 +60,7 @@
 
 
     <main>
-        <div class="container main-container" style="margin-top: 30px; margin-bottom:30px;">
+        <div class="container main-container" id="main-div" style="margin-top: 30px; margin-bottom:30px;">
             <form>
                 <div class="form-group">
                     <label for="inputCenterName">Name</label>
@@ -101,7 +101,7 @@
 
                 <div class="form-group">
                     <label for="inputCenterAmenities">Amenities</label>
-                    <input type="text" class="form-control" id="inputCenterAmenities" placeholder="Enter one at a time and press 'enter'" onkeyup="getAmenity(event.key)">
+                    <input type="text" class="form-control" id="inputCenterAmenities" placeholder="e.g standby generator, toilets, air-conditioned..." onkeyup="getAmenity(event.key)">
                     <ul id="amenitiesList"></ul>
                 </div>
 
