@@ -20,6 +20,20 @@ main{
 }
 
 
+.search-widget {
+    min-width: 100px;
+    height: 60px;
+}
+
+button {
+    background-color: orange;
+    border-color: orange; 
+    color: white;
+}
+
+footer {
+    border-top: 5px solid lightgray;
+}
 /* @media screen and (min-width: 480px) {
     .topDescrip{
         font-size: 40px;

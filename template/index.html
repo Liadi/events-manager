@@ -20,33 +20,18 @@
 
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light p-big">
-        <a class="navbar-brand" href="#">EM</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light p-big" >
+        <a class="navbar-brand" href="#" style="color:orange">EM</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav">
-                <li class="nav-item nav-element navbar-item mx-auto">
-                    <a class="nav-link" href="./slated-events.html">Event centers</a>
-                </li>
-                <li class="nav-item dropdown navbar-item mx-auto">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Company
-                    </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">About</a>
-                    <a class="dropdown-item" href="#">Team</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Contact</a>
-                </div>
-                </li>
-
                 <li class="nav-item navbar-item mx-auto">
-                  <a class="nav-link" href="./signup.html">Sign up</a>
+                  <a class="nav-link" href="./signup.html"style="color:orange">Sign up</a>
                 </li>
                 <li class="navbar-item">
-                  <a class="nav-link btn btn-light" href="signin.html">Log in</a>
+                  <a class="nav-link btn btn-light" href="signin.html"style="color:orange">Log in</a>
                 </li>
             </ul>
         </div>
@@ -56,54 +41,56 @@
       <img src="./images/top.png" alt="yap" class"img-fluid" style="width:100%;">
       <div class="container">
         <form style="margin: 30px;">
-          <div class="form-row">
-            <div class="col-7" style="margin-top: 20px;">
-              <input type="text" class="form-control form-control-lg" placeholder="Center" style="border-radius:20px; min-width: 100px;">
+            <div class="row">
+            <div class="input-group" style="margin-top: 20px;">
+              <input type="text" class="form-control form-control-lg search-widget" placeholder="Search for a center" >
+              <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary btn-lg search-widget" style="background-color:orange; border-color:orange;">Search</button>
+              </span>
             </div>
-            <div class="col" style="margin-top: 20px;">
-                <button type="submit" class="btn btn-primary btn-lg" style="border-radius:20px;">Search</button>
-            </div>
-            <div class="col" style="margin-top: 20px;">
-                <button class="btn btn-link btn-lg" onclick="toggleAdvancedSearch()">Advanced Search</button>
+            <div style="margin-top: 20px;">
+                <button style="margin-left:0px; padding-left:0px; color:orange" type="button" class="btn btn-link btn-lg" onclick="toggleAdvancedSearch()">Advanced Search</button>
             </div>
           </div>
           <div id= "advancedSearchFrame" hidden>
-            <div class="form-row mx-auto">
+            <div class="form-row">
                 
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-2">
                     <label for="searchCountry" class="form-label-sm">Country</label>
                     <input type="text" class="form-control form-control-sm" id="searchCountry" placeholder="Nigeria" disabled>
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-2">
                     <label for="searchState" class="form-label-sm">State</label>
                     <input type="text" class="form-control form-control-sm" id="searchState">
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-2">
                     <label for="searchCity" class="form-label-sm">City</label>
                     <input type="text" class="form-control form-control-sm" id="searchCity">
                 </div>
             </div>
+            <div class="form-group">
+                <label for="searchCapacity" class="form-label-sm">Capacity</label>
+                <input type="text" class="form-control form-control-sm col-md-4" id="searchCapacity">
+            </div>
             <div class="row container">
-                <div class="form-group card col-sm-6" style="padding: 5px;">
+                <div class="form-group card col-md-4" style="padding-left: 5px;padding-right: 5px;margin-right: 0px;">
                     <label for="searchPrice"><h6>Price Range</h6></label>
-                    <div class="form-row" id="searchPrice" style="padding-left:20px; padding-right:20px;">
-                        <div class="form-group col-6">
+                    <div class="form-row mx-auto" id="searchPrice" style="padding-left:20px;">
+                        <div class="form-group col-sm-6">
                             <label for="searchPriceLower" class="form-label-sm">From</label>
                             <input type="text" class="form-control form-control-sm" id="searchPriceLower" style="max-width: 100px;">
                         </div>
-                        <div class="form-group col-6">
+                        <div class="form-group col-sm-6">
                             <label for="searchPriceUpper" class="form-label-sm">To</label>
                             <input type="text" class="form-control form-control-sm" id="searchPriceUpper" style="max-width: 100px;">
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-sm-4">
-                    <label for="searchCapacity" class="form-label-sm">Capacity</label>
-                    <input type="text" class="form-control form-control-sm col-md-4" id="searchCapacity">
-                </div>
+                
             </div>
             
-            <button class="btn" type="reset">Reset</button>
+            
+            <button class="btn" type="reset"style="margin-top: 30px;">Reset</button>
             </div>
             
         </form>
@@ -143,12 +130,17 @@
       </div>
     </main>
 
+    <footer style="height: 50px; background-color:orange; padding-top:10px;" class="d-flex justify-content-end">
+    <p style="margin-right:20px;"> <a href="#" style="color:lightgray">About us</a> </p>
+    <p style="margin-right:20px; color:lightgray">EM@gmail.com </p>
+    <p style="margin-right:20px; color:lightgray">(+234)818 154 6011</p>
+    </div>
+    </footer>
+
     <script>
       const searchFrame = document.getElementById('advancedSearchFrame');
-      let bol = false;
       function toggleAdvancedSearch() {
-          bol = !bol
-          searchFrame.hidden = bol;
+          searchFrame.hidden = !searchFrame.hidden;
       }
   </script>
 
