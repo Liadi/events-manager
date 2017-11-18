@@ -28,32 +28,198 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
           <ul class="navbar-nav">
 
-            <li class="nav-item">
+            <li class="nav-item" style="margin-left:20px;">
               <a class="nav-link" href="./centers.html"style="color:orange">Centers</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="margin-left:20px;">
               <a class="nav-link" href="./add-center.html"style="color:orange">Add Center</a>
             </li>
 
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown" style="margin-left:20px;">
                 <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="fa fa-user fa-1x mx-auto" aria-hidden="true" style="color:orange"></i>
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#" style="color:orange">My Events</a>
-                  <a class="dropdown-item" href="#" style="color:orange">Create Event</a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="./event.html" style="color:orange">My Events</a>
+                  <a class="dropdown-item" href="./add-event.html" style="color:orange">Create Event</a>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#" style="color:orange">Log out</a>
+                  <a class="dropdown-item" href="./index.html" style="color:orange">Log out</a>
                 </div>
               </li>
           </ul>
         </div>
       </nav>
 
-    <main>
+    <main class="container-fluid row">
+      <div class="col-md-3" style="border: 1px solid black;">
+        <div class="row">
+          <div class="col-md-12 col-4">
+            <button class="tab-btn" id="btnTimeline" onclick="toggleTab(0)">
+              Timeline
+            </button>
+          </div>
+          <div class="col-md-12 col-4">
+            <button class="tab-btn" id="btnHow" onclick="toggleTab(1)">        
+              How to?
+            </button>
+          </div>
+          <div class="col-md-12 col-4">
+            <button class="tab-btn" id="btnProfile" onclick="toggleTab(2)">      
+              Profile
+            </button>
+          </div>
+          <div class="col-md-12 col-4">
+            <button class="tab-btn" id="btnSecurity" onclick="toggleTab(3)">      
+              Security
+            </button>
+          </div>
+            
+        </div>
+      
+      </div>
+      <div class="mx-auto">
+        <div id="timelineContent">
+          <h4>
+            Timeline
+          </h4>
+          <div>
+            <h5>
+              Upcoming Events
+            </h5>
+            <div>
+              You do not have any Upcoming event
+            </div>
+          </div>
+          <div>
+            <h5>
+              Past Events
+            </h5>
+            <div>
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Event Name</th>
+                        <th scope="col">Event Center</th>
+                        <th scope="col">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>Adegbite's Birthday</td>
+                        <td>The Home</td>
+                        <td>12/02/2017</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">2</th>
+                        <td>Wake Keeping of Pa Jacob</td>
+                        <td>Vikings Hall</td>
+                        <td>25/04/2016</td>
+                        
+                      </tr>
+                      <tr>
+                        <th scope="row">3</th>
+                        <td>Marriage of my beautiful daughter</td>
+                        <td>Sweets and Candles</td>
+                        <td>10/08/2015</td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </div>
+          </div>
 
-        gagaja
+        </div>
+
+        <div id="howContent" hidden>
+          <h4>
+            How to
+          </h4>
+          <div>
+            <h5>Create event</h5>
+            <ol>
+              <li>Click the "user" icon on the top-left corner</li>
+              <li>Select "Create Event"</li>
+              <li>Fill in the details of the event</li>
+              <li>Press the add button to create event</li>
+            </ol>
+            <h5>Manage events</h5>
+            <ol>
+              <li>Click the "user" icon on the top-left corner</li>
+              <li>Select "My Events"</li>
+            </ol>
+            
+            <h5>View all centers</h5>
+            <ol>
+              <li>Click "Centers" on the top (navigation) bar</li>
+              <li>Click "Advanced Search" for directed search</li>
+            </ol>
+
+            <h5>View details and slated events of a center</h5>
+            <ol>
+              <li>Click "Centers" on the top (navigation) bar</li>
+              <li>Click "Advanced Search" for directed search</li>
+              <li>Click the center</li>
+            </ol>
+
+
+          </div>
+        </div>
+        
+        <div id="profileContent" hidden>
+          <h4>
+            Profile
+          </h4>
+          <form>
+            <div class="form-group">
+              <label for="inputFirstName">First Name</label>
+              <input type="text" class="form-control" id="inputFirstName">
+            </div>
+            <div class="form-group">
+              <label for="inputLastName">Last Name</label>
+              <input type="text" class="form-control" id="inputLastName">
+            </div>
+            <div class="form-group">
+              <label for="inputEmail">Email address</label>
+              <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
+            </div>
+            
+            <div class="form-group">
+              <label for="inputLastName">Telephone</label>
+              <input type="text" class="form-control" id="inputLastName">
+            </div>
+        
+            <button type="submit" class="btn btn-primary">Update</button>
+          </form>
+        </div>
+        
+        <div id="securityContent" hidden>
+          <h4>
+            Security
+          </h4>
+          <form>
+            <h6>Reset password</h6>
+            <div class="form-group">
+              <label for="inputOldPassword">Old Password</label>
+              <input type="password" class="form-control" id="inputOldPassword">
+            </div>
+            <div class="form-group">
+              <label for="inputNewPassword">New Password</label>
+              <input type="password" class="form-control" id="inputNewPassword">
+            </div>
+            <div class="form-group">
+              <label for="inputConfirmNewPassword">Confirm Password</label>
+              <input type="password" class="form-control" id="inputConfirmNewPassword">
+            </div>
+            <button type="submit" class="btn btn-primary">Change</button>
+          </form>
+          <p><a>Report</a> security issues</p>
+        </div>
+      
+      </div>
     </main>
+
+
     <footer style="background-color:orange;" class="d-flex justify-content-end flex-wrap">
     <p style="margin-right:20px;" class="p-footer"> <a href="#" style="color:lightgray">About us</a> </p>
     <p style="margin-right:20px; color:lightgray" class="p-footer">EM@gmail.com </p>
@@ -61,6 +227,24 @@
     </footer>
     
     
+
+    <script>
+      const getElem = document.getElementById;
+      let tab = [
+        [document.getElementById("btnTimeline"),document.getElementById("timelineContent")],
+        [document.getElementById("btnHow"), document.getElementById("howContent")],
+        [document.getElementById("btnProfile"), document.getElementById("profileContent")],
+        [document.getElementById("btnSecurity"), document.getElementById("securityContent")]
+        ];
+      let present = 0;
+      function toggleTab(index){
+        if (index !== present) {
+          tab[present][1].hidden = true;
+          tab[index][1].hidden = false;
+          present = index;
+        }
+      }
+    </script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
