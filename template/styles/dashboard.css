@@ -1,3 +1,7 @@
+*, a {
+    margin: 0px;
+}
+
 .navbar-item {
     padding-left: 20px;
 }
@@ -12,12 +16,8 @@ footer {
     border-top: 5px solid lightgray;
 }
 
-main {
-    min-height: calc(100vh - 120px);
-}
 
 nav {
-    height: 60px;
 }
 
 footer {
@@ -25,6 +25,16 @@ footer {
     padding-top: 10px;
 }
 
+main {
+    min-height: calc(100vh - 116px);
+}
+
+
+@media screen and (min-width: 800px) {
+    main {
+        min-height: calc(100vh - 118px);
+    }        
+}
 
 
 @media screen and (min-width: 720px) {
