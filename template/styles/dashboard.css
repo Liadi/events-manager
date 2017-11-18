@@ -1,0 +1,13 @@
+.navbar-item {
+    padding-left: 20px;
+}
+
+button {
+    background-color: orange;
+    border-color: orange; 
+    color: white;
+}
+
+footer {
+    border-top: 5px solid lightgray;
+}
