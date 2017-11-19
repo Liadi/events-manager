@@ -2,6 +2,50 @@
     margin: 0px;
 }
 
+
+.tab-btn {
+    background-color: white;
+    width: 100%;
+    color: orange;
+    margin: 20px 0px;
+    border: 0px;
+}
+
+#tabContentContainer{
+    margin: 30px 0px;
+    width: 100%;
+}
+
+@media screen and (min-width: 900px) {
+    #tabContentContainer{
+        width: 90%;
+        min-width: 600px;
+    }
+}
+
+@media screen and (min-width: 720px) {
+    #tabContentContainer{
+        width: 80%;
+        min-width: 400px;
+    }
+}
+@media screen and (min-width: 420px) {
+    #tabContentContainer{
+        width: 90%;
+        min-width: 300px;
+    }
+}
+
+
+
+
+
+
+.tabSection {
+    margin: 30px 0px 0px;
+
+}
+
 .navbar-item {
     padding-left: 20px;
 }

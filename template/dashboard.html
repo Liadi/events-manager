@@ -50,39 +50,57 @@
         </div>
       </nav>
 
-    <main class="container-fluid row">
-      <div class="col-md-3" style="border: 1px solid black;">
-        <div class="row">
-          <div class="col-md-12 col-4">
+    <main class="container-fluid d-flex">
+      <div style="width:200px; min-width:50px;">
+          <div>
             <button class="tab-btn" id="btnTimeline" onclick="toggleTab(0)">
-              Timeline
+              <span class="mx-auto">
+                <span>
+                  <i class="fa fa-calendar-o fa-2x" aria-hidden="true"></i>
+                </span>
+                <h3 class="d-inline" id="timelineTabElem">Timeline</h3>
+              </span>
             </button>
           </div>
-          <div class="col-md-12 col-4">
-            <button class="tab-btn" id="btnHow" onclick="toggleTab(1)">        
-              How to?
+          <div>
+            <button class="tab-btn" id="btnHow" onclick="toggleTab(1)"> 
+              <span class="mx-auto">
+                <span>
+                  <i class="fa fa-question fa-2x" aria-hidden="true"></i>
+                </span>
+                  <h3 class="d-inline" id="howTabElem">How to</h3>
+              </span>
             </button>
           </div>
-          <div class="col-md-12 col-4">
+          <div>
             <button class="tab-btn" id="btnProfile" onclick="toggleTab(2)">      
-              Profile
+              <span class="mx-auto">
+                <span>
+                  <i class="fa fa-user fa-2x" aria-hidden="true"></i>
+                </span>
+                <h3 class="d-inline" id="profileTabElem">Profile</h3>
+              </span>
             </button>
           </div>
-          <div class="col-md-12 col-4">
+          <div>
             <button class="tab-btn" id="btnSecurity" onclick="toggleTab(3)">      
-              Security
+              <span class="mx-auto">
+                <span>
+                  <i class="fa fa-lock fa-2x" aria-hidden="true"></i>
+                </span>
+                <h3 class="d-inline" id="securityTabElem">Security</h3>
+              </span>
             </button>
           </div>
-            
-        </div>
-      
+
       </div>
       <div class="mx-auto">
+        <div id="tabContentContainer">
         <div id="timelineContent">
           <h4>
             Timeline
           </h4>
-          <div>
+          <div class="tabSection">
             <h5>
               Upcoming Events
             </h5>
@@ -90,12 +108,12 @@
               You do not have any Upcoming event
             </div>
           </div>
-          <div>
+          <div class="tabSection">
             <h5>
               Past Events
             </h5>
             <div>
-                <table class="table">
+                <table class="table table-responsive">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
@@ -126,6 +144,7 @@
                       </tr>
                     </tbody>
                   </table>
+                  
             </div>
           </div>
 
@@ -136,31 +155,40 @@
             How to
           </h4>
           <div>
-            <h5>Create event</h5>
-            <ol>
-              <li>Click the "user" icon on the top-left corner</li>
-              <li>Select "Create Event"</li>
-              <li>Fill in the details of the event</li>
-              <li>Press the add button to create event</li>
-            </ol>
-            <h5>Manage events</h5>
-            <ol>
-              <li>Click the "user" icon on the top-left corner</li>
-              <li>Select "My Events"</li>
-            </ol>
-            
-            <h5>View all centers</h5>
-            <ol>
-              <li>Click "Centers" on the top (navigation) bar</li>
-              <li>Click "Advanced Search" for directed search</li>
-            </ol>
+            <div class="tabSection">
+              <h5>Create event</h5>
+              <ol>
+                <li>Click the "user" icon on the top-left corner</li>
+                <li>Select "Create Event"</li>
+                <li>Fill in the details of the event</li>
+                <li>Press the add button to create event</li>
+              </ol>
+            </div>
 
-            <h5>View details and slated events of a center</h5>
-            <ol>
-              <li>Click "Centers" on the top (navigation) bar</li>
-              <li>Click "Advanced Search" for directed search</li>
-              <li>Click the center</li>
-            </ol>
+            <div class="tabSection">
+              <h5>Manage events</h5>
+              <ol>
+                <li>Click the "user" icon on the top-left corner</li>
+                <li>Select "My Events"</li>
+              </ol>
+            </div>
+
+            <div class="tabSection">
+              <h5>View all centers</h5>
+              <ol>
+                <li>Click "Centers" on the top (navigation) bar</li>
+                <li>Click "Advanced Search" for directed search</li>
+              </ol>
+            </div>
+
+            <div class="tabSection">
+              <h5>View details and slated events of a center</h5>
+              <ol>
+                <li>Click "Centers" on the top (navigation) bar</li>
+                <li>Click "Advanced Search" for directed search</li>
+                <li>Click the center</li>
+              </ol>
+            </div>
 
 
           </div>
@@ -189,7 +217,7 @@
               <input type="text" class="form-control" id="inputLastName">
             </div>
         
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="submit" class="btn btn-primary" style="background-color:orange; color:white; border:orange;">Update</button>
           </form>
         </div>
         
@@ -211,11 +239,12 @@
               <label for="inputConfirmNewPassword">Confirm Password</label>
               <input type="password" class="form-control" id="inputConfirmNewPassword">
             </div>
-            <button type="submit" class="btn btn-primary">Change</button>
+            <button type="submit" class="btn btn-primary" style="background-color:orange; color:white; border:orange;">Change</button>
           </form>
-          <p><a>Report</a> security issues</p>
+          <p class="tabSection"><a href="#">Report</a> security issues</p>
         </div>
       
+      </div>
       </div>
     </main>
 
@@ -229,6 +258,7 @@
     
 
     <script>
+      responsiveSideBar();
       const getElem = document.getElementById;
       let tab = [
         [document.getElementById("btnTimeline"),document.getElementById("timelineContent")],
@@ -244,6 +274,23 @@
           present = index;
         }
       }
+
+      window.onresize = responsiveSideBar;
+      function responsiveSideBar() {
+        if (window.innerWidth > 630){
+          document.getElementById("timelineTabElem").innerHTML = "Timeline"
+          document.getElementById("howTabElem").innerHTML = "How to"
+          document.getElementById("profileTabElem").innerHTML = "Profile"
+          document.getElementById("securityTabElem").innerHTML = "Security"
+        } 
+        else{
+          document.getElementById("timelineTabElem").innerHTML = ""
+          document.getElementById("howTabElem").innerHTML = ""
+          document.getElementById("profileTabElem").innerHTML = ""
+          document.getElementById("securityTabElem").innerHTML = ""
+        }
+      }
+
     </script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
