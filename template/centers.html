@@ -56,12 +56,12 @@
                     <div class="col-7 input-group">
                         <input type="text" class="form-control" placeholder="Search">
                         <span class="input-group-addon" id="basic-addon1" style="padding: 0px;">
-                            <button type="submit" class="btn btn-primary" style="border-radius:0px; border-style:none">
+                            <button type="submit" class="btn btn-primary" style="border-radius:0px; border-style:none; background-color:orange; color:white; border:orange;">
                                 <i class="fa fa-search" aria-hidden="true"></i>
                             </button>        
                         </span>
                     </div>
-                    <button type="button" class="btn btn-link" onclick="toggleAdvancedSearch()">Advanced settings</button>            
+                    <button type="button" class="btn btn-link" onclick="toggleAdvancedSearch()" style="color:orange;">Advanced settings</button>            
                 </div>
                 <div id= "advancedSearchFrame" hidden>
                 <div class="form-row mx-auto">
@@ -107,87 +107,135 @@
             
 
             <div class="container">
-                <div class="card mx-auto card-center">
+                    <div class="card mx-auto card-center" onclick="centerClicked()">
+                            <div class="card-body">
+                                <h4 class="card-title">Ventura Event Center</h4>
+                                <h6 class="card-subtitle mb-2 text-muted">5, Adebowale street Idumota Lagos Nigeria</h6>
+                                <h6 class="card-subtitle mb-2">Capacity: 1500</h6>
+                                <p class="card-text">Description....</p>
+                                <div class="d-flex justify-content-end">
+                                    <div class="d-flex flex-wrap justify-content-center grp">
+                                        <a onclick="event.stopPropagation()" href="./add-event.html" >
+                                            <button type="button" class="btn btn-primary grp-btn" style="background-color:orange; color:white; border:orange; margin-top:5px;">Add Event</button>
+                                        </a>
+                                        <a onclick="event.stopPropagation()" href="./add-event.html">
+                                            <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Edit</button>
+                                        </a>
+                                        <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                <div class="card mx-auto card-center" onclick="centerClicked()">
                     <div class="card-body">
                         <h4 class="card-title">Center Name</h4>
                         <h6 class="card-subtitle mb-2 text-muted">Center address</h6>
                         <p class="card-text">Description....</p>
-                        <div class="d-flex flex-wrap justify-content-end grp">
-                            <a href="./add-event.html">
-                                <button type="button" class="btn btn-primary grp-btn">Add Event</button>
-                            </a>
-                            <a href="./add-center.html">
-                                <button type="button" class="btn btn-primary grp-btn disabled">Edit</button>
-                            </a>
-                            <button type="button" class="btn btn-danger grp-btn disabled" href="#">Delete</button>
+                        <div class="d-flex justify-content-end">
+                            <div class="d-flex flex-wrap justify-content-center grp">
+                                <a onclick="event.stopPropagation()" href="./add-event.html" >
+                                    <button type="button" class="btn btn-primary grp-btn" style="background-color:orange; color:white; border:orange; margin-top:5px;">Add Event</button>
+                                </a>
+                                <a onclick="event.stopPropagation()" href="./add-event.html">
+                                    <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Edit</button>
+                                </a>
+                                <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Delete</button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card mx-auto card-center">
-                    <div class="card-body">
-                        <h4 class="card-title">Center Name</h4>
-                        <h6 class="card-subtitle mb-2 text-muted">Center address</h6>
-                        <p class="card-text">Description....</p>
-                        <div class="d-flex flex-wrap justify-content-end grp">
-                            <button type="button" class="btn btn-primary grp-btn">Add Event</button>
-                            <button type="button" class="btn btn-primary grp-btn disabled">Edit</button>
-                            <button type="button" class="btn btn-danger grp-btn disabled">Delete</button>
+                <div class="card mx-auto card-center" onclick="centerClicked()">
+                        <div class="card-body">
+                            <h4 class="card-title">Center Name</h4>
+                            <h6 class="card-subtitle mb-2 text-muted">Center address</h6>
+                            <p class="card-text">Description....</p>
+                            <div class="d-flex justify-content-end">
+                                <div class="d-flex flex-wrap justify-content-center grp">
+                                    <a onclick="event.stopPropagation()" href="./add-event.html" >
+                                        <button type="button" class="btn btn-primary grp-btn" style="background-color:orange; color:white; border:orange; margin-top:5px;">Add Event</button>
+                                    </a>
+                                    <a onclick="event.stopPropagation()" href="./add-event.html">
+                                        <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Edit</button>
+                                    </a>
+                                    <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Delete</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="card mx-auto card-center">
-                    <div class="card-body">
-                        <h4 class="card-title">Center Name</h4>
-                        <h6 class="card-subtitle mb-2 text-muted">Center address</h6>
-                        <p class="card-text">Description....</p>
-                        <div class="d-flex flex-wrap justify-content-end grp">
-                            <button type="button" class="btn btn-primary grp-btn">Add Event</button>
-                            <button type="button" class="btn btn-primary grp-btn disabled">Edit</button>
-                            <button type="button" class="btn btn-danger grp-btn disabled">Delete</button>
+                    <div class="card mx-auto card-center" onclick="centerClicked()">
+                            <div class="card-body">
+                                <h4 class="card-title">Center Name</h4>
+                                <h6 class="card-subtitle mb-2 text-muted">Center address</h6>
+                                <p class="card-text">Description....</p>
+                                <div class="d-flex justify-content-end">
+                                    <div class="d-flex flex-wrap justify-content-center grp">
+                                        <a onclick="event.stopPropagation()" href="./add-event.html" >
+                                            <button type="button" class="btn btn-primary grp-btn" style="background-color:orange; color:white; border:orange; margin-top:5px;">Add Event</button>
+                                        </a>
+                                        <a onclick="event.stopPropagation()" href="./add-event.html">
+                                            <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Edit</button>
+                                        </a>
+                                        <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="card mx-auto card-center">
-                    <div class="card-body">
-                        <h4 class="card-title">Center Name</h4>
-                        <h6 class="card-subtitle mb-2 text-muted">Center address</h6>
-                        <p class="card-text">Description....</p>
-                        <div class="d-flex flex-wrap justify-content-end grp">
-                            <button type="button" class="btn btn-primary grp-btn">Add Event</button>
-                            <button type="button" class="btn btn-primary grp-btn disabled">Edit</button>
-                            <button type="button" class="btn btn-danger grp-btn disabled">Delete</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card mx-auto card-center">
-                    <div class="card-body">
-                        <h4 class="card-title">Center Name</h4>
-                        <h6 class="card-subtitle mb-2 text-muted">Center address</h6>
-                        <p class="card-text">Description....</p>
-                        <div class="d-flex flex-wrap justify-content-end grp">
-                            <button type="button" class="btn btn-primary grp-btn">Add Event</button>
-                            <button type="button" class="btn btn-primary grp-btn disabled">Edit</button>
-                            <button type="button" class="btn btn-danger grp-btn disabled">Delete</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card mx-auto card-center">
-                    <div class="card-body">
-                        <h4 class="card-title">Center Name</h4>
-                        <h6 class="card-subtitle mb-2 text-muted">Center address</h6>
-                        <p class="card-text">Description....</p>
-                        <div class="d-flex flex-wrap justify-content-end grp">
-                            <button type="button" class="btn btn-primary grp-btn">Add Event</button>
-                            <button type="button" class="btn btn-primary grp-btn disabled">Edit</button>
-                            <button type="button" class="btn btn-danger grp-btn disabled">Delete</button>
-                        </div>
-                    </div>
-                </div>
+                        <div class="card mx-auto card-center" onclick="centerClicked()">
+                                <div class="card-body">
+                                    <h4 class="card-title">Center Name</h4>
+                                    <h6 class="card-subtitle mb-2 text-muted">Center address</h6>
+                                    <p class="card-text">Description....</p>
+                                    <div class="d-flex justify-content-end">
+                                        <div class="d-flex flex-wrap justify-content-center grp">
+                                            <a onclick="event.stopPropagation()" href="./add-event.html" >
+                                                <button type="button" class="btn btn-primary grp-btn" style="background-color:orange; color:white; border:orange; margin-top:5px;">Add Event</button>
+                                            </a>
+                                            <a onclick="event.stopPropagation()" href="./add-event.html">
+                                                <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Edit</button>
+                                            </a>
+                                            <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mx-auto card-center" onclick="centerClicked()">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Center Name</h4>
+                                        <h6 class="card-subtitle mb-2 text-muted">Center address</h6>
+                                        <p class="card-text">Description....</p>
+                                        <div class="d-flex justify-content-end">
+                                            <div class="d-flex flex-wrap justify-content-center grp">
+                                                <a onclick="event.stopPropagation()" href="./add-event.html" >
+                                                    <button type="button" class="btn btn-primary grp-btn" style="background-color:orange; color:white; border:orange; margin-top:5px;">Add Event</button>
+                                                </a>
+                                                <a onclick="event.stopPropagation()" href="./add-event.html">
+                                                    <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Edit</button>
+                                                </a>
+                                                <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mx-auto card-center" onclick="centerClicked()">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Ventura Event Center</h4>
+                                            <h6 class="card-subtitle mb-2 text-muted">5, Adebowale street Idumota Lagos Nigeria</h6>
+                                            <h6 class="card-subtitle mb-2">Capacity: 1500</h6>
+                                            <p class="card-text">Description....</p>
+                                            <div class="d-flex justify-content-end">
+                                                <div class="d-flex flex-wrap justify-content-center grp">
+                                                    <a onclick="event.stopPropagation()" href="./add-event.html" >
+                                                        <button type="button" class="btn btn-primary grp-btn" style="background-color:orange; color:white; border:orange; margin-top:5px;">Add Event</button>
+                                                    </a>
+                                                    <a onclick="event.stopPropagation()" href="./add-event.html">
+                                                        <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Edit</button>
+                                                    </a>
+                                                    <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Delete</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
             </div>
         </main>
         <footer style="background-color:orange;" class="d-flex justify-content-end flex-wrap">
@@ -200,6 +248,10 @@
             const searchFrame = document.getElementById('advancedSearchFrame');
             function toggleAdvancedSearch() {
                 searchFrame.hidden = !searchFrame.hidden;
+            }
+
+            function centerClicked() {
+                window.location.href = "./slated-events.html"
             }
         </script>
 
