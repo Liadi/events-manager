@@ -201,10 +201,8 @@
 
         <script>
             const searchFrame = document.getElementById('advancedSearchFrame');
-            let bol = false;
             function toggleAdvancedSearch() {
-                bol = !bol
-                searchFrame.hidden = bol;
+                searchFrame.hidden = !searchFrame.hidden;
             }
         </script>
 
