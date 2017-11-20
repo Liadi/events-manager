@@ -51,7 +51,7 @@
       </nav>
 
     <main class="container-fluid d-flex">
-      <div style="width:200px; min-width:50px;">
+      <div style="min-width:50px; max-width:200px; margin-right:10px;">
           <div>
             <button class="tab-btn" id="btnTimeline" onclick="toggleTab(0)">
               <span class="mx-auto">
@@ -94,10 +94,10 @@
           </div>
 
       </div>
-      <div class="mx-auto">
-        <div id="tabContentContainer">
+      <div class="mx-auto" style="min-width:50%;">
+        <div id="tabContentContainer mx-auto">
         <div id="timelineContent">
-          <h4>
+          <h4 style="color:orange; margin:20px 0px;">
             Timeline
           </h4>
           <div class="tabSection">
@@ -131,7 +131,7 @@
                       </tr>
                       <tr>
                         <th scope="row">2</th>
-                        <td>Wake Keeping of Pa Jacob</td>
+                        <td>Pa Jacob's wake keeping</td>
                         <td>Vikings Hall</td>
                         <td>25/04/2016</td>
                         
@@ -151,7 +151,7 @@
         </div>
 
         <div id="howContent" hidden>
-          <h4>
+          <h4 style="color:orange; margin:20px 0px;">
             How to
           </h4>
           <div>
@@ -195,7 +195,7 @@
         </div>
         
         <div id="profileContent" hidden>
-          <h4>
+          <h4 style="color:orange; margin:20px 0px;">
             Profile
           </h4>
           <form>
@@ -222,7 +222,7 @@
         </div>
         
         <div id="securityContent" hidden>
-          <h4>
+          <h4 style="color:orange; margin:20px 0px;">
             Security
           </h4>
           <form>
@@ -277,7 +277,7 @@
 
       window.onresize = responsiveSideBar;
       function responsiveSideBar() {
-        if (window.innerWidth > 630){
+        if (window.innerWidth > 760){
           document.getElementById("timelineTabElem").innerHTML = "Timeline"
           document.getElementById("howTabElem").innerHTML = "How to"
           document.getElementById("profileTabElem").innerHTML = "Profile"
