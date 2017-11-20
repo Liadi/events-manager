@@ -20,315 +20,128 @@
 
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light p-big">
-        <a class="navbar-brand" href="#">EM</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-            <ul class="navbar-nav">
-                <li class="nav-item nav-element  navbar-item mx-auto navbar-item">
-                    <a class="nav-link" href="./slated-events.html">Event centers</a>
-                </li>
-                <li class="nav-item dropdown nav-element navbar-item mx-auto navbar-item">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Company
-                    </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">About</a>
-                    <a class="dropdown-item" href="#">Team</a>
-                    <a class="dropdown-item" href="./centers.html">All Centers</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Contact</a>
-                </div>
-                </li>
-
-                <li class="nav-item dropdown nav-element  navbar-item mx-auto navbar-item">
-                    <a class="nav-link  btn btn-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-user-circle fa-lg" aria-hidden="true"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="./event.html">Manage my Events</a>
-                        <a class="dropdown-item" href="#">Add Events</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="./index.html">Log out</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-
-    <main>
-        <div class="container main-container card" style="padding-left:5%;padding-top: 5% ;padding-bottom:30px; margin-bottom:30px;">
-    <form>
-    <div class="form-row">
-        <div class="form-group col-md-6 form-section">
-            <label for="inputCenter">
-                <h3>Center</h3>
-            </label>
-            <input type="search" class="form-control" id="inputCenter">
-            <small id="centerCapacity" class="form-text text-muted">Capacity: 1000</small>
-        </div>
-
-
-
-        <div id="caro-div" class="carousel slide mx-auto img-thumbnail col-md-6" data-ride="carousel" style="border: 1px, solid; max-width: 360px;">
-            <div class="carousel-inner">
-              <div class="carousel-item active">
-                <img src="./images/pic3.jpg" alt="Los Angeles" class"img-fluid" style="width:100%;">
-                <div class="carousel-caption">
-                  <h3>Valtrop</h3>
-                  <p>The heart of lagos</p>
-                </div>   
-              </div>
-              <div class="carousel-item">
-                <img src="./images/pic2.jpg" alt="Chicago" class"img-fluid" style="width:100%;">
-                <div class="carousel-caption">
-                  <h3>A3</h3>
-                  <p>Ibadan, ki ni so..</p>
-                </div>   
-              </div>
-              <div class="carousel-item">
-                <img src="./images/pic7.jpg" alt="New York" class"img-fluid" style="width:100%;">
-                <div class="carousel-caption">
-                  <h3>Malfex</h3>
-                  <p>Kaduna, We rock North!</p>
-                </div>   
-              </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light p-big" >
+        <a class="navbar-brand" href="./dashboard.html" style="color:orange">EM</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+          
+                    <li class="nav-item" style="margin-left:20px;">
+                        <a class="nav-link" href="./centers.html"style="color:orange">Centers</a>
+                    </li>
+                    <li class="nav-item" style="margin-left:20px;">
+                        <a class="nav-link" href="./add-center.html"style="color:orange">Add Center</a>
+                    </li>
+                    <li class="nav-item dropdown" style="margin-left:20px;">
+                        <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-user fa-1x mx-auto" aria-hidden="true" style="color:orange"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="./event.html" style="color:orange">My Events</a>
+                            <a class="dropdown-item" href="./add-event.html" style="color:orange">Create Event</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="./index.html" style="color:orange">Log out</a>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <a class="carousel-control-prev" href="#caro-div" data-slide="prev">
-              <span class="carousel-control-prev-icon"></span>
-            </a>
-            <a class="carousel-control-next" href="#caro-div" data-slide="next">
-              <span class="carousel-control-next-icon"></span>
-            </a>
-          </div>
+        </nav>
 
-        
-    </div>
-    <div class="form-group form-section">
-        <label for="timeGroup">
-            <h3>Time of event</h3>
-        </label>
-        <div class="form-row" id="timeGroup">
-            <div class="form-group col-md-6">
-                <label for="inputStartGroup">
-                    <h5>Start</h5>
-                </label>
-                <div class="form-group d-flex flex-wrap justify-content-center" id="inputStartGroup">
-                    <div class="form-group time-input">
-                        <label for="inputStartYear">Year</label>
-                        <select class="custom-select" id="inputStartYear">
-                            <option selected value="1">2017</option>
-                            <option value="2">2018</option>
-                            <option value="3">2019</option>
-                        </select>    
-                    </div>
-                    <div class="form-group time-input">
-                        <label for="inputStartMonth">Month</label>
-                        <select class="custom-select" id="inputStartMonth">
-                            <option selected value="1">Jan</option>
-                            <option value="2">Feb</option>
-                            <option value="3">Mar</option>
-                            <option value="4">Apr</option>
-                            <option value="5">May</option>
-                            <option value="6">Jun</option>
-                            <option value="7">Jul</option>
-                            <option value="8">Aug</option>
-                            <option value="9">Sep</option>
-                            <option value="10">Oct</option>
-                            <option value="11">Nov</option>
-                            <option value="12">Dec</option>
-                        </select>   
-                    </div>
-                    <div class="form-group time-input">
-                        <label for="inputStartDay" class="d-block">Day</label>
-                        <select class="custom-select" id="inputStartDay">
-                            <option selected value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                            <option value="16">16</option>
-                            <option value="17">17</option>
-                            <option value="18">18</option>
-                            <option value="19">19</option>
-                            <option value="20">20</option>
-                            <option value="21">21</option>
-                            <option value="22">22</option>
-                            <option value="23">23</option>
-                            <option value="24">24</option>
-                            <option value="25">25</option>
-                            <option value="26">26</option>
-                            <option value="27">27</option>
-                            <option value="28">28</option>
-                            <option value="29">29</option>
-                            <option value="30">30</option>
-                            <option value="31">31</option>
-                        </select>
-                    </div>
-                    <div class="form-group time-input">
-                        <label for="inputStartTime" class="d-block">Time</label>
-                        <select class="custom-select" id="inputStartTime" data-size="5">
-                            <option selected value="0">00:00</option>
-                            <option value="1">01:00</option>
-                            <option value="2">02:00</option>
-                            <option value="3">03:00</option>
-                            <option value="4">04:00</option>
-                            <option value="5">05:00</option>
-                            <option value="6">06:00</option>
-                            <option value="7">07:00</option>
-                            <option value="8">08:00</option>
-                            <option value="9">09:00</option>
-                            <option value="10">10:00</option>
-                            <option value="11">11:00</option>
-                            <option value="12">12:00</option>
-                            <option value="13">13:00</option>
-                            <option value="14">14:00</option>
-                            <option value="15">15:00</option>
-                            <option value="16">16:00</option>
-                            <option value="17">17:00</option>
-                            <option value="18">18:00</option>
-                            <option value="19">19:00</option>
-                            <option value="20">20:00</option>
-                            <option value="21">21:00</option>
-                            <option value="22">22:00</option>
-                            <option value="23">23:00</option>
-                        </select>        
+
+    <main class="container" style="padding:30px;">
+
+        <h2 style="color:orange; margin-bottom: 20px;">Create an Event</h2>
+        <div class="container main-container card" style="padding:20px 20px;margin-bottom:30px;">
+            <form class="main-form">
+                <div class="form-group section-group">
+                    <label for="eventName"><h6>Name</h6></label>
+                    <input type="text" class="form-control" id="eventName" placeholder="Describe event, e.g Omotola's Wedding Ceremony">
+                </div>
+            
+                <div class="form-group section-group">
+                    <label for="centerName"><h6>Center</h6></label>
+                    <input type="text" class="form-control" id="centerName" placeholder="Pick a center">
+                </div>
+
+                <div class="form-group section-group">
+                    <label for="eventTime"><h6>Time of Event</h6></label>
+                    <div class="form-group row">
+                        
+                        <div class="form-group col-lg-4 col-md-6">
+                            <label for="eventTimeFrom" class="d-block">From</label>
+                            <div class="d-flex flex-wrap justify-content-around">
+                                <div class="form-group">
+                                    <label for="fromDay">Day</label>
+                                    <select class="form-control" id="fromDay">
+                                        
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="fromMonth">Month</label>
+                                    <select class="form-control" id="fromMonth">
+                                            
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="fromYear">Year</label>
+                                    <select class="form-control" id="fromYear">
+                                            
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-6">
+                            <label for="eventTimeTo" class="d-block">To</label>
+                            <div class="d-flex flex-wrap justify-content-around">
+                                <div class="form-group">
+                                    <label for="toDay">Day</label>
+                                    <select class="form-control" id="toDay">
+                                            
+                                    </select>
+                                </div>
+                                    
+                                <div class="form-group">
+                                    <label for="toMonth">Month</label>
+                                    <select class="form-control" id="toMonth">
+                                                
+                                    </select>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label for="toYear">Year</label>
+                                    <select class="form-control" id="toYear">
+                                                
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-            </div>
-            <div class="form-group col-md-6">
-                <label for="inputEndGroup">
-                    <h5>End</h5>
-                </label>
-                <div class="form-group d-flex flex-wrap justify-content-center" id="inputEndGroup">
-                    <div class="form-group time-input">
-                        <label for="inputEndYear">Year</label>
-                        <select class="custom-select" id="inputEndYear">
-                            <option selected value="1">2017</option>
-                            <option value="2">2018</option>
-                            <option value="3">2019</option>
-                        </select>    
-                    </div>
-                    <div class="form-group time-input">
-                        <label for="inputEndMonth">Month</label>
-                        <select class="custom-select" id="inputEndMonth">
-                            <option selected value="1">Jan</option>
-                            <option value="2">Feb</option>
-                            <option value="3">Mar</option>
-                            <option value="4">Apr</option>
-                            <option value="5">May</option>
-                            <option value="6">Jun</option>
-                            <option value="7">Jul</option>
-                            <option value="8">Aug</option>
-                            <option value="9">Sep</option>
-                            <option value="10">Oct</option>
-                            <option value="11">Nov</option>
-                            <option value="12">Dec</option>
-                        </select>   
-                    </div>
-                    <div class="form-group time-input">
-                        <label for="inputEndDay" class="d-block">Day</label>
-                        <select class="custom-select" id="inputEndDay">
-                            <option selected value="1" class="d-block">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                            <option value="16">16</option>
-                            <option value="17">17</option>
-                            <option value="18">18</option>
-                            <option value="19">19</option>
-                            <option value="20">20</option>
-                            <option value="21">21</option>
-                            <option value="22">22</option>
-                            <option value="23">23</option>
-                            <option value="24">24</option>
-                            <option value="25">25</option>
-                            <option value="26">26</option>
-                            <option value="27">27</option>
-                            <option value="28">28</option>
-                            <option value="29">29</option>
-                            <option value="30">30</option>
-                            <option value="31">31</option>
-                        </select>
-                    </div>
-                    <div class="form-group time-input">
-                        <label for="inputEndTime">Time</label>
-                        <select class="custom-select" id="inputEndTime">
-                            <option selected value="0">00:00</option>
-                            <option value="1">01:00</option>
-                            <option value="2">02:00</option>
-                            <option value="3">03:00</option>
-                            <option value="4">04:00</option>
-                            <option value="5">05:00</option>
-                            <option value="6">06:00</option>
-                            <option value="7">07:00</option>
-                            <option value="8">08:00</option>
-                            <option value="9">09:00</option>
-                            <option value="10">10:00</option>
-                            <option value="11">11:00</option>
-                            <option value="12">12:00</option>
-                            <option value="13">13:00</option>
-                            <option value="14">14:00</option>
-                            <option value="15">15:00</option>
-                            <option value="16">16:00</option>
-                            <option value="17">17:00</option>
-                            <option value="18">18:00</option>
-                            <option value="19">19:00</option>
-                            <option value="20">20:00</option>
-                            <option value="21">21:00</option>
-                            <option value="22">22:00</option>
-                            <option value="23">23:00</option>
-                        </select>        
-                    </div>
+
+                <div class="form-group section-group">
+                    <label for="addedServices"><h6> Added Services</h6></label>
+                    <input type="text" class="form-control" id="eventName" placeholder="Do you need added services such as Catering, Decorating or rentage of utensils...?">
                 </div>
-            </div>
-        </div>
 
-    </div>
+                <input type="submit" class="btn" value="Create" style="background-color:orange; color:white;">
+                <input type="reset" class="btn" value="Clear"  style="background-color:red; color:white; margin-left:20px;">
 
-
-    <div class="row">
-    <div class="form-group form-section col-md-6">
-        <label for="servicesTextareaInput">
-            <h3>Do you need added services?</h3>
-        </label>
-        <textarea class="form-control" id="servicesTextareaInput" rows="4" placeholder="Catering, Decoration or just rentage (utensils...)" style="resize: none; "></textarea>
-    </div>
-    </div>
-    <div class="form-group form-section">
-        <div class="alert alert-primary alert-sm d-inline-block" role="alert" style="margin-bottom:0%;">
-            Cost: #50,000
-        </div>
-        <small id="note" class="form-text text-muted">*does not include added service</small>
-    </div>
-    <button type="submit" class="btn btn-primary btn-lg form-section">Submit</button>
-</form>
+            </form>
         </div>
     </main>
+
+    <footer style="background-color:orange;" class="d-flex justify-content-end flex-wrap">
+        <p style="margin-right:20px;" class="p-footer"> <a href="#" style="color:lightgray">About us</a> </p>
+        <p style="margin-right:20px; color:lightgray" class="p-footer">EM@gmail.com </p>
+        <p style="margin-right:20px; color:lightgray" class="p-footer">(+234) 818 154 6011</p>
+    </footer>
+    
 
 
 

@@ -1,6 +1,6 @@
-.center-img {
-    max-width: 310px;
-    max-height: 310px;
+#centerImage {
+    max-width: 400px;
+    max-height: 400px;
 }
 
 /* .center-descrip {
@@ -8,6 +8,73 @@
     padding-right: 10%;
 } */
 
+
 .navbar-item {
     padding-left: 20px;
+}
+
+.small-card {
+    border-width: 0px;
+    width: 100%;
+}
+
+button {
+    background-color: orange;
+    border-color: orange; 
+    color: white;
+}
+
+footer {
+    border-top: 5px solid lightgray;
+}
+
+
+nav {
+}
+
+footer {
+    height: 60px;
+    padding-top: 10px;
+}
+
+main {
+    min-height: calc(100vh - 126px);
+}
+
+
+@media screen and (min-width: 760px) {
+    main {
+        min-height: calc(100vh - 126px);
+    }        
+}
+
+
+@media screen and (min-width: 720px) {
+    .p-footer {
+        font-size: 100%;
+    }
+}
+
+@media screen and (min-width: 420px) {
+    .p-footer {
+        font-size: 90%;
+    }
+}
+
+@media screen and (min-width: 320px) {
+    .p-footer {
+        font-size: 80%;
+    }
+}
+
+@media screen and (max-width: 319px) {
+    .p-footer {
+        font-size: 70%;
+    }
+}
+
+@media screen and (max-width: 250px) {
+    .p-footer {
+        font-size: 60%;
+    }
 }
