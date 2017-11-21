@@ -10,7 +10,10 @@
     "clean": "rimraf ./dist",
     "build": "npm run clean mkdir dist && babel server -s -d dist",
     "production": "npm run build && node bin/production",
-    "db:init": "sequelize init"
+    "db:init": "sequelize init",
+    "migrate": "sequelize db:migrate",
+    "migrate:undo": "sequelize db:migrate:undo:all",
+    "coverage": "node istanbul cover _mocha -- -R spec"
   },
   "repository": {
     "type": "git",
