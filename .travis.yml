@@ -1,0 +1,30 @@
+language: node_js
+
+node_js: "stable"
+
+install:
+  - npm install
+
+script:
+  - npm test
+
+env:
+  - NODE_ENV=test
+
+cache:
+  directories:
+    - "node_modules"
+
+services:
+  - postgresql
+
+
+before_script:
+  - npm install
+  - psql -c "create database testEM" -U postgres
+
+after_script:
+  - psql -c "drop database testEM" -U postgres
+
+
+after_success: npm run coverage  //scripts in package.json
