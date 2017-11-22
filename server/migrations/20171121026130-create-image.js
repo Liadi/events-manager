@@ -1,31 +1,20 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    queryInterface.createTable('Events', {
+    queryInterface.createTable('Images', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      name: {
+      imageType: {
         type: Sequelize.STRING,
         allowNull: false,
+        defaultValue: 'main',
       },
-      startTime: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
-        allowNull: false,
-      },
-      endTime: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
-        allowNull: false,
-      },
-      status: {
+      imageDescription: {
         type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: 'upcoming',
-      },
-      services: {
-        type: Sequelize.TEXT,
       },
       createdAt: {
         allowNull: false,
@@ -35,9 +24,18 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
+      centerId: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Centers',
+          key: 'id',
+          as: 'centerId',
+        },
+      },
     });
   },
   down: (queryInterface /* , Sequelize */) => {
-    queryInterface.dropTable('Events');
+    queryInterface.dropTable('Images');
   },
 };

@@ -1,25 +1,25 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
-    firstName: {
+    userFirstName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    lastName: {
+    userLastName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email: {
+    userEmail: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    password: {
+    userPassword: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    phone: {
+    userPhone: {
       type: DataTypes.STRING,
     },
-    status: {
+    userStatus: {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: 'regular',
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   User.associate = (models) => {
     User.hasMany(models.Event, {
-      foreignKey: 'eventId',
+      foreignKey: 'userId',
       as: 'events',
     });
   };
