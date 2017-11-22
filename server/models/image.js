@@ -2,8 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const Image = sequelize.define('Image', {
     imageType: {
       type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: 'main',
+      defaultValue: 'others',
     },
     imageDescription: {
       type: DataTypes.STRING,

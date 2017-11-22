@@ -10,6 +10,8 @@
 // };
 
 import {createEvent} from '../controllers/events';
+import {createUser} from '../controllers/users';
+import {cleanData, validateCreateUserFields} from '../controllers/middleware';
 
 import app from './../../index';
 
@@ -35,7 +37,10 @@ module.exports = (app) => {
     });
   });
   
-  //create a new event
-  app.post('/api/v1/events', createEvent);
+  // //create a new event
+  // app.post('/api/v1/events', createEvent);
+
+  // create a new user account 
+  app.post('/api/v1/users', cleanData, validateCreateUserFields, createUser);
 
 }

@@ -28,7 +28,6 @@ module.exports = {
       },
       userStatus: {
         type: Sequelize.STRING,
-        allowNull: false,
         defaultValue: 'regular',
       },
       createdAt: {

@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     centerCountry: {
       type: DataTypes.STRING,
-      allowNull: false,
       defaultValue: 'Nigeria',
       validate: {
         len: {
@@ -70,7 +69,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     centerStatus: {
       type: DataTypes.STRING,
-      allowNull: false,
       defaultValue: 'available',
       validate: {
         isEnum(value){

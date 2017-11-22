@@ -21,7 +21,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     userStatus: {
       type: DataTypes.STRING,
-      allowNull: false,
       defaultValue: 'regular',
     },
   });

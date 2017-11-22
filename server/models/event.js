@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     eventStatus: {
       type: DataTypes.STRING,
-      allowNull: false,
       defaultValue: 'upcoming',
     },
     eventServices: {

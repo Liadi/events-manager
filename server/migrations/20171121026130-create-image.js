@@ -9,8 +9,7 @@ module.exports = {
       },
       imageType: {
         type: Sequelize.STRING,
-        allowNull: false,
-        defaultValue: 'main',
+        defaultValue: 'others',
       },
       imageDescription: {
         type: Sequelize.STRING,

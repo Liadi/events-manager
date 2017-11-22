@@ -21,7 +21,6 @@ module.exports = {
       },
       eventStatus: {
         type: Sequelize.STRING,
-        allowNull: false,
         defaultValue: 'upcoming',
       },
       eventServices: {
