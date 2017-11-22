@@ -1,8 +1,9 @@
 const User = require('../models').User;
-
+import bcryptjs from 'bcryptjs';
 module.exports = {
 	createUser(req, res){
-		User.create({
+        req.userPassword = bcryptjs.hashSync(req.userPassword, 10);
+        User.create({
 			userFirstName: req.userFirstName,
             userLastName: req.userLastName,
             userEmail: req.userEmail,
@@ -11,7 +12,6 @@ module.exports = {
             userStatus: req.userStatus,
 
 		}).then(user => {
-            console.log("user created")
             return res.status(201).json({
                 message: 'User created',
                 status: true,
@@ -25,7 +25,6 @@ module.exports = {
             })
         })
         .catch(error => {
-            console.log("error found", error);
             return res.status(400).json({
                 message: "pls fill in the fields appropriately",
                 status: false

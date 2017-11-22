@@ -1,3 +1,5 @@
+process.env.SECRET_KEY = 25;
+
 module.exports = {
 	cleanData(req, res, next) {
 		try{
@@ -9,6 +11,8 @@ module.exports = {
 			req.userPassword = (req.body.userPassword && req.body.userPassword.trim()) || null;
 			req.userPhone = (req.body.userPhone && req.body.userPhone.trim()) || null;
 			req.userStatus = (req.body.userStatus && req.body.userStatus.trim()) || 'regular';
+
+      
 
 			//image fields
 			req.imageType = (req.body.imageType && req.body.imageType.trim()) || 'others';
@@ -45,22 +49,22 @@ module.exports = {
     next();
 	},
 
-	validateCreateEventFields(req, res, next){
-    if(req.eventName) {
+	// validateCreateEventFields(req, res, next){
+  //   if(req.eventName) {
 
 
-    }else{
-      res.status(400).json({
-        message: 'event name cannot be empty',
-        status: false
-      });
-    }
+  //   }else{
+  //     res.status(400).json({
+  //       message: 'event name cannot be empty',
+  //       status: false
+  //     });
+  //   }
 
-    req.eventStartTimeYear
-    req.eventStartTimeMonth
-    req.eventStartTimeDate
-    req.eventStartTimeTime
-	},
+  //   req.eventStartTimeYear
+  //   req.eventStartTimeMonth
+  //   req.eventStartTimeDate
+  //   req.eventStartTimeTime
+	// },
 
   validateCreateUserFields(req, res, next){
     // validate firstname
@@ -118,6 +122,7 @@ module.exports = {
 
     // validate email
     if (req.userEmail) {
+      console.log("prob3");
       if (!req.userEmail.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
         return res.status(400).json({
           message: `email invalid`,
@@ -133,13 +138,15 @@ module.exports = {
     }
 
     if (req.userPassword) {
+      console.log("prob2");
       if(req.userPassword.length < 6){
         return res.status(400).json({
           message: 'minimum length of password is 6',
           status: false
         });
       }
-
+      
+      
     }else{
       return res.status(400).json({
         message: 'password field cannot be empty',
@@ -148,6 +155,7 @@ module.exports = {
     }
 
     if (req.userPhone) {
+      console.log("prob1");
       if (req.userPhone.match(/^[0-9]+$/)){
         return res.status(400).json({
           message: 'phone number is invalid',
@@ -157,6 +165,7 @@ module.exports = {
     }
 
     if (req.userStatus){
+      console.log("prob");
       if (req.userStatus !== 'regular'){
         return res.status(400).json({
           message: 'status can only be regular or admin',
@@ -166,8 +175,8 @@ module.exports = {
     }
    next(); 
   }
-  // validateEditEventFields(req, res, next){
 
+  // validateUserSigninFields(req, res, next){
   // },
 
   // validateDeleteEventFields(req, res, next){
