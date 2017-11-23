@@ -4,8 +4,7 @@ module.exports = {
 	cleanData(req, res, next) {
 		try{
       //user fields
-      console.log("aaaaa ",req.body.userFirstName);
-			req.userFirstName = (req.body.userFirstName && req.body.userFirstName.trim()) || null;
+      req.userFirstName = (req.body.userFirstName && req.body.userFirstName.trim()) || null;
 			req.userLastName = (req.body.userLastName && req.body.userLastName.trim()) || null;
 			req.userEmail = (req.body.userEmail && req.body.userEmail.trim()) || null;
 			req.userPassword = (req.body.userPassword && req.body.userPassword.trim()) || null;
@@ -68,11 +67,9 @@ module.exports = {
 
   validateCreateUserFields(req, res, next){
     // validate firstname
-    console.log(req.userFirstName, "aaaa");
     if (req.userFirstName) {
-      console.log(req.userFirstName, "c");
       // validate firstname type (letters only)/^[a-z]+$/
-      if (!(req.userFirstName).match(/^[a-z]+$/)){
+      if (!(req.userFirstName).match(/^[a-zA-Z]+$/)){
         return res.status(400).json({
           message: `pls, enter an appropriate firstname`,
           status: false
@@ -88,7 +85,6 @@ module.exports = {
       }
 
     }else{
-      console.log(req.userFirstName, "d");
       return res.status(400).json({
         message: 'firstname field cannot be empty',
         status: false
@@ -113,7 +109,6 @@ module.exports = {
         });
       }
     }else{
-      console.log(req.userFirstName, "d");
       return res.status(400).json({
         message: 'lastname field cannot be empty',
         status: false
@@ -122,7 +117,6 @@ module.exports = {
 
     // validate email
     if (req.userEmail) {
-      console.log("prob3");
       if (!req.userEmail.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
         return res.status(400).json({
           message: `email invalid`,
@@ -138,7 +132,6 @@ module.exports = {
     }
 
     if (req.userPassword) {
-      console.log("prob2");
       if(req.userPassword.length < 6){
         return res.status(400).json({
           message: 'minimum length of password is 6',
@@ -155,7 +148,6 @@ module.exports = {
     }
 
     if (req.userPhone) {
-      console.log("prob1");
       if (req.userPhone.match(/^[0-9]+$/)){
         return res.status(400).json({
           message: 'phone number is invalid',
@@ -165,7 +157,6 @@ module.exports = {
     }
 
     if (req.userStatus){
-      console.log("prob");
       if (req.userStatus !== 'regular'){
         return res.status(400).json({
           message: 'status can only be regular or admin',
