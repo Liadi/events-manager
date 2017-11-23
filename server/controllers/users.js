@@ -1,12 +1,6 @@
 const User = require('../models').User;
 import bcryptjs from 'bcryptjs';
 module.exports = {
-  empty(req, res){
-    return res.status(200).json({
-      message: 'trying',
-      status: true
-    })
-  },
 	createUser(req, res){
     req.userPassword = bcryptjs.hashSync(req.userPassword, 10);
     User.findOne({ 
@@ -45,5 +39,54 @@ module.exports = {
         })
       });
     });    
-	},
+  },
+  signIn(req, res){ 
+    if (req.userEmail === null){ 
+      return res.status(400).send({ 
+      message:'email field is required', 
+      status: false, 
+    });  
+    if (req.userPassword === null){
+      return res.status(400).send({
+        message: 'password is required',
+        status: false,
+      })
+    }
+  }   
+  req.userPassword = bcryptjs.hashSync(req.userPassword, 10);
+  User
+  .findOne({ 
+    where: {userEmail: req.userEmail}, 
+  }) 
+    .then((user) =>{ 
+      if (bcryptjs.compare(req.userPassword, user.userPassword)){ 
+        // let userId = user.id; 
+        // const token = jwt.sign({userId}, secret, {expiresIn: '60m'}); 
+        return res.status(200).send({
+          feed: { 
+            'userFirstName': user.userFirstName, 
+            'id':user.id, 
+            'userLastName': user.userLastName, 
+            'userEmail':user.userEmail, 
+            'userStatus': user.userStatus 
+          },
+          // token: token, 
+          message: 'Successfully signed in',
+          status: true, 
+        }); 
+      } 
+      return res.status(400).send({ 
+        message: "Authentication failed: Wrong email or password", 
+        status: false, 
+      });
+    }) 
+    .catch(error => {
+      const err = error.errors[0].message; 
+      return res.status(400).send({ 
+        message: err + " Pls fill in the field appropritely", 
+        status: false 
+      }) 
+    }); 
+      
+  },
 }
