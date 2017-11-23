@@ -15,4 +15,4 @@ require('./server/routes')(app);
 const port = parseInt(process.env.PORT, 10) || 2222;
 app.listen(port, () => console.log('App running!'));
 
-
+export default app;

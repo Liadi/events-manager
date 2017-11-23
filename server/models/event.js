@@ -1,14 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
-  const EventItem = sequelize.define('Event', {
+  const Event = sequelize.define('Event', {
     eventName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    eventStartTime: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: false,
-    },
-    eventEndTime: {
+    eventTime: {
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false,
     },
@@ -20,16 +16,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
     },
   });
-  EventItem.associate = (models) => {
+  Event.associate = (models) => {
     // associations can be defined here
-    EventItem.belongsTo(models.User, {
+    Event.belongsTo(models.User, {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
     });
-    EventItem.belongsTo(models.Center, {
+    Event.belongsTo(models.Center, {
       foreignKey: 'centerId',
       onDelete: 'CASCADE',
     });
   };
-  return EventItem;
+  return Event;
 };

