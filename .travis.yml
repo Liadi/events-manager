@@ -21,10 +21,10 @@ services:
 
 before_script:
   - npm install
-  - psql -c "create database testEM" -U postgres
+  - psql -c "create database events-manager" -U postgres
 
 after_script:
-  - psql -c "drop database testEM" -U postgres
+  - psql -c "drop database events-manager" -U postgres
 
 
 after_success: npm run coverage  //scripts in package.json
