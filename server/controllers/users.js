@@ -9,11 +9,12 @@ const secret = process.env.SECRET_KEY;
 module.exports = {
 	createUser(req, res){
     req.userPassword = bcryptjs.hashSync(req.userPassword, 10);
+
     User.findOne({ 
       where: {userEmail: req.userEmail.toLowerCase()}
     }).then((user) => {
       if (user) {
-        return res.status(400).json({
+          return res.status(400).json({
           message: 'account with email already exists',
           status: false,
         });
