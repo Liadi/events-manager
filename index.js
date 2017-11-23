@@ -20,6 +20,6 @@ require('./server/routes')(app);
 //   });
 // });
 
-app.listen(80, () => console.log('App running!'));
+app.listen(8080, () => console.log('App running!'));
 
 module.exports = app;
