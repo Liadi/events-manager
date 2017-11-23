@@ -19,7 +19,7 @@ require('./server/routes')(app);
 //     status: true
 //   });
 // });
-
-app.listen(8080, () => console.log('App running!'));
+const port = parseInt(process.env.PORT, 10) || 8000;
+app.listen(port, () => console.log('App running!'));
 
 module.exports = app;

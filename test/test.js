@@ -19,17 +19,33 @@ describe('api', () => {
   });
 });
 
-describe('api', () => {
-  before(() => {
+describe('create user', () => {
+  beforeEach(() => {
     data = {
-      userFirstName: 'Seun',
+      userFirstName: 'Muyiwa',
+      userLastName: 'Ojerinde',
+      userEmail: 'x@y.com',
+      userPassword: 'my pass',
+      userPhone: '0359693',
+      userStatus: 'regular',
     }
   });
-  after(() => {
-    data = {}
+
+  it('Should return error if no firstname', (done) => {
+    data.userFirstName = null;
+    request.post('/api/v1/users')
+    .send(data)
+    .end((err, res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('firstname field cannot be empty'); 
+      expect(res.body.status).to.equal(false); 
+      done(); 
+    });
+
   });
 
-  it('Should return error upon creating new user', (done) => {
+  it('Should return error if no lastname', (done) => {
+    data.userLastName = null;
     request.post('/api/v1/users')
     .send(data)
     .end((err, res) => {
@@ -40,4 +56,59 @@ describe('api', () => {
     });
 
   });
+
+  it('Should return error if no email', (done) => {
+    data.userEmail = null;
+    request.post('/api/v1/users')
+    .send(data)
+    .end((err, res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('email field cannot be empty'); 
+      expect(res.body.status).to.equal(false); 
+      done(); 
+    });
+
+  });
+
+  it('Should return error if no password', (done) => {
+    data.userPassword = null;
+    request.post('/api/v1/users')
+    .send(data)
+    .end((err, res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('password field cannot be empty'); 
+      expect(res.body.status).to.equal(false); 
+      done(); 
+    });
+
+  });
+
+
+  it('Should return error if no phone', (done) => {
+    data.userPhone = null;
+    request.post('/api/v1/users')
+    .send(data)
+    .end((err, res) => {
+      expect(res.status).to.equal(201);
+      expect(res.body.message).to.equal('User created'); 
+      expect(res.body.status).to.equal(true); 
+      done(); 
+    });
+
+  });
+
+  // it('Should return error if no status', (done) => {
+  //   data.userStatus = null;
+  //   request.post('/api/v1/users')
+  //   .send(data)
+  //   .end((err, res) => {
+  //     expect(res.status).to.equal(400);
+  //     expect(res.body.message).to.equal('firstname field cannot be empty'); 
+  //     expect(res.body.status).to.equal(false); 
+  //     done(); 
+  //   });
+
+  // });
+
+
 });

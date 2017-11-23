@@ -94,7 +94,7 @@ module.exports = {
     // validate lastname
     if (req.userLastName) {
       // validate type (letters only)/^[a-z]+$/
-      if (!((req.userLastName).match(/^[a-z]+$/))){
+      if (!((req.userLastName).match(/^[a-zA-z]+$/))){
         return res.status(400).json({
           message: `pls, enter an appropriate lastname`,
           status: false
