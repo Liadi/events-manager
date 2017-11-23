@@ -11,12 +11,8 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      eventStartTime: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
-        allowNull: false,
-      },
-      eventEndTime: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
+      eventTime: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
       eventStatus: {

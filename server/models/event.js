@@ -4,11 +4,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    eventStartTime: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: false,
-    },
-    eventEndTime: {
+    eventTime: {
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false,
     },
