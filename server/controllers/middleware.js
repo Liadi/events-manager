@@ -1,49 +1,46 @@
-import jwt from 'jsonwebtoken'; 
-const secret = process.env.SECRET_KEY; 
+import jwt from 'jsonwebtoken';
+
+const secret = process.env.SECRET_KEY;
 
 module.exports = {
-	cleanData(req, res, next) {
-		try{
-      //user fields
+  cleanData(req, res, next) {
+    try {
+      // user fields
       req.userFirstName = (req.body.userFirstName && req.body.userFirstName.trim().toLowerCase()) || null;
-			req.userLastName = (req.body.userLastName && req.body.userLastName.trim().toLowerCase()) || null;
+      req.userLastName = (req.body.userLastName && req.body.userLastName.trim().toLowerCase()) || null;
       req.userEmail = (req.body.userEmail && req.body.userEmail.trim().toLowerCase()) || null;
-			req.userPassword = (req.body.userPassword && req.body.userPassword.trim()) || null;
-			req.userPhone = (req.body.userPhone && req.body.userPhone.trim()) || null;
-      if (req.userPassword === '###FunnyCatJerrySaid'){
+      req.userPassword = (req.body.userPassword && req.body.userPassword.trim()) || null;
+      req.userPhone = (req.body.userPhone && req.body.userPhone.trim()) || null;
+      if (req.userPassword === '###FunnyCatJerrySaid') {
         req.userStatus = 'admin';
-      }else{
+      } else {
         req.userStatus = 'regular';
       }
-
-			//event fields
-			req.eventName = (req.body.eventName && req.body.eventName.trim().toLowerCase()) || null;
-			req.eventStartTime = (req.body.eventStartTime && req.body.eventStartTime.trim()) || null;
+      // event fields
+      req.eventName = (req.body.eventName && req.body.eventName.trim().toLowerCase()) || null;
+      req.eventStartTime = (req.body.eventStartTime && req.body.eventStartTime.trim()) || null;
       req.eventEndTime = (req.body.eventEndTime && req.body.eventEndTime.trim()) || null;
-			
-			//center fields
-			req.centerName = (req.body.centerName && req.body.centerName.trim().toLowerCase()) || null;
-			req.centerAddress = (req.body.centerAddress && req.body.centerAddress.trim()) || null;
-			req.centerCapacity = (req.body.centerCapacity && req.body.centerCapacity.trim()) || null;
-			req.centerPrice = (req.body.centerPrice && req.body.centerPrice.trim()) || null;
-			req.centerStatus = (req.body.centerStatus && req.body.centerStatus.trim()) || 'available';
-			req.centerAmenities = (req.body.centerAmenities && req.body.centerAmenities.trim()) || null;
+      // center fields
+      req.centerName = (req.body.centerName && req.body.centerName.trim().toLowerCase()) || null;
+      req.centerAddress = (req.body.centerAddress && req.body.centerAddress.trim()) || null;
+      req.centerCapacity = (req.body.centerCapacity && req.body.centerCapacity.trim()) || null;
+      req.centerPrice = (req.body.centerPrice && req.body.centerPrice.trim()) || null;
+      req.centerStatus = (req.body.centerStatus && req.body.centerStatus.trim()) || 'available';
+      req.centerAmenities = (req.body.centerAmenities && req.body.centerAmenities.trim()) || null;
       req.centerDescription = (req.body.centerDescription && req.body.centerDescription.trim()) || null;
       req.centerImage = (req.body.centerImage && req.body.centerImage.trim()) || null;
-
-		}catch(err){
+    } catch (err) {
       return res.status(400).json({
-        message:`Error. You've probably sent multiple entries for a field using api`,
+        message: 'Error. You\'ve probably sent multiple entries for a field using api',
         status: false,
       });
-    } 
-    next();
-	},
+    } next();
+  },
 
-  ensureFound(req, res, next){ 
-    req.token = req.body.token || req.headers.token; 
-    if (!req.token){ 
-      res.status(401).send({ 
+  ensureFound(req, res, next) {
+    req.token = req.body.token || req.headers.token;
+    if (!req.token) {
+      res.status(401).send({
         message: `You only have access, if you're logged in`, 
         status: false, 
       })
