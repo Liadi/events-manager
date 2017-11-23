@@ -12,14 +12,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 require('./server/routes')(app);
 
-
-// app.get('*', (req, res) => {
-//   res.status(200).send({
-//     message: 'Welcome to EM!',
-//     status: true
-//   });
-// });
-const port = parseInt(process.env.PORT, 10) || 8000;
+const port = parseInt(process.env.PORT, 10) || 2222;
 app.listen(port, () => console.log('App running!'));
 
-module.exports = app;
+
