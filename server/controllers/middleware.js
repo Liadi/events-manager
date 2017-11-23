@@ -29,19 +29,19 @@ module.exports = {
 			req.eventServices = (req.body.eventServices && req.body.eventServices.trim()) || null;
 
 			//center fields
-			req.centerName = (req.body.eventName && req.body.eventName.trim().toLowerCase()) || null;
-			req.centerCountry = (req.body.eventStartTime && req.body.eventStartTime.trim()) || 'Nigeria';
-			req.centerState = (req.body.eventEndTime && req.bodyeventEndTime.trim()) || null;
-			req.centerCity = (req.body.eventStatus && req.body.eventStatus.trim()) || null;
-			req.centerCapacity = (req.body.eventServices && req.body.eventServices.trim()) || null;
-			req.centerPrice = (req.body.eventEndTime && req.bodyeventEndTime.trim()) || null;
-			req.centerStatus = (req.body.eventStatus && req.body.eventStatus.trim()) || 'available';
-			req.centerAmenities = (req.body.eventServices && req.body.eventServices.trim()) || null;
-			req.centerDescription = (req.body.eventEndTime && req.bodyeventEndTime.trim()) || null;
+			req.centerName = (req.body.centerName && req.body.centerName.trim().toLowerCase()) || null;
+			req.centerCountry = (req.body.centerCountry && req.body.centerCountry.trim()) || 'Nigeria';
+			req.centerState = (req.body.centerState && req.body.centerState.trim()) || null;
+			req.centerCity = (req.body.centerCity && req.body.centerCity.trim()) || null;
+			req.centerCapacity = (req.body.centerCapacity && req.body.centerCapacity.trim()) || null;
+			req.centerPrice = (req.body.centerPrice && req.body.centerPrice.trim()) || null;
+			req.centerStatus = (req.body.centerStatus && req.body.centerStatus.trim()) || 'available';
+			req.centerAmenities = (req.body.centerAmenities && req.body.centerAmenities.trim()) || null;
+			req.centerDescription = (req.body.centerDescription && req.body.centerDescription.trim()) || null;
 
 		}catch(err){
       return res.status(400).json({
-        message: `Consuming api? You'd probably sent multiple entries for a field`,
+        message:`Consuming api? You'd probably sent multiple entries for a field`,
         status: false
       });
     } 
@@ -66,20 +66,33 @@ module.exports = {
 	// },
 
   validateCreateUserFields(req, res, next){
-    validateUserFirstName(req);
-    validateUserLastName(req);
-    validateUserEmail(req);
-    validateUserPassword(req);
-    validateUserPhone(req);
-    validateUserStatus(req);
+    validateUserFirstName(req, res);
+    validateUserLastName(req, res);
+    validateUserEmail(req, res);
+    validateUserPassword(req, res);
+    validateUserPhone(req, res);
+    validateUserStatus(req, res);
     next(); 
   },
 
   validateUserSigninFields(req, res, next){
-    validateUserPassword(req);
-    validateUserEmail(req);
+    validateUserPassword(req, res);
+    validateUserEmail(req, res);
     next();
   },
+
+  validateCreateCenterFields(req, res, next){
+    // validateCenterName(req, res);
+    // validateCenterState(req, res);
+    // validateCenterAmenities(req, res);
+    // validateCenterCapacity(req, res);
+    // validateCenterCity(req, res);
+    // validateCenterCountry(req, res);
+    // validateCenterDescription(req, res);
+    // validateCenterPrice(req, res);
+    // validateCenterStatus(req, res);
+    next();
+  }
 
   // validateDeleteEventFields(req, res, next){
 
@@ -104,7 +117,7 @@ module.exports = {
 
 }
 
-function validateUserLastName(req){
+function validateUserLastName(req, res){
   // validate lastname
   if (req.userLastName) {
     // validate type (letters only)/^[a-z]+$/
@@ -130,7 +143,7 @@ function validateUserLastName(req){
   }
 }
 
-function validateUserFirstName(req){
+function validateUserFirstName(req, res){
   if (req.userFirstName) {
     // validate firstname type (letters only)/^[a-z]+$/
     if (!(req.userFirstName).match(/^[a-zA-Z]+$/)){
@@ -157,7 +170,7 @@ function validateUserFirstName(req){
 
 }
 
-function validateUserEmail(req) {
+function validateUserEmail(req, res) {
   if (req.userEmail) {
     if (!req.userEmail.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
       return res.status(400).json({
@@ -174,7 +187,7 @@ function validateUserEmail(req) {
   }
 }
 
-function validateUserPassword(req) {
+function validateUserPassword(req, res) {
   if (req.userPassword) {
     if(req.userPassword.length < 6){
       return res.status(400).json({
@@ -190,7 +203,7 @@ function validateUserPassword(req) {
   }
 }
 
-function validateUserPhone(req) {
+function validateUserPhone(req, res) {
   if (req.userPhone) {
     if (req.userPhone.match(/^[0-9]+$/)){
       return res.status(400).json({
@@ -201,7 +214,7 @@ function validateUserPhone(req) {
   }
 
 }
-function validateUserStatus(req) {
+function validateUserStatus(req, res) {
   if (req.userStatus){
     if (req.userStatus !== 'regular'){
       return res.status(400).json({
@@ -215,27 +228,56 @@ function validateUserStatus(req) {
 
 
 //image fields
-function validateImageType(){}
-function validateImageDescription(){}
+function validateImageType(req, res){}
+function validateImageDescription(req, res){}
 
 //event fields
-function validateEventName(){}
-function validateEventStartTimeYear(){}
-function validateEventStartTimeMonth(){}
+function validateEventName(req, res){}
+function validateEventStartTimeYear(req, res){}
+function validateEventStartTimeMonth(req, res){}
 
-function validateEventStartTimeDate(){}
+function validateEventStartTimeDate(req, res){}
 
-function validateEventEndTime(){}
-function validateEventStatus(){}
-function validateEventServices(){}
+function validateEventEndTime(req, res){}
+function validateEventStatus(req, res){}
+function validateEventServices(req, res){}
 
 //center fields
-function validateCenterName(){}
-function validateCenterCountry(){}
-function validateCenterState(){}
-function validateCenterCity(){}
-function validateCenterCapacity(){}
-function validateCenterPrice(){}
-function validateCenterStatus(){}
-function validateCenterAmenities(){}
-function validateCenterDescription(){}
+function validateCenterName(req, res){
+  if (!req.centerName) {
+    return res.status(400).json({
+      message: 'center name field cannot be empty',
+      status: false
+    });
+  }
+}
+
+function validateCenterCountry(req, res){
+  if (!req.centerCountry) {
+    req.centerCountry = Nigeria
+  }
+}
+function validateCenterState(req, res){
+  if (!req.centerState) {
+    return res.status(400).json({
+      message: 'center state field cannot be empty',
+      status: false,
+    });
+  }
+}
+
+function validateCenterCity(req, res){
+  if (!req.centerCity) {
+    return res.status(400).json({
+      message: 'center city field cannot be empty',
+      status: false,
+    });
+  }
+}
+function validateCenterCapacity(req, res){
+  return res.status(4)
+}
+function validateCenterPrice(req, res){}
+function validateCenterStatus(req, res){}
+function validateCenterAmenities(req, res){}
+function validateCenterDescription(req, res){}

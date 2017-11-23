@@ -1,6 +1,7 @@
 import {createEvent} from '../controllers/events';
+import {createCenter}  from '../controllers/centers';
 import {createUser, empty, signIn} from '../controllers/users';
-import {cleanData, validateCreateUserFields, validateUserSigninFields} from '../controllers/middleware';
+import {cleanData, validateCreateUserFields, validateUserSigninFields, validateCreateCenterFields} from '../controllers/middleware';
 
 import app from './../../index';
 
@@ -13,7 +14,8 @@ module.exports = (app) => {
     });
   });
   
-  app.post('/api/v1/users/signup', cleanData, validateCreateUserFields, createUser);
-  app.post('/api/v1/users/signin', cleanData, validateUserSigninFields, signIn);
+  app.post('/api/v1/users/signup/', cleanData, validateCreateUserFields, createUser);
+  app.post('/api/v1/users/signin/', cleanData, validateUserSigninFields, signIn);
+  app.post('/api/v1/centers/', cleanData, validateCreateCenterFields, createCenter);
 
 }
