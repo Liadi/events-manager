@@ -1,9 +1,9 @@
-import {createEvent} from '../controllers/events';
-import {createCenter}  from '../controllers/centers';
-import {createUser, empty, signIn} from '../controllers/users';
+import { createEvent } from '../controllers/events';
+import { createCenter, modifyCenter, allCenters, getCenter } from '../controllers/centers';
+import { createUser, signIn } from '../controllers/users';
 import {
   cleanData, validateCreateUserFields,
-  validateUserSigninFields, validateCreateCenterFields, 
+  validateUserSigninFields, validateCreateCenterFields,
   ensureFound, ensureSameUser
 } from '../controllers/middleware';
 
@@ -17,9 +17,11 @@ module.exports = (app) => {
       status: true
     });
   });
-  
   app.post('/api/v1/users/signup/', cleanData, validateCreateUserFields, createUser);
   app.post('/api/v1/users/signin/', cleanData, validateUserSigninFields, signIn);
   app.post('/api/v1/centers/', cleanData, ensureFound, ensureSameUser, validateCreateCenterFields, createCenter);
-
-}
+  app.put('/api/v1/centers/:centerId', cleanData, ensureFound, ensureSameUser, modifyCenter);
+  app.get('/api/v1/centers/', cleanData, allCenters);
+  app.post('/api/v1/events/', cleanData, ensureFound, validateTime, ensureSameUser, createEvent);
+  // app.post('/api/v1/events/', cleanData, ensureFound, )
+};

@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const Center = sequelize.define('Center', {
     centerName: {
       type: DataTypes.STRING,
-      allowNull: false,     
+      allowNull: false,
     },
     centerAddress: {
       type: DataTypes.STRING,

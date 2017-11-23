@@ -33,7 +33,7 @@ describe('create user', () => {
 
   it('Should return error if no firstname', (done) => {
     data.userFirstName = null;
-    request.post('/api/v1/users')
+    request.post('/api/v1/users/signup')
     .send(data)
     .end((err, res) => {
       expect(res.status).to.equal(400);
@@ -46,7 +46,7 @@ describe('create user', () => {
 
   it('Should return error if no lastname', (done) => {
     data.userLastName = null;
-    request.post('/api/v1/users')
+    request.post('/api/v1/users/signup')
     .send(data)
     .end((err, res) => {
       expect(res.status).to.equal(400);
@@ -59,7 +59,7 @@ describe('create user', () => {
 
   it('Should return error if no email', (done) => {
     data.userEmail = null;
-    request.post('/api/v1/users')
+    request.post('/api/v1/users/signup')
     .send(data)
     .end((err, res) => {
       expect(res.status).to.equal(400);
@@ -72,7 +72,7 @@ describe('create user', () => {
 
   it('Should return error if no password', (done) => {
     data.userPassword = null;
-    request.post('/api/v1/users')
+    request.post('/api/v1/users/signup')
     .send(data)
     .end((err, res) => {
       expect(res.status).to.equal(400);
@@ -84,18 +84,18 @@ describe('create user', () => {
   });
 
 
-  it('Should return error if no phone', (done) => {
-    data.userPhone = null;
-    request.post('/api/v1/users')
-    .send(data)
-    .end((err, res) => {
-      expect(res.status).to.equal(201);
-      expect(res.body.message).to.equal('User created'); 
-      expect(res.body.status).to.equal(true); 
-      done(); 
-    });
+  // it('Should return error if no phone', (done) => {
+  //   data.userPhone = null;
+  //   request.post('/api/v1/users/signup')
+  //   .send(data)
+  //   .end((err, res) => {
+  //     expect(res.status).to.equal(201);
+  //     expect(res.body.message).to.equal('User created'); 
+  //     expect(res.body.status).to.equal(true); 
+  //     done(); 
+  //   });
 
-  });
+  // });
 
   // it('Should return error if no status', (done) => {
   //   data.userStatus = null;

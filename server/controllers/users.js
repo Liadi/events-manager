@@ -7,14 +7,13 @@ const secret = process.env.SECRET_KEY;
 
 
 module.exports = {
-	createUser(req, res){
+  createUser(req, res) {
     req.userPassword = bcryptjs.hashSync(req.userPassword, 10);
-
-    User.findOne({ 
-      where: {userEmail: req.userEmail.toLowerCase()}
+    User.findOne({
+      where: { userEmail: req.userEmail.toLowerCase() }
     }).then((user) => {
       if (user) {
-          return res.status(400).json({
+        return res.status(400).json({
           message: 'account with email already exists',
           status: false,
         });
@@ -26,49 +25,46 @@ module.exports = {
         userPassword: req.userPassword,
         userPhone: req.userPhone,
         userStatus: req.userStatus,
-      }).then(user => {
+      }).then((user) => {
         return res.status(201).json({
           message: 'User created',
-          status: true,
-          feed: {
-            'firstname': req.userFirstName,
-            'lastname': req.userLastName,
-            'email': req.userEmail,
-            'phone': req.userPhone,
-            'user status': req.userStatus,
+          user: {
+            firstname: req.userFirstName,
+            lastname: req.userLastName,
+            email: req.userEmail,
+            phone: req.userPhone,
+            status: req.userStatus,
           },
-        })
-      })
-      .catch(error => {
+        });
+      }).catch((error) => {
         return res.status(400).json({
-          message: "pls fill in the fields appropriately",
-          status: false
-        })
+          message: 'pls fill in the fields appropriately',
+        });
       });
-    });    
+    });
   },
-  signIn(req, res){ 
-    if (req.userEmail === null){ 
-      return res.status(400).send({ 
-      message:'email field is required', 
-      status: false, 
-    });  
-    if (req.userPassword === null){
+
+  signIn(req, res) {
+    if (req.userEmail === null) {
+      return res.status(400).send({
+        message: 'email field is required',
+        status: false,
+      });
+    }
+    if (req.userPassword === null) {
       return res.status(400).send({
         message: 'password is required',
         status: false,
-      })
+      });
     }
-  }   
-  req.userPassword = bcryptjs.hashSync(req.userPassword, 10);
-  User
-  .findOne({ 
-    where: {userEmail: req.userEmail}, 
-  }) 
+    req.userPassword = bcryptjs.hashSync(req.userPassword, 10);
+    User
+    .findOne({ 
+      where: {userEmail: req.userEmail},
+    }) 
     .then((user) =>{ 
-      if (bcryptjs.compare(req.userPassword, user.userPassword)){ 
+      if (user && bcryptjs.compare(req.userPassword, user.userPassword)){ 
         const userId = user.id; 
-        // const token = jwt.sign({userId}, secret, {expiresIn: '60m'}); 
         const token = jwt.sign({userId}, secret, {expiresIn: '60m'});
         return res.status(200).send({
           feed: { 
@@ -89,7 +85,6 @@ module.exports = {
       });
     }) 
     .catch(error => {
-      console.log('abcde',error);
       const err = error.errors[0].message; 
       return res.status(400).send({ 
         message: err + " Pls fill in the field appropritely", 

@@ -16,10 +16,12 @@ module.exports = {
       } else {
         req.userStatus = 'regular';
       }
+
+      
       // event fields
       req.eventName = (req.body.eventName && req.body.eventName.trim().toLowerCase()) || null;
-      req.eventStartTime = (req.body.eventStartTime && req.body.eventStartTime.trim()) || null;
-      req.eventEndTime = (req.body.eventEndTime && req.body.eventEndTime.trim()) || null;
+      req.eventTime = (req.body.eventTime && req.body.eventTime.trim()) || null;
+
       // center fields
       req.centerName = (req.body.centerName && req.body.centerName.trim().toLowerCase()) || null;
       req.centerAddress = (req.body.centerAddress && req.body.centerAddress.trim()) || null;
@@ -69,7 +71,7 @@ module.exports = {
       next();
     }
   }, 
-  
+
   validateCreateUserFields(req, res, next){
     validateUserFirstName(req, res);
     validateUserLastName(req, res);
@@ -96,9 +98,18 @@ module.exports = {
     // validateCenterPrice(req, res);
     // validateCenterStatus(req, res);
     next();
-  }
+  },
 
-  
+  validateTime(req, res, next){
+    const time = req.eventTime;
+    timeArray = time.split('/');
+    if (timeArray.length !== 3){
+      return res.status(400).json({
+        message: 'wrong time format enter \'yy/mm/dd\'',
+      });
+    }  
+    next();
+  },
 }
 
 function validateUserLastName(req, res){
