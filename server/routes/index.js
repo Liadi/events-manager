@@ -4,7 +4,7 @@ import { createUser, signIn } from '../controllers/users';
 import {
   cleanData, validateCreateUserFields,
   validateUserSigninFields, validateCreateCenterFields,
-  ensureFound, ensureSameUser
+  ensureFound, ensureSameUser, validateTime
 } from '../controllers/middleware';
 
 import app from './../../index';
