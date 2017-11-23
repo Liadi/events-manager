@@ -7,40 +7,40 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      name: {
+      centerName: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      country: {
+      centerCountry: {
         type: Sequelize.STRING,
         allowNull: false,
         defaultValue: 'Nigeria',
       },
-      state: {
+      centerState: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      city: {
+      centerCity: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      capacity: {
+      centerCapacity: {
         type: Sequelize.DECIMAL,
         allowNull: false,
       },
-      price: {
+      centerPrice: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      status: {
+      centerStatus: {
         type: Sequelize.STRING,
         defaultValue: 'available',
         allowNull: false,
       },
-      amenities: {
+      centerAmenities: {
         type: Sequelize.ARRAY(Sequelize.STRING),
       },
-      description: {
+      centerDescription: {
         type: Sequelize.TEXT,
         allowNull: false,
       },

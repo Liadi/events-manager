@@ -7,24 +7,23 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      name: {
+      eventName: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      startTime: {
+      eventStartTime: {
         type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: false,
       },
-      endTime: {
+      eventEndTime: {
         type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: false,
       },
-      status: {
+      eventStatus: {
         type: Sequelize.STRING,
-        allowNull: false,
         defaultValue: 'upcoming',
       },
-      services: {
+      eventServices: {
         type: Sequelize.TEXT,
       },
       createdAt: {
@@ -34,6 +33,24 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+      },
+      userId: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Users',
+          key: 'id',
+          as: 'userId',
+        },
+      },
+      centerId: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Centers',
+          key: 'id',
+          as: 'centerId',
+        },
       },
     });
   },

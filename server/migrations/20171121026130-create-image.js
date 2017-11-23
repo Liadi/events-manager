@@ -9,10 +9,9 @@ module.exports = {
       },
       imageType: {
         type: Sequelize.STRING,
-        allowNull: false,
-        defaultValue: 'main',
+        defaultValue: 'others',
       },
-      description: {
+      imageDescription: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -23,6 +22,15 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+      },
+      centerId: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Centers',
+          key: 'id',
+          as: 'centerId',
+        },
       },
     });
   },

@@ -2,10 +2,9 @@ module.exports = (sequelize, DataTypes) => {
   const Image = sequelize.define('Image', {
     imageType: {
       type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: 'main',
+      defaultValue: 'others',
     },
-    description: {
+    imageDescription: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -13,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
   Image.associate = (models) => {
     // associations can be defined here
     Image.belongsTo(models.Center, {
-      foreignKey: 'imageId',
+      foreignKey: 'centerId',
       onDelete: 'CASCADE',
     });
   };
