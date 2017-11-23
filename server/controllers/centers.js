@@ -4,14 +4,12 @@ module.exports = {
   createCenter(req, res){
     Center.create({
       centerName: req.centerName,
-      centerState: req.centerState,
-      centerAmenities: req.centerState,
-      centerCapacity: req.centerState,
-      centerCity: req.centerState,
-      centerCountry: req.centerState,
-      centerDescription: req.centerState,
-      centerPrice: req.centerState,
-      centerStatus: req.centerState,
+      centerAddress: req.centerAddress,
+      centerAmenities: req.centerAmenities,
+      centerCapacity: req.centerCapacity,
+      centerDescription: req.centerDescription,
+      centerPrice: req.centerPrice,
+      centerStatus: req.centerStatus,
     })
     .then(center => {
       return res.status(201).json({
@@ -21,8 +19,9 @@ module.exports = {
       });
     })
     .catch(error => {
+      console.log('-----', error);
       return res.status(400).json({
-        message: `${error.errors[0].message}, fill field appropriately`
+        message: error.errors[0].message
       });
     })
   } 

@@ -11,16 +11,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      centerCountry: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        defaultValue: 'Nigeria',
-      },
-      centerState: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      centerCity: {
+      centerAddress: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -34,15 +25,18 @@ module.exports = {
       },
       centerStatus: {
         type: Sequelize.STRING,
-        defaultValue: 'available',
-        allowNull: false,
+        allowNull: false
       },
       centerAmenities: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       centerDescription: {
         type: Sequelize.TEXT,
         allowNull: false,
+      },
+      centerImage: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,

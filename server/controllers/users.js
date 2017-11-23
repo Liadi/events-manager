@@ -1,5 +1,11 @@
 const User = require('../models').User;
 import bcryptjs from 'bcryptjs';
+import jwt from  'jsonwebtoken';
+
+process.env.SECRET_KEY = 'mysecretkey'; 
+const secret = process.env.SECRET_KEY; 
+
+
 module.exports = {
 	createUser(req, res){
     req.userPassword = bcryptjs.hashSync(req.userPassword, 10);
@@ -60,8 +66,9 @@ module.exports = {
   }) 
     .then((user) =>{ 
       if (bcryptjs.compare(req.userPassword, user.userPassword)){ 
-        // let userId = user.id; 
+        const userId = user.id; 
         // const token = jwt.sign({userId}, secret, {expiresIn: '60m'}); 
+        const token = jwt.sign({userId}, secret, {expiresIn: '60m'});
         return res.status(200).send({
           feed: { 
             'userFirstName': user.userFirstName, 
@@ -70,7 +77,7 @@ module.exports = {
             'userEmail':user.userEmail, 
             'userStatus': user.userStatus 
           },
-          // token: token, 
+          token: token, 
           message: 'Successfully signed in',
           status: true, 
         }); 
@@ -81,6 +88,7 @@ module.exports = {
       });
     }) 
     .catch(error => {
+      console.log('abcde',error);
       const err = error.errors[0].message; 
       return res.status(400).send({ 
         message: err + " Pls fill in the field appropritely", 
