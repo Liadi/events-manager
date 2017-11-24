@@ -132,17 +132,14 @@ module.exports = {
         });
       }
       req.token = req.body.token || req.headers.token;
-      console.log('-------', req.token);
       if (req.token) {
         let verifiedJWT; 
         try { 
           verifiedJWT = jwt.verify(req.token, secret);   
         }catch (err) {
-          console.log('errored');
           user = false;
         }
         if (verifiedJWT){
-          console.log('verified');
           user = true;
           if (!verifiedJWT.userId){
             return res.status(400).json({

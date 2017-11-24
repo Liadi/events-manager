@@ -107,6 +107,17 @@ module.exports = {
         message: 'wrong time format enter \'yy/mm/dd\'',
       });
     }  
+    timeArray.forEach(element => {
+      if (element.length !== 2 && str(parseInt(element)) !== element){
+        return res.satus(400).json({
+          message: 'wrong time format enter \'yy/mm/dd\'',
+        })
+      } 
+    });
+    // let year = timeArray[0];
+    // let month = timeArray[1];
+    // let date = timeArray[2];
+    // if y
     next();
   },
 }
@@ -215,12 +226,6 @@ function validateImageDescription(req, res){}
 
 //event fields
 function validateEventName(req, res){}
-function validateEventStartTimeYear(req, res){}
-function validateEventStartTimeMonth(req, res){}
-
-function validateEventStartTimeDate(req, res){}
-
-function validateEventEndTime(req, res){}
 function validateEventStatus(req, res){}
 function validateEventServices(req, res){}
 
