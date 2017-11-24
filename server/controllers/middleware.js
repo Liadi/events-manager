@@ -16,7 +16,6 @@ module.exports = {
       } else {
         req.userStatus = 'regular';
       }
-
       
       // event fields
       req.eventName = (req.body.eventName && req.body.eventName.trim().toLowerCase()) || null;
@@ -70,7 +69,7 @@ module.exports = {
       req.userId = verifiedJWT.userId;
       next();
     }
-  }, 
+  },
 
   validateCreateUserFields(req, res, next){
     validateUserFirstName(req, res);
