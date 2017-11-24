@@ -59,7 +59,7 @@ module.exports = {
         status: false,
       });
     }
-    if (!verifiedJWT.userId){
+    if (verifiedJWt && !verifiedJWT.userId){
       res.status(400).send({
         message: 'Pls Login into your account or sign up',
         satus: false,

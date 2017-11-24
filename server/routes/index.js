@@ -31,9 +31,9 @@ module.exports = (app) => {
 
   // event route
   app.post('/api/v1/events/', cleanData, ensureFound, ensureSameUser, validateTime, createEvent);
-  app.put('/api/v1/centers/:centerId', cleanData, ensureFound, ensureSameUser, validateTime, modifyEvent);
-  app.get('/api/v1/centers/:centerId', cleanData, ensureFound, ensureSameUser, getEvent);
-  app.delete('/api/v1/centers/:centerId', cleanData, ensureFound, ensureSameUser, deleteEvent);
-  app.get('/api/v1/centers/', cleanData, ensureFound, ensureSameUser, getAllEvents);
+  app.put('/api/v1/events/:eventId', cleanData, ensureFound, ensureSameUser, validateTime, modifyEvent);
+  app.get('/api/v1/events/:eventId', cleanData, ensureFound, ensureSameUser, getEvent);
+  app.delete('/api/v1/events/:eventId', cleanData, ensureFound, ensureSameUser, deleteEvent);
+  app.get('/api/v1/events/', cleanData, ensureFound, ensureSameUser, getAllEvents);
 
 };

@@ -46,8 +46,8 @@ module.exports = {
       req.event.update({
         eventName: valName,
         eventTime:valTime,
-        eventStatus: valStatus;
-        eventServices: valServices
+        eventStatus: valStatus,
+        eventServices: valServices,
       });
       res.status(200).json({
         message: 'event updated',
