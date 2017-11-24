@@ -16,7 +16,6 @@ module.exports = {
       } else {
         req.userStatus = 'regular';
       }
-
       
       // event fields
       req.eventName = (req.body.eventName && req.body.eventName.trim().toLowerCase()) || null;
@@ -70,7 +69,7 @@ module.exports = {
       req.userId = verifiedJWT.userId;
       next();
     }
-  }, 
+  },
 
   validateCreateUserFields(req, res, next){
     validateUserFirstName(req, res);
@@ -108,6 +107,13 @@ module.exports = {
         message: 'wrong time format enter \'yy/mm/dd\'',
       });
     }  
+    timeArray.forEach(element => {
+      if (element.length !== 2 && (parseInt(element)).toString() !== element){
+        return res.satus(400).json({
+          message: 'wrong time format enter \'yy/mm/dd\'',
+        })
+      } 
+    });
     next();
   },
 }
@@ -216,12 +222,6 @@ function validateImageDescription(req, res){}
 
 //event fields
 function validateEventName(req, res){}
-function validateEventStartTimeYear(req, res){}
-function validateEventStartTimeMonth(req, res){}
-
-function validateEventStartTimeDate(req, res){}
-
-function validateEventEndTime(req, res){}
 function validateEventStatus(req, res){}
 function validateEventServices(req, res){}
 
