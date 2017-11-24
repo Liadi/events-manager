@@ -108,7 +108,7 @@ module.exports = {
       });
     }  
     timeArray.forEach(element => {
-      if (element.length !== 2 && str(parseInt(element)) !== element){
+      if (element.length !== 2 && (parseInt(element)).toString() !== element){
         return res.satus(400).json({
           message: 'wrong time format enter \'yy/mm/dd\'',
         })
