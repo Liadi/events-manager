@@ -69,7 +69,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   User.associate = (models) => {
-    User.hasMany(models.Events, {
+    User.hasMany(models.Event, {
       foreignKay: 'userId',
       as: 'events',
     });
