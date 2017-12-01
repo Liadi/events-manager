@@ -4,7 +4,7 @@ import { createUser, signIn } from '../controllers/users';
 import {
   cleanData, validateCreateUserFields,
   validateUserSigninFields, validateCreateCenterFields,
-  ensureFound, ensureSameUser, validateTime
+  ensureFound, ensureSameUser, validateTime, validateEventFields
 } from '../controllers/middleware';
 
 import app from './../../index';
@@ -30,7 +30,7 @@ module.exports = (app) => {
   app.get('/api/v1/centers/', cleanData, ensureFound, ensureSameUser, allCenters);
 
   // event route
-  app.post('/api/v1/events/', cleanData, ensureFound, ensureSameUser, validateTime, createEvent);
+  app.post('/api/v1/events/', cleanData, ensureFound, ensureSameUser, validateTime, validateEventFields, createEvent);
   app.put('/api/v1/events/:eventId', cleanData, ensureFound, ensureSameUser, validateTime, modifyEvent);
   app.get('/api/v1/events/:eventId', cleanData, ensureFound, ensureSameUser, getEvent);
   app.delete('/api/v1/events/:eventId', cleanData, ensureFound, ensureSameUser, deleteEvent);
