@@ -20,6 +20,7 @@ module.exports = {
       userEmail: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
       },
 
       userPassword: {
