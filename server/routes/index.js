@@ -1,23 +1,20 @@
 import { createEvent, modifyEvent, getEvent, deleteEvent, getAllEvents } from '../controllers/events';
 import { createCenter, modifyCenter, allCenters, getCenter, deleteCenter } from '../controllers/centers';
 import { createUser, signIn } from '../controllers/users';
-import {
-  cleanData, validateCreateUserFields,
-  validateUserSigninFields, validateCreateCenterFields,
-  ensureFound, ensureSameUser, validateTime, validateEventFields,
-} from '../controllers/middleware';
+import { cleanData } from '../middlewares/';
 
 import app from './../../index';
 
 module.exports = (app) => {
   app.get('/api/v1/', (req, res) => {
-    res.status(200).send({
+    res.status(200).json({
       message: 'Welcome to EM api',
+      status: true,
     });
   });
 
-  // // users route
-  // app.post('/api/v1/users/signup/', cleanData, validateCreateUserFields, createUser);
+  // users route
+  app.post('/api/v1/users/signup/', cleanData, createUser);
   // app.post('/api/v1/users/signin/', cleanData, validateUserSigninFields, signIn);
 
   // // centers route
