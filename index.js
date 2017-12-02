@@ -12,7 +12,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 require('./server/routes')(app);
 
-const port = parseInt(process.env.PORT, 10) || 3000;
-app.listen(port, () => console.log('App running!'));
+// const port = parseInt(process.env.PORT, 10) || 3000;
 
-export default app;
+module.exports = app;

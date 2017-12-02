@@ -1,4 +1,4 @@
-import { assert, expect } from 'chai';
+import { expect } from 'chai';
 import supertest from 'supertest';
 import app from './../index';
 
