@@ -4,7 +4,9 @@
   "description": "Event managing application",
   "main": "index.js",
   "scripts": {
-    "test": "mocha bin/test",
+    "seed:testdb": "cross-env NODE_ENV=test sequelize db:seed:undo:all &&cross-env NODE_ENV=test sequelize db:seed:all",
+    "test:db": "cross-env NODE_ENV=test sequelize db:migrate:undo:all &&cross-env NODE_ENV=test sequelize db:migrate && npm run seed:testdb",
+    "test": "npm run test:db &&cross-env NODE_ENV=test mocha  bin/test",
     "start": "npm run production",
     "start:dev": "nodemon --exec babel-node bin/dev",
     "clean": "rimraf ./dist",
@@ -31,6 +33,7 @@
     "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.26.0",
     "chai": "^4.1.2",
+    "cross-env": "^5.1.1",
     "eslint": "^4.11.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.8.0",

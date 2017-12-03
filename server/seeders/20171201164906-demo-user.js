@@ -1,12 +1,16 @@
+const bcryptjs = require('bcryptjs');
+
+const password = bcryptjs.hashSync('fatBoy', 8);
+
 module.exports = {
   up: queryInterface =>
     queryInterface.bulkInsert('Users', [{
-      userFirstName: 'Tola',
-      userLastName: 'Liadi',
+      userFirstName: 'tola',
+      userLastName: 'liadi',
       userEmail: 'liadiomotola@gmailcom',
-      userPassword: 'fatBoy',
+      userPassword: password,
       userPhoneNumber: '08181546011',
-      userType: 'regular',
+      userType: 'admin',
       createdAt: '2016-08-09 04:05:02',
       updatedAt: '2016-08-09 04:05:02',
     }], {}),
