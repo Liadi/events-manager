@@ -26,7 +26,7 @@ module.exports = {
     }).catch((error) => {
       const err = error.errors[0].message;
       return res.status(400).json({
-        message: `${err}, pls fill in the fields appropriately`,
+        message: err,
         status: false,
       });
     });

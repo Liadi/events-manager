@@ -36,7 +36,7 @@ module.exports = {
       }).catch((error) => {
         const err = error.errors[0].message;
         return res.status(400).json({
-          message: `${err}, pls fill in the fields appropriately`,
+          message: err,
           status: false,
         });
       });
@@ -76,25 +76,25 @@ module.exports = {
                 userPhoneNumber: user.userPhoneNumber,
               },
               token,
-              message: 'Successfully signed in',
+              message: 'successfully signed in',
               status: true,
             });
           }
-          return res.status(400).send({
-            message: 'Authentication failed: Wrong email or password!',
+          return res.status(401).send({
+            message: 'authentication failed: wrong email or password',
             status: false,
           });
         });
       } else {
-        return res.status(400).send({
-          message: 'Authentication failed: Wrong email or password?',
+        return res.status(401).send({
+          message: 'authentication failed: wrong email or password',
           status: false,
         });
       }
     }).catch((error) => {
       const err = error.errors[0].message;
       return res.status(400).send({
-        message: `${err}, Pls fill in the field appropritely`,
+        message: err,
         status: false,
       });
     });

@@ -30,4 +30,12 @@ module.exports = (app) => {
   // app.get('/api/v1/events/:eventId', cleanData, ensureFound, ensureSameUser, getEvent);
   // app.delete('/api/v1/events/:eventId', cleanData, ensureFound, ensureSameUser, deleteEvent);
   // app.get('/api/v1/events/', cleanData, ensureFound, ensureSameUser, getAllEvents);
+
+  // other route (404)
+  app.all('*', (req, res) => {
+    res.status(404).json({
+      message: 'request not found, wrong url',
+      status: false,
+    });
+  });
 };

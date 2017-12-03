@@ -34,8 +34,9 @@ module.exports = {
       req.centerStatus = (req.body.centerStatus && req.body.centerStatus.trim().toLowerCase()) || 'available';
       req.centerAmenities = (req.body.centerAmenities && req.body.centerAmenities.trim()) || null;
     } catch (err) {
+      console.log('err', err);
       return res.status(400).json({
-        message: 'Error. You\'ve probably sent multiple entries for a field using api',
+        message: 'Error. Invalid input(s). Probable solution: Enusure single entries, no multiple entries for a field; Ensure string(quotes) input, regardless of type, for raw inputs (e.g \'100\' not 100)',
         status: false,
       });
     } next();
@@ -45,7 +46,7 @@ module.exports = {
     // ensure token found
     req.token = req.body.token || req.headers.token;
     if (!req.token) {
-      res.status(401).json({
+      return res.status(401).json({
         message: 'You only have access, if you\'re logged in',
         status: false,
       });
@@ -64,7 +65,7 @@ module.exports = {
     }
     if (!verifiedJWT) {
       return res.status(400).json({
-        message: 'Pls Login into your account or sign up',
+        message: 'pls, login',
         satus: false,
       });
     }
@@ -75,7 +76,7 @@ module.exports = {
 
   isAdmin(req, res, next) {
     if (req.userType !== 'admin') {
-      return res.status(401).json({
+      return res.status(403).json({
         message: 'access denied',
         status: false,
       });
@@ -84,7 +85,6 @@ module.exports = {
   },
 
   validateSignUpFields(req, res, next) {
-    console.log(`user password is , ${req.userPassword}`);
     if (!req.userPassword) {
       return res.status(400).json({
         message: 'password required',

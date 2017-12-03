@@ -6,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         len: {
-          args: [1, 30],
-          msg: 'invalid input, center name should be of length 1-30',
+          args: [1, 50],
+          msg: 'invalid input, center name should be of length 1-50',
         },
       },
     },
@@ -35,7 +35,6 @@ module.exports = (sequelize, DataTypes) => {
 
     centerCity: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
 
     centerDescription: {

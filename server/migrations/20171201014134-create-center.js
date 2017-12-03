@@ -30,7 +30,6 @@ module.exports = {
 
     centerCity: {
       type: Sequelize.STRING,
-      allowNull: false,
     },
 
     centerDescription: {
