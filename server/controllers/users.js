@@ -43,52 +43,60 @@ module.exports = {
     });
   },
 
-  // signIn(req, res) {
-  //   if (req.userEmail === null) {
-  //     return res.status(400).send({
-  //       message: 'email field is required',
-  //       status: false,
-  //     });
-  //   }
-  //   if (req.userPassword === null) {
-  //     return res.status(400).send({
-  //       message: 'password is required',
-  //       status: false,
-  //     });
-  //   }
-  //   req.userPassword = bcryptjs.hashSync(req.userPassword, 10);
-  //   User
-  //   .findOne({ 
-  //     where: {userEmail: req.userEmail},
-  //   }) 
-  //   .then((user) =>{ 
-  //     if (user && bcryptjs.compare(req.userPassword, user.userPassword)){ 
-  //       const userId = user.id; 
-  //       const token = jwt.sign({userId}, secret, {expiresIn: '60m'});
-  //       return res.status(200).send({
-  //         feed: { 
-  //           'userFirstName': user.userFirstName, 
-  //           'id':user.id, 
-  //           'userLastName': user.userLastName, 
-  //           'userEmail':user.userEmail, 
-  //           'userStatus': user.userStatus 
-  //         },
-  //         token: token, 
-  //         message: 'Successfully signed in',
-  //         status: true, 
-  //       }); 
-  //     } 
-  //     return res.status(400).send({ 
-  //       message: "Authentication failed: Wrong email or password", 
-  //       status: false, 
-  //     });
-  //   }) 
-  //   .catch(error => {
-  //     const err = error.errors[0].message; 
-  //     return res.status(400).send({ 
-  //       message: err + " Pls fill in the field appropritely", 
-  //       status: false 
-  //     }) 
-  //   });     
-  // },
+  signIn(req, res) {
+    if (req.userEmail === null) {
+      return res.status(400).send({
+        message: 'user email is required',
+        status: false,
+      });
+    }
+    if (req.userPassword === null) {
+      return res.status(400).send({
+        message: 'password is required',
+        status: false,
+      });
+    }
+    // req.userPassword = bcryptjs.hashSync(req.userPassword, 8);
+
+    User.findOne({
+      where: { userEmail: req.userEmail },
+    }).then((user) => {
+      if (user) {
+        bcryptjs.compare(req.userPassword, user.userPassword).then((same) => {
+          if (same) {
+            const userId = user.id;
+            const userType = user.userType;
+            const token = jwt.sign({ userId, userType }, secret, { expiresIn: '60m' });
+            return res.status(200).send({
+              user: {
+                userFirstName: user.userFirstName,
+                userLastName: user.userLastName,
+                userEmail: user.userEmail,
+                userType: user.userType,
+                userPhoneNumber: user.userPhoneNumber,
+              },
+              token,
+              message: 'Successfully signed in',
+              status: true,
+            });
+          }
+          return res.status(400).send({
+            message: 'Authentication failed: Wrong email or password!',
+            status: false,
+          });
+        });
+      } else {
+        return res.status(400).send({
+          message: 'Authentication failed: Wrong email or password?',
+          status: false,
+        });
+      }
+    }).catch((error) => {
+      const err = error.errors[0].message;
+      return res.status(400).send({
+        message: `${err}, Pls fill in the field appropritely`,
+        status: false,
+      });
+    });
+  },
 };
