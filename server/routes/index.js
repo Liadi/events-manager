@@ -1,7 +1,7 @@
 import { createEvent, modifyEvent, getEvent, deleteEvent, getAllEvents } from '../controllers/events';
 import { createCenter, modifyCenter, allCenters, getCenter, deleteCenter } from '../controllers/centers';
 import { createUser, signIn } from '../controllers/users';
-import { cleanData } from '../middlewares/';
+import { cleanData, validateToken, isAdmin, validateSignUpFields } from '../middlewares/';
 
 import app from './../../index';
 
@@ -14,11 +14,11 @@ module.exports = (app) => {
   });
 
   // users route
-  app.post('/api/v1/users/signup/', cleanData, createUser);
-  // app.post('/api/v1/users/signin/', cleanData, validateUserSigninFields, signIn);
+  app.post('/api/v1/users/signup/', cleanData, validateSignUpFields, createUser);
+  app.post('/api/v1/users/signin/', cleanData, signIn);
 
-  // // centers route
-  // app.post('/api/v1/centers/', cleanData, ensureFound, ensureSameUser, validateCreateCenterFields, createCenter);
+  // centers route
+  app.post('/api/v1/centers/', cleanData, validateToken, isAdmin, createCenter);
   // app.put('/api/v1/centers/:centerId', cleanData, ensureFound, ensureSameUser, modifyCenter);
   // app.get('/api/v1/centers/:centerId', cleanData, getCenter);
   // app.delete('/api/v1/centers/:centerId', cleanData, ensureFound, ensureSameUser, deleteCenter);
