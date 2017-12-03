@@ -3,11 +3,8 @@ module.exports = (sequelize, DataTypes) => {
 
     eventName: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
-        notNull: {
-          args: true,
-          msg: 'invalid input, event name should not be null',
-        },
         len: {
           args: [30],
           msg: 'invalid input, event name should have at most 30 characters',
@@ -24,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL,
       defaultValue: 0,
       validate: {
+        is: {
+          args: /^[0-9]+$/i,
+          msg: 'invalid input, amount paid for event should be positive integers between 0 and 100 (percentage)',
+        },
         min: {
           args: 0,
           msg: 'invalid input, percentage value only [0 - 100]',
@@ -37,22 +38,12 @@ module.exports = (sequelize, DataTypes) => {
 
     eventStartTime: {
       type: DataTypes.STRING,
-      validate: {
-        notNull: {
-          args: true,
-          msg: 'invalid input, event start time should not be null',
-        },
-      },
+      allowNull: false,
     },
 
     eventEndTime: {
       type: DataTypes.STRING,
-      validate: {
-        notNull: {
-          args: true,
-          msg: 'invalid input, event end time should not be null',
-        },
-      },
+      allowNull: false,
     },
 
   });

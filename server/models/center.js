@@ -3,11 +3,8 @@ module.exports = (sequelize, DataTypes) => {
 
     centerName: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
-        notNull: {
-          args: true,
-          msg: 'invalid input, center name should not be null',
-        },
         len: {
           args: [1, 30],
           msg: 'invalid input, center name should be of length 1-30',
@@ -17,11 +14,8 @@ module.exports = (sequelize, DataTypes) => {
 
     centerAddress: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
-        notNull: {
-          args: true,
-          msg: 'invalid input, center arddress should not be null',
-        },
         len: {
           args: [0, 120],
           msg: 'invalid input, center addrress should not be more than 120 characters',
@@ -31,32 +25,17 @@ module.exports = (sequelize, DataTypes) => {
 
     centerCountry: {
       type: DataTypes.STRING,
-      validate: {
-        notNull: {
-          args: true,
-          msg: 'invalid input, center country should not be null',
-        },
-      },
+      allowNull: false,
     },
 
     centerState: {
       type: DataTypes.STRING,
-      validate: {
-        notNull: {
-          args: true,
-          msg: 'invalid input, center state should not be null',
-        },
-      },
+      allowNull: false,
     },
 
     centerCity: {
       type: DataTypes.STRING,
-      validate: {
-        notNull: {
-          args: true,
-          msg: 'invalid input, center city should not be null',
-        },
-      },
+      allowNull: false,
     },
 
     centerDescription: {
@@ -75,10 +54,11 @@ module.exports = (sequelize, DataTypes) => {
 
     centerCapacity: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       validate: {
-        notNull: {
-          args: true,
-          msg: 'invalid input, center capacity should not be null',
+        is: {
+          args: /^[0-9]+$/i,
+          msg: 'invalid input, center capacity should be positive integers',
         },
         min: {
           args: 5,
@@ -93,10 +73,11 @@ module.exports = (sequelize, DataTypes) => {
 
     centerRate: {
       type: DataTypes.DECIMAL,
+      allowNull: false,
       validate: {
-        notNull: {
-          args: true,
-          msg: 'invalid input, center rate should not be null',
+        is: {
+          args: /^[0-9]+$/i,
+          msg: 'invalid input, center rate should be positive integers',
         },
         min: {
           args: 500,

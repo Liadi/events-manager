@@ -3,12 +3,7 @@ module.exports = (sequelize, DataTypes) => {
 
     imagePath: {
       type: DataTypes.STRING,
-      validate: {
-        notNull: {
-          args: true,
-          msg: 'invalid input, image address path should not be null',
-        },
-      },
+      allowNull: false,
     },
 
     imageDescription: {
@@ -25,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 0,
       validate: {
+        is: {
+          args: /^[0-9]+$/i,
+          msg: 'invalid input, image order should be positive integers',
+        },
         min: {
           args: 0,
           msg: 'invalid input, negative image order not allowed',
