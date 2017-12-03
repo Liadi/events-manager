@@ -30,7 +30,7 @@ module.exports = {
         userType: req.userType,
       }).then(() => {
         return res.status(201).json({
-          message: 'User created',
+          message: 'user created',
           status: true,
         });
       }).catch((error) => {
