@@ -46,7 +46,7 @@ module.exports = {
   signIn(req, res) {
     if (req.userEmail === null) {
       return res.status(400).send({
-        message: 'user email is required',
+        message: 'email is required',
         status: false,
       });
     }

@@ -84,9 +84,10 @@ module.exports = {
   },
 
   validateSignUpFields(req, res, next) {
+    console.log(`user password is , ${req.userPassword}`);
     if (!req.userPassword) {
       return res.status(400).json({
-        message: 'Password required',
+        message: 'password required',
         status: false,
       });
     }
