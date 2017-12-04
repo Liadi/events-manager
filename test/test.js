@@ -523,6 +523,205 @@ describe('api', () => {
       });
     });
   });
+
+  describe('modify center api', () => {
+    beforeEach(() => {
+      data = {
+        token: adminUserToken,
+      };
+    });
+
+    it('denies \'not signed in\' user access', (done) => {
+      data.token = null;
+      request.put('/api/v1/centers/aa').send(data).end((err, res) => {
+        expect(res.status).to.equal(401);
+        expect(res.body.message).to.equal('You only have access, if you\'re logged in');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('denies user with invalid token', (done) => {
+      data.token = 'iiuohaog78981whenjns.jhvztuvsbuA7389gbhwdiuBe3';
+      request.put('/api/v1/centers/aa').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('pls, login');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('rejects regular user', (done) => {
+      data.token = regularUserToken;
+      request.put('/api/v1/centers/aa').send(data).end((err, res) => {
+        expect(res.status).to.equal(403);
+        expect(res.body.message).to.equal('access denied');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('rejects invalid param', (done) => {
+      request.put('/api/v1/centers/aa').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid centerId param');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('center does not exist', (done) => {
+      request.put(`/api/v1/centers/${1000000}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(404);
+        expect(res.body.message).to.equal('center does not exist');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('updates center name', (done) => {
+      data.centerName = 'New Ventura';
+      request.put(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('center updated');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center').to.have.property('centerName').to.equal('New Ventura');
+        done();
+      });
+    });
+
+    it('updates center address', (done) => {
+      data.centerAddress = '1, New Ventura villa off Airport road, Joke island, Lagos, Nigeria.';
+      request.put(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('center updated');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center').to.have.property('centerAddress').to.equal('1, New Ventura villa off Airport road, Joke island, Lagos, Nigeria.');
+        done();
+      });
+    });
+
+    it('updates center country', (done) => {
+      data.centerCountry = 'New Nigeria';
+      request.put(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('center updated');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center').to.have.property('centerCountry').to.equal('New Nigeria');
+        done();
+      });
+    });
+
+    it('updates center state', (done) => {
+      data.centerState = 'New Lagos';
+      request.put(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('center updated');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center').to.have.property('centerState').to.equal('New Lagos');
+        done();
+      });
+    });
+
+    it('updates center city', (done) => {
+      data.centerCity = 'New Lagos city';
+      request.put(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('center updated');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center').to.have.property('centerCity').to.equal('New Lagos city');
+        done();
+      });
+    });
+
+    it('updates center description', (done) => {
+      data.centerDescription = 'New descrip. At the heart of lagos. Very classy and designed for grand occasions such as weeding, luncheon...';
+      request.put(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('center updated');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center').to.have.property('centerDescription').to.equal('New descrip. At the heart of lagos. Very classy and designed for grand occasions such as weeding, luncheon...');
+        done();
+      });
+    });
+
+    it('updates center mantra', (done) => {
+      data.centerMantra = 'New mantra. We beat the rest';
+      request.put(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('center updated');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center').to.have.property('centerMantra').to.equal('New mantra. We beat the rest');
+        done();
+      });
+    });
+
+    it('updates center capacity', (done) => {
+      data.centerCapacity = '50002';
+      request.put(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('center updated');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center').to.have.property('centerCapacity').to.equal('50002');
+        done();
+      });
+    });
+
+    it('updates center rate', (done) => {
+      data.centerRate = '20001';
+      request.put(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('center updated');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center').to.have.property('centerRate').to.equal('20001');
+        done();
+      });
+    });
+
+    it('updates center amenities', (done) => {
+      data.centerAmenities = 'New Toilets,New parking space,New fully air-conditioned...';
+      request.put(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('center updated');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center').to.have.property('centerAmenities').to.equal('New Toilets,New parking space,New fully air-conditioned...');
+        done();
+      });
+    });
+
+    it('updates center status', (done) => {
+      data.centerStatus = 'unavailable';
+      request.put(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);  
+        expect(res.body.message).to.equal('center updated');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center').to.have.property('centerStatus').to.equal('unavailable');
+        done();
+      });
+    });
+
+    it('updates center status to default', (done) => {
+      data.centerStatus = 'closed'; // defaults to 'available'. status type=ENUM('available', 'unavailable')
+      request.put(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('center updated');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center').to.have.property('centerStatus').to.equal('available');
+        done();
+      });
+    });
+
+    it('validates entries', (done) => {
+      data.centerName = 'NewNameNewNameNewNameNewNameNewNameNewNameNewNameNewNameNewNameNewName'; 
+      request.put(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, center name should not be more than 50 characters');
+        expect(res.body.status).to.equal(false);
+        expect(res.body).to.not.have.property('center');
+        done();
+      });
+    });
+  });
 });
 
 module.exports = app;

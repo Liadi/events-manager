@@ -6,6 +6,9 @@ const secret = process.env.SECRET_KEY;
 module.exports = {
   cleanData(req, res, next) {
     try {
+      // params
+      req.centerId = parseInt(req.params.centerId);
+
       // user fields
       req.userFirstName = (req.body.userFirstName && req.body.userFirstName.trim().toLowerCase()) || null;
       req.userLastName = (req.body.userLastName && req.body.userLastName.trim().toLowerCase()) || null;
@@ -15,18 +18,18 @@ module.exports = {
       req.userType = (req.body.userType && req.body.userType.trim().toLowerCase()) || 'regular';
 
       // event fields
-      req.eventName = (req.body.eventName && req.body.eventName.trim().toLowerCase()) || null;
+      req.eventName = (req.body.eventName && req.body.eventName.trim()) || null;
       req.eventStatus = (req.body.eventStatus && req.body.eventStatus.trim().toLowerCase()) || null;
       req.eventAmountPaid = (req.body.eventAmountPaid && req.body.eventAmountPaid.trim()) || null;
       req.eventStartTime = (req.body.eventStartTime && req.body.eventStartTime.trim()) || null;
       req.eventEndTime = (req.body.eventEndTime && req.body.eventEndTime.trim()) || null;
 
       // center fields
-      req.centerName = (req.body.centerName && req.body.centerName.trim().toLowerCase()) || null;
+      req.centerName = (req.body.centerName && req.body.centerName.trim()) || null;
       req.centerAddress = (req.body.centerAddress && req.body.centerAddress.trim()) || null;
-      req.centerCountry = (req.body.centerCountry && req.body.centerCountry.trim().toLowerCase()) || null;
-      req.centerState = (req.body.centerState && req.body.centerState.trim().toLowerCase()) || null;
-      req.centerCity = (req.body.centerCity && req.body.centerCity.trim().toLowerCase()) || null;
+      req.centerCountry = (req.body.centerCountry && req.body.centerCountry.trim()) || null;
+      req.centerState = (req.body.centerState && req.body.centerState.trim()) || null;
+      req.centerCity = (req.body.centerCity && req.body.centerCity.trim()) || null;
       req.centerDescription = (req.body.centerDescription && req.body.centerDescription.trim()) || null;
       req.centerMantra = (req.body.centerMantra && req.body.centerMantra.trim()) || null;
       req.centerCapacity = (req.body.centerCapacity && req.body.centerCapacity.trim()) || null;
