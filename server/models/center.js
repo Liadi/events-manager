@@ -6,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         len: {
-          args: [1, 50],
-          msg: 'invalid input, center name should be of length 1-50',
+          args: [0, 50],
+          msg: 'invalid input, center name should not be more than 50 characters',
         },
       },
     },
@@ -26,15 +26,33 @@ module.exports = (sequelize, DataTypes) => {
     centerCountry: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        len: {
+          args: [0, 50],
+          msg: 'invalid input, center country should not be more than 50 characters',
+        },
+      },
     },
 
     centerState: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        len: {
+          args: [0, 50],
+          msg: 'invalid input, center state should not be more than 50 characters',
+        },
+      },
     },
 
     centerCity: {
       type: DataTypes.STRING,
+      validate: {
+        len: {
+          args: [0, 50],
+          msg: 'invalid input, center city should not be more than 50 characters',
+        },
+      },
     },
 
     centerDescription: {
@@ -45,8 +63,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       validate: {
         len: {
-          args: [0, 50],
-          msg: 'invalid input, center mantra should be more than 50 characters',
+          args: [0, 100],
+          msg: 'invalid input, center mantra should not be more than 100 characters',
         },
       },
     },
@@ -57,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         is: {
           args: /^[0-9]+$/i,
-          msg: 'invalid input, center capacity should be positive integers',
+          msg: 'invalid input, center capacity should be a positive whole number',
         },
         min: {
           args: 5,
@@ -71,12 +89,12 @@ module.exports = (sequelize, DataTypes) => {
     },
 
     centerRate: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         is: {
           args: /^[0-9]+$/i,
-          msg: 'invalid input, center rate should be positive integers',
+          msg: 'invalid input, center rate should be a positive whole number',
         },
         min: {
           args: 500,
@@ -94,7 +112,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 'available',
     },
 
-    centerAmenitites: {
+    centerAmenities: {
       type: DataTypes.TEXT,
     },
 

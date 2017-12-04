@@ -15,11 +15,11 @@ module.exports = {
       centerCapacity: req.centerCapacity,
       centerRate: req.centerRate,
       centerStatus: req.centerStatus,
-      centerAmenitites: req.centerAmenities,
+      centerAmenities: req.centerAmenities,
 
     }).then((center) => {
       return res.status(201).json({
-        message: 'Center created',
+        message: 'center created',
         center,
         status: true,
       });

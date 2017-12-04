@@ -46,7 +46,7 @@ module.exports = {
     },
 
     centerRate: {
-      type: Sequelize.DECIMAL,
+      type: Sequelize.INTEGER,
       allowNull: false,
     },
 
@@ -55,7 +55,7 @@ module.exports = {
       defaultValue: 'available',
     },
 
-    centerAmenitites: {
+    centerAmenities: {
       type: Sequelize.TEXT,
     },
     createdAt: {

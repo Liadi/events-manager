@@ -1,11 +1,16 @@
 import { expect } from 'chai';
 import supertest from 'supertest';
 import app from './../index';
+import db from './../server/models';
 
+const { Center, User } = db;
 
 let data = {};
 let regularUserToken = null;
 let adminUserToken = null;
+let centerId = null;
+let eventId = null;
+let userId = null;
 const request = supertest(app);
 
 describe('api', () => {
@@ -107,6 +112,14 @@ describe('api', () => {
         done();
       });
     });
+
+    it('checks for created user in database', () => {
+      return User.findOne({
+        where: { userEmail: 'a@b.com' },
+      }).then((user) => {
+        expect(user).to.not.equal(null);
+      });
+    });
   });
 
   describe('user signin api', () => {
@@ -200,7 +213,6 @@ describe('api', () => {
         centerMantra: 'We beat the rest',
         centerCapacity: '50000',
         centerRate: '20000',
-        centerStatus: 'available',
         centerAmenities: 'Toilets, parking space, fully air-conditioned...',
         token: adminUserToken,
       };
@@ -250,9 +262,264 @@ describe('api', () => {
       data.centerName = 'NiceNiceNiceNiceNiceNiceNiceNiceNiceNiceNiceLongerThan 50';
       request.post('/api/v1/centers').send(data).end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('invalid input, center name should be of length 1-50');
+        expect(res.body.message).to.equal('invalid input, center name should not be more than 50 characters');
         expect(res.body.status).to.equal(false);
         done();
+      });
+    });
+
+    it('returns center address required', (done) => {
+      data.centerAddress = null;
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('Center.centerAddress cannot be null');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center address too long', (done) => {
+      data.centerAddress = '1, Ventura villa off Airport road, Joke island, Lagos, NigeriaNigeriaNigeriaNigeriaNigeriaNigeriaNigeriaNigeriaNigeriaNigeriaNigeriaNigeria.';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, center addrress should not be more than 120 characters');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center country reuired', (done) => {
+      data.centerCountry = null;
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('Center.centerCountry cannot be null');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center country too long', (done) => {
+      data.centerCountry = 'NigeriaNigeriaNigeriaNigeriaNigeriaNigeriaNigeriaNigeria';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, center country should not be more than 50 characters');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center state required', (done) => {
+      data.centerState = null;
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('Center.centerState cannot be null');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center state too long', (done) => {
+      data.centerState = 'LagosLagosLagosLagosLagosLagosLagosLagosLagosLagosLagos';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, center state should not be more than 50 characters');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center city too long', (done) => {
+      data.centerCity = 'LagosLagosLagosLagosLagosLagosLagosLagosLagosLagosLagos';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, center city should not be more than 50 characters');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center mantra too long', (done) => {
+      data.centerMantra = 'just do it!just do it!just do it!just do it!just do it!just do it!just do it!just do it!just do it!just do it!';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, center mantra should not be more than 100 characters');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center capacity required', (done) => {
+      data.centerCapacity = null;
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('Center.centerCapacity cannot be null');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center capacity should be valid number', (done) => {
+      data.centerCapacity = 'abc123';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, center capacity should be a positive whole number');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center capacity should be positive number', (done) => {
+      data.centerCapacity = '-1234';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, center capacity should be a positive whole number');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center capacity should be positive number', (done) => {
+      data.centerCapacity = '12.34';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, center capacity should be a positive whole number');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center capacity minimum (5)', (done) => {
+      data.centerCapacity = '4';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, center capacity should not be less than five (5)');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center capacity maximum (1000000000)', (done) => {
+      data.centerCapacity = '1000000001';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, center capacity should not be more than a billion (1000000000)');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center rate required', (done) => {
+      data.centerRate = null;
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('Center.centerRate cannot be null');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center rate should be valid number', (done) => {
+      data.centerRate = 'abc123';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, center rate should be a positive whole number');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center rate should be positive number', (done) => {
+      data.centerRate = '-1234';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, center rate should be a positive whole number');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center rate should be positive number', (done) => {
+      data.centerRate = '1234.56';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, center rate should be a positive whole number');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center rate minimum (5)', (done) => {
+      data.centerRate = '419';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, center rate should not be less than five hundred naira (#500)');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center rate maximum (1000000000)', (done) => {
+      data.centerRate = '1000000001';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, center rate should not be more than 1 billion naira (#1000000000)');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns \'available\' as center status default', (done) => {
+      data.centerStatus = null;
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(201);
+        expect(res.body.message).to.equal('center created');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center');
+        expect(res.body).to.have.property('center').to.have.property('centerStatus').to.equal('available');
+        done();
+      });
+    });
+
+    it('returns \'available\' as center status default', (done) => {
+      data.centerStatus = 'I am not sure';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(201);
+        expect(res.body.message).to.equal('center created');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center');
+        expect(res.body).to.have.property('center').to.have.property('centerStatus').to.equal('available');
+        done();
+      });
+    });
+
+    it('returns \'unavailable\' as center status when set', (done) => {
+      data.centerStatus = 'unavailable';
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(201);
+        expect(res.body.message).to.equal('center created');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center');
+        expect(res.body).to.have.property('center').to.have.property('centerStatus').to.equal('unavailable');
+        done();
+      });
+    });
+
+    it('accepts center amenities as null', (done) => {
+      data.centerAmenities = null;
+      request.post('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(201);
+        expect(res.body.message).to.equal('center created');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center');
+        expect(res.body).to.have.property('center').to.have.property('centerAmenities').to.equal(null);
+        centerId = res.body.center.id;
+        done();
+      });
+    });
+
+    it('checks for created center in database', () => {
+      return Center.findById(centerId).then((center) => {
+        expect(center).to.not.equal(null);
       });
     });
   });

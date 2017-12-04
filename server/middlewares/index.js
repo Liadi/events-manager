@@ -31,7 +31,7 @@ module.exports = {
       req.centerMantra = (req.body.centerMantra && req.body.centerMantra.trim()) || null;
       req.centerCapacity = (req.body.centerCapacity && req.body.centerCapacity.trim()) || null;
       req.centerRate = (req.body.centerRate && req.body.centerRate.trim()) || null;
-      req.centerStatus = (req.body.centerStatus && req.body.centerStatus.trim().toLowerCase()) || 'available';
+      req.centerStatus = (((req.body.centerStatus && req.body.centerStatus.trim().toLowerCase()) === 'unavailable') && 'unavailable') || 'available';
       req.centerAmenities = (req.body.centerAmenities && req.body.centerAmenities.trim()) || null;
     } catch (err) {
       console.log('err', err);
