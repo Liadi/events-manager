@@ -20,7 +20,7 @@ module.exports = (app) => {
   // centers route
   app.post('/api/v1/centers/', cleanData, validateToken, isAdmin, createCenter);
   app.put('/api/v1/centers/:centerId', cleanData, validateToken, isAdmin, modifyCenter);
-  app.get('/api/v1/centers/:centerId', cleanData, getCenter);
+  // app.get('/api/v1/centers/:centerId', cleanData, getCenter);
   // app.delete('/api/v1/centers/:centerId', cleanData, ensureFound, ensureSameUser, deleteCenter);
   // app.get('/api/v1/centers/', cleanData, ensureFound, ensureSameUser, allCenters);
 
