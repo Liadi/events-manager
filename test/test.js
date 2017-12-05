@@ -4,14 +4,14 @@ import app from './../index';
 import db from './../server/models';
 
 const { Center, User } = db;
+const request = supertest(app);
 
 let data = {};
 let regularUserToken = null;
 let adminUserToken = null;
 let centerId = null;
+const centerIdArray = [];
 let eventId = null;
-let userId = null;
-const request = supertest(app);
 
 describe('api', () => {
   it('returns HTTP response', (done) => {
@@ -476,6 +476,7 @@ describe('api', () => {
         expect(res.body.status).to.equal(true);
         expect(res.body).to.have.property('center');
         expect(res.body).to.have.property('center').to.have.property('centerStatus').to.equal('available');
+        centerIdArray.push(res.body.center.id);
         done();
       });
     });
@@ -488,6 +489,7 @@ describe('api', () => {
         expect(res.body.status).to.equal(true);
         expect(res.body).to.have.property('center');
         expect(res.body).to.have.property('center').to.have.property('centerStatus').to.equal('available');
+        centerIdArray.push(res.body.center.id);
         done();
       });
     });
@@ -500,6 +502,7 @@ describe('api', () => {
         expect(res.body.status).to.equal(true);
         expect(res.body).to.have.property('center');
         expect(res.body).to.have.property('center').to.have.property('centerStatus').to.equal('unavailable');
+        centerIdArray.push(res.body.center.id);
         done();
       });
     });
@@ -512,16 +515,18 @@ describe('api', () => {
         expect(res.body.status).to.equal(true);
         expect(res.body).to.have.property('center');
         expect(res.body).to.have.property('center').to.have.property('centerAmenities').to.equal(null);
-        centerId = res.body.center.id;
+        centerIdArray.push(res.body.center.id);
         done();
       });
     });
 
-    it('checks for created center in database', () => {
-      return Center.findById(centerId).then((center) => {
-        expect(center).to.not.equal(null);
+    for (let id in centerIdArray) {
+      it('checks for created center in database', () => {
+        return Center.findById(id).then((center) => {
+          expect(center).to.not.equal(null);
+        });
       });
-    });
+    }
   });
 
   describe('modify center api', () => {
@@ -581,6 +586,7 @@ describe('api', () => {
 
     it('updates center name', (done) => {
       data.centerName = 'New Ventura';
+      centerId = centerIdArray[centerIdArray.length - 1];
       request.put(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body.message).to.equal('center updated');
@@ -718,6 +724,156 @@ describe('api', () => {
         expect(res.body.message).to.equal('invalid input, center name should not be more than 50 characters');
         expect(res.body.status).to.equal(false);
         expect(res.body).to.not.have.property('center');
+        done();
+      });
+    });
+  });
+
+  describe('get center', () => {
+    before(() => {
+      data = {};
+    });
+
+    it('rejects invalid param', (done) => {
+      request.get('/api/v1/centers/aa').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid centerId param');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('center does not exist', (done) => {
+      request.get(`/api/v1/centers/${1000000}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(404);
+        expect(res.body.message).to.equal('center does not exist');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center', (done) => {
+      centerId = centerIdArray[centerIdArray.length - 1];
+      request.get(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('center found');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center');
+        done();
+      });
+    });
+  });
+
+  describe('delete center', () => {
+    before(() => {
+      centerId = centerIdArray[centerIdArray.length - 1];
+    });
+
+    after(() => {
+      centerId = centerIdArray[centerIdArray.length - 1];
+    });
+
+    beforeEach(() => {
+      data = {
+        token: adminUserToken,
+      };
+    });
+
+    it('denies \'not signed in\' user access', (done) => {
+      data.token = null;
+      request.delete('/api/v1/centers/aa').send(data).end((err, res) => {
+        expect(res.status).to.equal(401);
+        expect(res.body.message).to.equal('You only have access, if you\'re logged in');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('denies user with invalid token', (done) => {
+      data.token = 'iiuohaog78981whenjns.jhvztuvsbuA7389gbhwdiuBe3';
+      request.delete('/api/v1/centers/aa').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('pls, login');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('rejects regular user', (done) => {
+      data.token = regularUserToken;
+      request.delete('/api/v1/centers/aa').send(data).end((err, res) => {
+        expect(res.status).to.equal(403);
+        expect(res.body.message).to.equal('access denied');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('rejects invalid param', (done) => {
+      request.delete('/api/v1/centers/aa').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid centerId param');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('center does not exist', (done) => {
+      request.delete(`/api/v1/centers/${1000000}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(404);
+        expect(res.body.message).to.equal('center does not exist');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('deletes center', (done) => {
+      centerId = centerIdArray[centerIdArray.length - 1];
+      request.delete(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('center deleted');
+        expect(res.body.status).to.equal(true);
+        done();
+      });
+    });
+
+    it('checks if center is deleted', () => {
+      return Center.findById(centerId).then((center) => {
+        expect(center).to.equal(null);
+      });
+    });
+  });
+
+  describe('get all centers', () => {
+    before(() => {
+      data = {};
+    });
+
+    it('rejects invalid param', (done) => {
+      request.get('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid centerId param');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('center does not exist', (done) => {
+      request.get('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(404);
+        expect(res.body.message).to.equal('center does not exist');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns center', (done) => {
+      centerId = centerIdArray[centerIdArray.length - 1];
+      request.get('/api/v1/centers/').send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('center found');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center');
         done();
       });
     });

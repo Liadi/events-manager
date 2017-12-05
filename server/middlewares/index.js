@@ -15,7 +15,7 @@ module.exports = {
       req.userEmail = (req.body.userEmail && req.body.userEmail.trim().toLowerCase()) || null;
       req.userPassword = (req.body.userPassword && req.body.userPassword.trim()) || null;
       req.userPhoneNumber = (req.body.userPhone && req.body.userPhone.trim()) || null;
-      req.userType = (req.body.userType && req.body.userType.trim().toLowerCase()) || 'regular';
+      req.userType = null;
 
       // event fields
       req.eventName = (req.body.eventName && req.body.eventName.trim()) || null;
@@ -109,4 +109,23 @@ module.exports = {
     next();
   },
 
+  determineUser(req, res, next) {
+    // find token
+    req.token = req.headers.token || req.body.token;
+    if (req.token) {
+      let verifiedJWT;
+      try {
+        verifiedJWT = jwt.verify(req.token, secret);
+      } catch (err) {
+        req.userType = null;
+      }
+      if (verifiedJWT) {
+        req.userType = verifiedJWT.userType;
+      }
+    }
+    else{
+      req.userType = null;
+    }
+    next();
+  },
 };
