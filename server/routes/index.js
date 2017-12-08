@@ -17,7 +17,7 @@ module.exports = (app) => {
   app.post('/api/v1/users/signup/', cleanData, validateUserFields, createUser);
   app.post('/api/v1/users/signin/', cleanData, signIn);
   // add admin
-  app.post('/api/v1/users/', cleanData, validateToken, isAdmin, validateUserFields, createUser); 
+  app.post('/api/v1/users/admin', cleanData, validateToken, isAdmin, validateUserFields, createUser); 
 
   // centers route
   app.post('/api/v1/centers/', cleanData, validateToken, isAdmin, createCenter);

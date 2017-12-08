@@ -197,6 +197,28 @@ describe('api', () => {
     });
   });
 
+  describe('create (add) admin', () => {
+    beforeEach(() => {
+      data = {
+        userFirstName: 'tola',
+        userLastName: 'liadi',
+        userEmail: 'liadi.rilwan@yahoo.com',
+        userPassword: '###StupidCatJerrySaid',
+        userPhoneNumber: '08181546011',
+      };
+    });
+
+    it('creates admin', (done) => {
+      data.token = adminUserToken;
+      request.post('/api/v1/users/admin').send(data).end((err, res) => {
+        expect(res.status).to.equal(201);
+        expect(res.body.message).to.equal('user created');
+        expect(res.body.status).to.equal(true);
+        done();
+      });
+    });
+  });
+
   describe('create center api', () => {
     beforeEach(() => {
       data = {
@@ -1076,29 +1098,35 @@ describe('api', () => {
       });
     });
 
-    it('creates event', (done) => {
-      let tempTime = new Date (year, month - 1, (date + 4)); 
-      data.eventTime = `${tempTime.getFullYear()}-${tempTime.getMonth() + 1}-${tempTime.getDate()}`;
-      request.post('/api/v1/events').send(data).end((err, res) => {
-        expect(res.status).to.equal(201);
-        expect(res.body.message).to.equal('event created');
-        expect(res.body.status).to.equal(true);
-        expect(res.body).to.have.property('event').to.have.property('id');
-        eventIdArray.push(res.body.event.id);
-        done();
+    // creates 2 events
+    for (let i = 0; i < 2; i = i + 1) {
+      it('creates event', (done) => {
+        let tempTime = new Date (year, month - 1, (date + 4 + i)); 
+        data.eventTime = `${tempTime.getFullYear()}-${tempTime.getMonth() + 1}-${tempTime.getDate()}`;
+        request.post('/api/v1/events').send(data).end((err, res) => {
+          expect(res.status).to.equal(201);
+          expect(res.body.message).to.equal('event created');
+          expect(res.body.status).to.equal(true);
+          expect(res.body).to.have.property('event').to.have.property('id');
+          eventIdArray.push(res.body.event.id);
+          done();
+        });
       });
-    });
+    }
 
-    it('checks for created event in database', () => {
-      return Event.findOne({
-        where: { id: eventIdArray[eventIdArray.length - 1] },
-        attributes: [ 'eventName' ],
-      }).then((event) => {
-        expect(event).to.not.equal(null);
+    // check for (2) events created
+    for (let i = 0; i < eventIdArray.length; i = i + 1) {
+      it('checks for created event in database', () => {
+        return Event.findOne({
+          where: { id: eventIdArray[i] },
+          attributes: [ 'eventName' ],
+        }).then((event) => {
+          expect(event).to.not.equal(null);
+        });
       });
-    });
+    }
 
-    it('rejects event with taken time', () => {
+    it('rejects event with taken time', (done) => {
       let tempTime = new Date (year, month - 1, (date + 4)); 
       data.eventTime = `${tempTime.getFullYear()}-${tempTime.getMonth() + 1}-${tempTime.getDate()}`;
       request.post('/api/v1/events').send(data).end((err, res) => {
@@ -1106,6 +1134,80 @@ describe('api', () => {
         expect(res.body.message).to.equal('date taken');
         expect(res.body.status).to.equal(false);
         expect(res.body).to.have.not.property('event');
+        done();
+      });
+    });
+  });
+
+  describe('modify event', () => {
+    beforeEach(() => {
+      eventId = eventIdArray[eventIdArray.length - 1];
+      data = {
+        token: regularUserToken,
+      };
+    });
+
+    it('modifies event', (done) => {
+      data.eventName = 'Mothers birthday';
+      request.put(`/api/v1/events/${eventId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('event updated');
+        expect(res.body.status).to.equal(true);
+        done();
+      });
+    });
+  });
+
+  describe('get event', () => {
+    beforeEach(() => {
+      eventId = eventIdArray[eventIdArray.length - 1];
+      data = {
+        token: regularUserToken,
+      };
+    });
+
+    it('returns event', (done) => {
+      request.get(`/api/v1/events/${eventId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('event found');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('event');
+        done();
+      });
+    });
+  });
+
+  describe('get all events', () => {
+    beforeEach(() => {
+      data = {
+        token: adminUserToken,
+      };
+    });
+
+    it('returns events', (done) => {
+      request.get('/api/v1/events').send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('all events found');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('events');
+        done();
+      });
+    });
+  });
+
+  describe('delete event', () => {
+    beforeEach(() => {
+      eventId = eventIdArray[eventIdArray.length - 1];
+      data = {
+        token: regularUserToken,
+      };
+    });
+
+    it('deletes event', (done) => {
+      request.delete(`/api/v1/events/${eventId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('event deleted');
+        expect(res.body.status).to.equal(true);
         done();
       });
     });

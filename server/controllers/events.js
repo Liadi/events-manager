@@ -6,7 +6,6 @@ const Center = require('./../models').Center;
 
 module.exports = {
   createEvent(req, res) {
-    console.log("centerId", req.centerId);
     Center.findOne({
       where:{id: req.centerId},
       include:[{
@@ -22,15 +21,15 @@ module.exports = {
         });
       }
       // check for time clash with another event
-      center.events.forEach((event) => {
-        if (event.eventTime === req.eventTime) {
+      for (let i in center.events) {
+        if (center.events[i].eventTime.getTime() === req.eventTime.getTime()) {
           return res.status(404).json({
             message: 'date taken',
             status: false,
           });
         }
-      });
-
+      }
+      console.log('creating event');
       Event.create({
         eventName: req.eventName,
         eventTime: req.eventTime,
@@ -53,14 +52,16 @@ module.exports = {
   },
 
   modifyEvent(req, res) {
+    console.log('0');
     if (!req.eventId){
       return res.status(400).json({
         message: 'invalid eventId param',
         status: false,
       });
     }
+    console.log('1');
     Event.findOne({
-      where: {id: req.centerId, userId: req.userId},
+      where: {id: req.eventId, userId: req.userId},
       include: [{
         model: Center,
         as: 'center',
@@ -70,25 +71,38 @@ module.exports = {
         'centerAddress',
         ],
       }],
+      attributes: [
+      'id',
+      'eventName',
+      'eventStatus',
+      'eventTime',
+      'eventAmountPaid',
+      'centerId',
+      'userId',
+      ],
     }).then((event) => {
+      console.log('2');
       if (!event) {
         return res.status(404).json({
           message: 'event does not exist',
           status: false,
         });
       }
+      console.log('3');
       event.update({
         eventName: req.eventName || event.eventName,
         eventAmountPaid: req.eventAmountPaid || event.eventAmountPaid,
         eventTime: req.eventTime || event.eventTime,
         centerId: req.centerId || event.centerId,
       }).then((event) => {
+        console.log('4');
         return res.status(200).json({
           message: 'event updated',
           event,
           status: true,
         });
       }).catch((error) => {
+        console.log('5');
         const err = error.errors[0].message;
         return res.status(400).json({
           message: err,
@@ -116,6 +130,15 @@ module.exports = {
         'centerAddress',
         ],
       }],
+      attributes: [
+      'id',
+      'eventName',
+      'eventStatus',
+      'eventTime',
+      'eventAmountPaid',
+      'centerId',
+      'userId',
+      ],
     }).then((event) => {
       if (!event) {
         return res.status(404).json({
@@ -146,7 +169,16 @@ module.exports = {
       });
     }
     Event.findOne({
-      where: {id: req.centerId, userId: req.userId},
+      where: {id: req.eventId, userId: req.userId},
+      attributes: [
+      'id',
+      'eventName',
+      'eventStatus',
+      'eventTime',
+      'eventAmountPaid',
+      'centerId',
+      'userId',
+      ],
     }).then((event) => {
       if (!event) {
         return res.status(404).json({
@@ -174,6 +206,15 @@ module.exports = {
             'centerAddress',
           ],
         }],
+        attributes: [
+        'id',
+        'eventName',
+        'eventStatus',
+        'eventTime',
+        'eventAmountPaid',
+        'centerId',
+        'userId',
+        ],
       }).then((events) => {
         if (events.length > 0){
           return res.status(200).json({
@@ -199,6 +240,15 @@ module.exports = {
             'centerAddress',
           ],
         }],
+        attributes: [
+        'id',
+        'eventName',
+        'eventStatus',
+        'eventTime',
+        'eventAmountPaid',
+        'centerId',
+        'userId',
+        ],
       }).then((events) => {
         if (events.length > 0){
           return res.status(200).json({

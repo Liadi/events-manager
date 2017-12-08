@@ -54,11 +54,13 @@ module.exports = (sequelize, DataTypes) => {
 
   Event.associate = (models) => {
     Event.belongsTo(models.User, {
+      as: 'user',
       foreignKey: 'userId',
       onDelete: 'CASCADE',
     });
 
     Event.belongsTo(models.Center, {
+      as: 'center',
       foreignKey: 'centerId',
       onDelete: 'CASCADE',
     });
