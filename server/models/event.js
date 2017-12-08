@@ -6,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         len: {
-          args: [30],
-          msg: 'invalid input, event name should have at most 30 characters',
+          args: [0, 120],
+          msg: 'invalid input, event name should have at most 120 characters',
         },
       },
     },
@@ -26,26 +26,30 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'invalid input, amount paid for event should be positive integers between 0 and 100 (percentage)',
         },
         min: {
-          args: 0,
-          msg: 'invalid input, percentage value only [0 - 100]',
+          args: [0],
+          msg: 'invalid input, amount paid should be percentage value only [0 - 100]',
         },
         max: {
-          args: 100,
-          msg: 'invalid input, percentage value only [0 - 100]',
+          args: [100],
+          msg: 'invalid input, amount paid should be percentage value only [0 - 100]',
         },
       },
     },
 
-    eventStartTime: {
-      type: DataTypes.STRING,
+    eventTime: {
+      type: DataTypes.DATE,
       allowNull: false,
     },
 
-    eventEndTime: {
-      type: DataTypes.STRING,
+    centerId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
 
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   });
 
   Event.associate = (models) => {

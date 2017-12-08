@@ -3,15 +3,11 @@ import supertest from 'supertest';
 import app from './../index';
 import db from './../server/models';
 
-const { Center, User } = db;
+const { Center, User, Event } = db;
 const request = supertest(app);
 
-let data = {};
-let regularUserToken = null;
-let adminUserToken = null;
-let centerId = null;
-const centerIdArray = [];
-let eventId = null;
+let [regularUserToken, adminUserToken, centerId, eventId, data] = [null, null, null, null, {}];
+const [eventIdArray, centerIdArray] = [[], []];
 
 describe('api', () => {
   it('returns HTTP response', (done) => {
@@ -520,13 +516,13 @@ describe('api', () => {
       });
     });
 
-    for (let id in centerIdArray) {
+    centerIdArray.forEach((id) => {
       it('checks for created center in database', () => {
         return Center.findById(id).then((center) => {
           expect(center).to.not.equal(null);
         });
       });
-    }
+    });
   });
 
   describe('modify center api', () => {
@@ -744,7 +740,7 @@ describe('api', () => {
     });
 
     it('center does not exist', (done) => {
-      request.get(`/api/v1/centers/${1000000}`).send(data).end((err, res) => {
+      request.get('/api/v1/centers/1000000').send(data).end((err, res) => {
         expect(res.status).to.equal(404);
         expect(res.body.message).to.equal('center does not exist');
         expect(res.body.status).to.equal(false);
@@ -758,7 +754,19 @@ describe('api', () => {
         expect(res.status).to.equal(200);
         expect(res.body.message).to.equal('center found');
         expect(res.body.status).to.equal(true);
-        expect(res.body).to.have.property('center');
+        expect(res.body).to.have.property('center').to.not.have.property('events');
+        done();
+      });
+    });
+
+    it('returns center with slated events for user', (done) => {
+      data.token = regularUserToken;
+      centerId = centerIdArray[centerIdArray.length - 1];
+      request.get(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('center found');
+        expect(res.body.status).to.equal(true);
+        expect(res.body).to.have.property('center').to.have.property('events');
         done();
       });
     });
@@ -770,6 +778,7 @@ describe('api', () => {
     });
 
     after(() => {
+      centerIdArray.pop();
       centerId = centerIdArray[centerIdArray.length - 1];
     });
 
@@ -845,21 +854,197 @@ describe('api', () => {
   });
 
   describe('get all centers', () => {
-    before(() => {
-      data = {};
+    beforeEach(() => {
+      data = {
+        token: regularUserToken,
+      };
     });
 
-    it('rejects invalid param', (done) => {
+    it('rejects null token', (done) => {
+      data.token = null;
       request.get('/api/v1/centers').send(data).end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('invalid centerId param');
+        expect(res.status).to.equal(401);
+        expect(res.body.message).to.equal('You only have access, if you\'re logged in');
         expect(res.body.status).to.equal(false);
         done();
       });
     });
 
-    it('center does not exist', (done) => {
+    it('rejects invalid token', (done) => {
+      data.token = 'invalidTokenwomp2ps1jnno2.wioj2oiiunj0I9hbjJNJnbn2iubbK0';
       request.get('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('pls, login');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('returns centers', (done) => {
+      request.get('/api/v1/centers').send(data).end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('all centers found');
+        expect(res.body.status).to.equal(true);
+        done();
+      });
+    });
+  });
+
+  describe('create event', () => {
+    const today = new Date();
+    const [year, month, date] = [today.getFullYear(), today.getMonth() + 1, today.getDate()];
+    let [tempYear, tempMonth, tempDate] = [year, month, date];
+
+    beforeEach(() => {
+      data = {
+        token: regularUserToken,
+        centerId: centerIdArray[centerIdArray.length - 1].toString(),
+        eventName: 'My birthday party',
+      };
+    });
+
+    it('rejects null token', (done) => {
+      data.token = null;
+      request.post('/api/v1/events').send(data).end((err, res) => {
+        expect(res.status).to.equal(401);
+        expect(res.body.message).to.equal('You only have access, if you\'re logged in');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('rejects invalid token', (done) => {
+      data.token = 'invalidTokenwomp2ps1jnno2.wioj2oiiunj0I9hbjJNJnbn2iubbK0';
+      request.post('/api/v1/events').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('pls, login');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('rejects null eventTime', (done) => {
+      data.eventTime = null;
+      request.post('/api/v1/events').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid eventTime. eventTime should not be null');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('rejects invalid eventTime', (done) => {
+      data.eventTime = 'Wed 2, Jan 2017';
+      request.post('/api/v1/events').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid eventTime. Year, month and date should be numbers. Date format: yyyy-mm-dd (2050-06-30)');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('rejects invalid eventTime (zero)', (done) => {
+      data.eventTime = `${year}-0-${date}`;
+      request.post('/api/v1/events').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid eventTime. Year, month and date should be numbers. Date format: yyyy-mm-dd (2050-06-30). Zero (0) is not a valid input');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('rejects invalid eventTime (month exceeds 12)', (done) => {
+      data.eventTime = `${year}-13-${date}`;
+      request.post('/api/v1/events').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid eventTime month');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('rejects leap year with more than 29 days in feb', (done) => {
+      data.eventTime = '2020-02-30';
+      request.post('/api/v1/events').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal(`invalid eventTime. For leap year 2020, february should not exceed 29 days`);
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('rejects year (not leap year) with more than 28 days in feb', (done) => {
+      data.eventTime = '2017-02-29';
+      request.post('/api/v1/events').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal(`invalid eventTime. For year ${year}, february should not exceed 28 days`);
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    // Sept, Apr, Jun, Nov
+    [4, 6, 9, 11].forEach ((monthInstance) => {
+      it(`rejects ${monthInstance}th month with more than 30 days`, (done) => {
+        data.eventTime = `${year}-${monthInstance}-31`;
+        request.post('/api/v1/events').send(data).end((err, res) => {
+          expect(res.status).to.equal(400);
+          expect(res.body.message).to.equal(`invalid eventTime. For month ${monthInstance}, date should not exceed 30 days`);
+          expect(res.body.status).to.equal(false);
+          done();
+        });
+      });
+    });
+
+    // Jan, Mar, May, Jul, Aug, Oct, Dec
+    [1, 3, 5, 7, 8, 10, 12].forEach ((tempMonth) =>  {
+      it(`rejects ${tempMonth}th month with more than 31 days`, (done) => {
+        data.eventTime = `${year}-${tempMonth}-32`;
+        request.post('/api/v1/events').send(data).end((err, res) => {
+          expect(res.status).to.equal(400);
+          expect(res.body.message).to.equal(`invalid eventTime. For month ${tempMonth}, date should not exceed 31 days`);
+          expect(res.body.status).to.equal(false);
+          done();
+        });
+      });
+    });
+
+    it('rejects too far in future (2 years or more)', (done) => {
+      data.eventTime = `${year + 3}-${month}-${date}`;
+      request.post('/api/v1/events').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('cannot book an event 2 years before eventTime');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('rejects eventTime in past', (done) => {
+      data.eventTime = `${year - 1}-${month}-${date}`;
+      request.post('/api/v1/events').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid eventTime. Time in the past');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('rejects eventTime in 3 days or less', (done) => {
+      let tempTime = new Date (year, month - 1, (date + 2)); 
+      data.eventTime = `${tempTime.getFullYear()}-${tempTime.getMonth() + 1}-${tempTime.getDate()}`;
+      request.post('/api/v1/events').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid eventTime. Event cannot be scheduled in 3 days or less');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('rejects center not found', (done) => {
+      let tempTime = new Date (year, month - 1, (date + 4)); 
+      data.eventTime = `${tempTime.getFullYear()}-${tempTime.getMonth() + 1}-${tempTime.getDate()}`;
+      data.centerId = (centerIdArray[centerIdArray.length - 1] + 3).toString();
+      request.post('/api/v1/events').send(data).end((err, res) => {
         expect(res.status).to.equal(404);
         expect(res.body.message).to.equal('center does not exist');
         expect(res.body.status).to.equal(false);
@@ -867,13 +1052,60 @@ describe('api', () => {
       });
     });
 
-    it('returns center', (done) => {
-      centerId = centerIdArray[centerIdArray.length - 1];
-      request.get('/api/v1/centers/').send(data).end((err, res) => {
-        expect(res.status).to.equal(200);
-        expect(res.body.message).to.equal('center found');
+    it('rejects null eventName', (done) => {
+      let tempTime = new Date (year, month - 1, (date + 4)); 
+      data.eventTime = `${tempTime.getFullYear()}-${tempTime.getMonth() + 1}-${tempTime.getDate()}`;
+      data.eventName = null;
+      request.post('/api/v1/events').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('Event.eventName cannot be null');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('rejects too long eventName', (done) => {
+      let tempTime = new Date (year, month - 1, (date + 4)); 
+      data.eventTime = `${tempTime.getFullYear()}-${tempTime.getMonth() + 1}-${tempTime.getDate()}`;
+      data.eventName = 'My birthday partyMy birthday partyMy birthday partyMy birthday partyMy birthday partyMy birthday partyMy birthday partyMy birthday party';
+      request.post('/api/v1/events').send(data).end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('invalid input, event name should have at most 120 characters');
+        expect(res.body.status).to.equal(false);
+        done();
+      });
+    });
+
+    it('creates event', (done) => {
+      let tempTime = new Date (year, month - 1, (date + 4)); 
+      data.eventTime = `${tempTime.getFullYear()}-${tempTime.getMonth() + 1}-${tempTime.getDate()}`;
+      request.post('/api/v1/events').send(data).end((err, res) => {
+        expect(res.status).to.equal(201);
+        expect(res.body.message).to.equal('event created');
         expect(res.body.status).to.equal(true);
-        expect(res.body).to.have.property('center');
+        expect(res.body).to.have.property('event').to.have.property('id');
+        eventIdArray.push(res.body.event.id);
+        done();
+      });
+    });
+
+    it('checks for created event in database', () => {
+      return Event.findOne({
+        where: { id: eventIdArray[eventIdArray.length - 1] },
+        attributes: [ 'eventName' ],
+      }).then((event) => {
+        expect(event).to.not.equal(null);
+      });
+    });
+
+    it('rejects event with taken time', () => {
+      let tempTime = new Date (year, month - 1, (date + 4)); 
+      data.eventTime = `${tempTime.getFullYear()}-${tempTime.getMonth() + 1}-${tempTime.getDate()}`;
+      request.post('/api/v1/events').send(data).end((err, res) => {
+        expect(res.status).to.equal(404);
+        expect(res.body.message).to.equal('date taken');
+        expect(res.body.status).to.equal(false);
+        expect(res.body).to.have.not.property('event');
         done();
       });
     });

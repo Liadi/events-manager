@@ -12,6 +12,10 @@ module.exports = {
   createUser(req, res) {
     req.userPassword = bcryptjs.hashSync(req.userPassword, 8);
 
+    if (req.userType && (req.userType === 'admin')) {
+      req.newUserType = 'admin';
+    }
+
     User.findOne({
       where: { userEmail: req.userEmail.toLowerCase() },
     }).then((user) => {
@@ -27,7 +31,7 @@ module.exports = {
         userEmail: req.userEmail,
         userPassword: req.userPassword,
         userPhonNumber: req.userPhone,
-        userType: req.userType,
+        userType: req.newUserType || 'regular',
       }).then(() => {
         return res.status(201).json({
           message: 'user created',

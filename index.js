@@ -12,6 +12,4 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 require('./server/routes')(app);
 
-// const port = parseInt(process.env.PORT, 10) || 3000;
-
 module.exports = app;

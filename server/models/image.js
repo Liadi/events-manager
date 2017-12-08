@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       validate: {
         len: {
-          args: [0, 30],
+          args: [0, 50],
           msg: 'invalid input, image description should not be more than 30 characters',
         },
       },
@@ -34,7 +34,10 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
     },
-
+    centerId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   });
 
   Image.associate = (models) => {

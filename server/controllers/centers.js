@@ -1,6 +1,6 @@
 import db from './../models';
 
-const { Center } = db;
+const { Center, Event, Image } = db;
 
 module.exports = {
   createCenter(req, res) {
@@ -80,7 +80,14 @@ module.exports = {
         status: false,
       });
     }
-    Center.findById(req.centerId).then((center) => {
+    Center.findOne({
+      where: {id: req.centerId},
+      include: [{
+        model: Event,
+        as: 'events',
+        attributes: ['eventTime'],
+      }],
+    }).then((center) => {
       if (!center) {
         return res.status(404).json({
           message: 'center does not exist',
@@ -88,28 +95,9 @@ module.exports = {
         });
       }
       if (req.userType){
-        const slatedEvents = [];
-        for (let event in center.events){
-          slatedEvents.push([event.eventStartTime, eventEndTime]);
-        }
         return res.status(200).json({
           message: 'center found',
-          center: {
-            centerId: center.id, 
-            centerName: center.centerName,
-            centerAddress: center.centerAddress,
-            centerCountry: center.centerCountry,
-            centerState: center.centerState,
-            centerCity: center.centerCountry,
-            centerDescription: center.centerDescription,
-            centerMantra: center.centerMantra,
-            centerCapacity: center.centerCapacity,
-            centerRate: center.centerRate,
-            centerStatus: center.centerStatus,
-            centerAmenities: center.centerAmenities,
-            centerImages: center.images,
-            centerEvents: slatedEvents,
-          },
+          center,
           status: true,
         });
       }
@@ -123,9 +111,14 @@ module.exports = {
           centerCity: center.centerCity,
           centerCapacity: center.centerCapacity,
           centerDescription: center.centerDescription,
-          centerImages: center.images,
         },
         status: true,
+      });
+    }).catch((error) => {
+      const err = error.errors[0].message;
+      return res.status(400).json({
+        message: err,
+        status: false,
       });
     });
   },
@@ -153,9 +146,7 @@ module.exports = {
   },
 
   getAllCenters(req, res){
-    Center.findAll({
-      attributes: { exclude: ['events'] }
-    }).then((centers) => {
+    Center.findAll().then((centers) => {
       if (centers.length > 0){
         return res.status(200).json({
           message: 'all centers found',

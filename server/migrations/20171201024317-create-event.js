@@ -22,16 +22,10 @@ module.exports = {
       defaultValue: 0,
     },
 
-    eventStartTime: {
-      type: Sequelize.STRING,
+    eventTime: {
+      type: Sequelize.DATE,
       allowNull: false,
     },
-
-    eventEndTime: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-
 
     createdAt: {
       allowNull: false,
@@ -45,6 +39,7 @@ module.exports = {
 
     centerId: {
       type: Sequelize.INTEGER,
+      allowNull: false,
       onDelete: 'CASCADE',
       references: {
         model: 'Centers',
@@ -53,13 +48,14 @@ module.exports = {
       },
     },
 
-    eventId: {
+    userId: {
       type: Sequelize.INTEGER,
+      allowNull: false,
       onDelete: 'CASCADE',
       references: {
-        model: 'Events',
+        model: 'Users',
         key: 'id',
-        as: 'eventId',
+        as: 'userId',
       },
     },
 
