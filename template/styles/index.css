@@ -34,27 +34,3 @@ button {
 footer {
     border-top: 5px solid lightgray;
 }
-/* @media screen and (min-width: 480px) {
-    .topDescrip{
-        font-size: 40px;
-    }
-}
-
-@media screen and (min-width: 720px) {
-    .topDescrip{
-        font-size: 50px;
-    }
-}
-
-@media screen and (min-width: 800px) {
-    .topDescrip{
-        font-size: 60px;
-    }
-}
-
-
-@media screen and (min-width: 1020px) {
-    .topDescrip{
-        font-size: 80px;
-    }
-} */
