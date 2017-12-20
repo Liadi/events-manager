@@ -1,16 +1,23 @@
-const User = require('../models').User;
 import bcryptjs from 'bcryptjs';
-import jwt from  'jsonwebtoken';
+import jwt from 'jsonwebtoken';
+import db from './../models';
 
-process.env.SECRET_KEY = 'mysecretkey'; 
-const secret = process.env.SECRET_KEY; 
+const { User } = db;
 
+
+process.env.SECRET_KEY = 'mysecretkey';
+const secret = process.env.SECRET_KEY;
 
 module.exports = {
   createUser(req, res) {
-    req.userPassword = bcryptjs.hashSync(req.userPassword, 10);
+    req.userPassword = bcryptjs.hashSync(req.userPassword, 8);
+
+    if (req.userType && (req.userType === 'admin')) {
+      req.newUserType = 'admin';
+    }
+
     User.findOne({
-      where: { userEmail: req.userEmail.toLowerCase() }
+      where: { userEmail: req.userEmail.toLowerCase() },
     }).then((user) => {
       if (user) {
         return res.status(400).json({
@@ -19,26 +26,22 @@ module.exports = {
         });
       }
       User.create({
-        userFirstName: req.userFirstName.toLowerCase(),
-        userLastName: req.userLastName.toLowerCase(),
-        userEmail: req.userEmail.toLowerCase(),
+        userFirstName: req.userFirstName,
+        userLastName: req.userLastName,
+        userEmail: req.userEmail,
         userPassword: req.userPassword,
-        userPhone: req.userPhone,
-        userStatus: req.userStatus,
-      }).then((user) => {
+        userPhonNumber: req.userPhone,
+        userType: req.newUserType || 'regular',
+      }).then(() => {
         return res.status(201).json({
-          message: 'User created',
-          user: {
-            firstname: req.userFirstName,
-            lastname: req.userLastName,
-            email: req.userEmail,
-            phone: req.userPhone,
-            status: req.userStatus,
-          },
+          message: 'user created',
+          status: true,
         });
       }).catch((error) => {
+        const err = error.errors[0].message;
         return res.status(400).json({
-          message: 'pls fill in the fields appropriately',
+          message: err,
+          status: false,
         });
       });
     });
@@ -47,7 +50,7 @@ module.exports = {
   signIn(req, res) {
     if (req.userEmail === null) {
       return res.status(400).send({
-        message: 'email field is required',
+        message: 'email is required',
         status: false,
       });
     }
@@ -57,40 +60,47 @@ module.exports = {
         status: false,
       });
     }
-    req.userPassword = bcryptjs.hashSync(req.userPassword, 10);
-    User
-    .findOne({ 
-      where: {userEmail: req.userEmail},
-    }) 
-    .then((user) =>{ 
-      if (user && bcryptjs.compare(req.userPassword, user.userPassword)){ 
-        const userId = user.id; 
-        const token = jwt.sign({userId}, secret, {expiresIn: '60m'});
-        return res.status(200).send({
-          feed: { 
-            'userFirstName': user.userFirstName, 
-            'id':user.id, 
-            'userLastName': user.userLastName, 
-            'userEmail':user.userEmail, 
-            'userStatus': user.userStatus 
-          },
-          token: token, 
-          message: 'Successfully signed in',
-          status: true, 
-        }); 
-      } 
-      return res.status(400).send({ 
-        message: "Authentication failed: Wrong email or password", 
-        status: false, 
+    // req.userPassword = bcryptjs.hashSync(req.userPassword, 8);
+
+    User.findOne({
+      where: { userEmail: req.userEmail },
+    }).then((user) => {
+      if (user) {
+        bcryptjs.compare(req.userPassword, user.userPassword).then((same) => {
+          if (same) {
+            const userId = user.id;
+            const userType = user.userType;
+            const token = jwt.sign({ userId, userType }, secret, { expiresIn: '60m' });
+            return res.status(200).send({
+              user: {
+                userFirstName: user.userFirstName,
+                userLastName: user.userLastName,
+                userEmail: user.userEmail,
+                userType: user.userType,
+                userPhoneNumber: user.userPhoneNumber,
+              },
+              token,
+              message: 'successfully signed in',
+              status: true,
+            });
+          }
+          return res.status(401).send({
+            message: 'authentication failed: wrong email or password',
+            status: false,
+          });
+        });
+      } else {
+        return res.status(401).send({
+          message: 'authentication failed: wrong email or password',
+          status: false,
+        });
+      }
+    }).catch((error) => {
+      const err = error.errors[0].message;
+      return res.status(400).send({
+        message: err,
+        status: false,
       });
-    }) 
-    .catch(error => {
-      const err = error.errors[0].message; 
-      return res.status(400).send({ 
-        message: err + " Pls fill in the field appropritely", 
-        status: false 
-      }) 
-    }); 
-      
+    });
   },
-}
+};

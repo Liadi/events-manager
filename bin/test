@@ -1,2 +1,10 @@
 require('babel-register');
-require('../test/test.js');
+
+const http = require('http');
+const app = require('../test/test');
+
+const port = parseInt(process.env.PORT, 10) || 8000;
+app.set('port', port);
+
+const server = http.createServer(app);
+server.listen(port, () => console.log('Test suite'));

@@ -1,5 +1,5 @@
-const centers = require('./centers');
+import * as centerControllers from './centers';
+import * as eventControllers from './events';
+import * as userControllers from './users';
 
-module.exports = {
-  centers,
-};
+module.exports = { centerControllers, eventControllers, userControllers };
