@@ -2,7 +2,6 @@
 <html lang="en">
     <head>
         <title>Centers</title>
-
     
         <!-- Required meta tags -->
         <meta charset="utf-8">
@@ -20,93 +19,90 @@
 
     </head>
     <body>
-            <nav class="navbar navbar-expand-lg navbar-light bg-light p-big" >
-                    <a class="navbar-brand" href="./dashboard.html" style="color:orange">EM</a>
-                      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                      </button>
-                      <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                        <ul class="navbar-nav">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light p-big" >
+            <a class="navbar-brand" href="./dashboard.html">EM</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav">  
+                    <li class="nav-item">
+                        <a class="nav-link" href="./centers.html">Centers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./add-center.html">Add Center</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-user fa-1x mx-auto" aria-hidden="true"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="./events.html">My Events</a>
+                            <a class="dropdown-item" href="./add-event.html">Create Event</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="./index.html">Log out</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
               
-                          <li class="nav-item" style="margin-left:20px;">
-                            <a class="nav-link" href="./centers.html"style="color:orange">Centers</a>
-                          </li>
-                          <li class="nav-item" style="margin-left:20px;">
-                            <a class="nav-link" href="./add-center.html"style="color:orange">Add Center</a>
-                          </li>
-              
-                          <li class="nav-item dropdown" style="margin-left:20px;">
-                              <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-user fa-1x mx-auto" aria-hidden="true" style="color:orange"></i>
-                              </a>
-                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="./events.html" style="color:orange">My Events</a>
-                                <a class="dropdown-item" href="./add-event.html" style="color:orange">Create Event</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="./index.html" style="color:orange">Log out</a>
-                              </div>
-                            </li>
-                        </ul>
-                      </div>
-                    </nav>
-              
-        <main class="container" style="padding: 30px 0px;">
-            <h2 style="color:orange;">Event Centers</h2>
-            <form style="margin: 30px;">
-                <div class="form-row">
-                    <div class="col-7 input-group">
-                        <input type="text" class="form-control" placeholder="Search">
-                        <span class="input-group-addon" id="basic-addon1" style="padding: 0px;">
-                            <button type="submit" class="btn btn-primary" style="border-radius:0px; border-style:none; background-color:orange; color:white; border:orange;">
-                                <i class="fa fa-search" aria-hidden="true"></i>
-                            </button>        
-                        </span>
-                    </div>
-                    <button type="button" class="btn btn-link" onclick="toggleAdvancedSearch()" style="color:orange;">Advanced settings</button>            
+        <main class="container">
+            <h3>Event Centers</h3>
+            <form class="search-form">
+                <div class="row">
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm" id="search-widget" placeholder="Search for a center" >
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn">
+                                    <i class="fa fa-search fa-1x mx-autp" aria-hidden="true"></i>
+                                </button>
+                            </span>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-link search-toggle" onclick="toggleAdvancedSearch()">Advanced Search</button>
+                        </div>
+            
                 </div>
                 <div id= "advancedSearchFrame" hidden>
-                <div class="form-row mx-auto">
-                    
-                    <div class="form-group col-md-4">
-                        <label for="searchCountry" class="form-label-sm">Country</label>
-                        <input type="text" class="form-control form-control-sm" id="searchCountry" placeholder="Nigeria" disabled>
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <input type="text" class="form-control form-control-sm" id="searchCapacity" placeholder="Capacity">
+                        </div>
                     </div>
-                    <div class="form-group col-md-4">
-                        <label for="searchState" class="form-label-sm">State</label>
-                        <input type="text" class="form-control form-control-sm" id="searchState">
+                    <div class="form-row">    
+                        <div class="form-group col-md-2">
+                            <label for="searchCountry" class="form-label-sm">Country</label>
+                            <input type="text" class="form-control form-control-sm" id="searchCountry" placeholder="Nigeria" disabled>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="searchState" class="form-label-sm">State</label>
+                            <input type="text" class="form-control form-control-sm" id="searchState">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="searchCity" class="form-label-sm">City</label>
+                            <input type="text" class="form-control form-control-sm" id="searchCity">
+                        </div>
                     </div>
-                    <div class="form-group col-md-4">
-                        <label for="searchCity" class="form-label-sm">City</label>
-                        <input type="text" class="form-control form-control-sm" id="searchCity">
-                    </div>
-                </div>
-                <div class="row container">
-                    <div class="form-group card col-sm-6" style="padding: 5px;">
-                        <label for="searchPrice"><h6>Price Range</h6></label>
-                        <div class="form-row" id="searchPrice" style="padding-left:20px; padding-right:20px;">
-                            <div class="form-group col-6">
-                                <label for="searchPriceLower" class="form-label-sm">From</label>
-                                <input type="text" class="form-control form-control-sm" id="searchPriceLower" style="max-width: 100px;">
-                            </div>
-                            <div class="form-group col-6">
-                                <label for="searchPriceUpper" class="form-label-sm">To</label>
-                                <input type="text" class="form-control form-control-sm" id="searchPriceUpper" style="max-width: 100px;">
+                    <div class="row container div-price-range">
+                        <div class="form-group card col-md-4">
+                            <label for="searchPrice"><h6>Price Range</h6></label>
+                            <div class="form-row mx-auto" id="searchPrice">
+                                <div class="form-group col-sm-6">
+                                    <label for="searchPriceLower" class="form-label-sm">From</label>
+                                    <input type="text" class="form-control form-control-sm" id="searchPriceLower">
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="searchPriceUpper" class="form-label-sm">To</label>
+                                    <input type="text" class="form-control form-control-sm" id="searchPriceUpper">
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group col-sm-4">
-                        <label for="searchCapacity" class="form-label-sm">Capacity</label>
-                        <input type="text" class="form-control form-control-sm col-md-4" id="searchCapacity">
-                    </div>
+                    <button id="reset-btn" class="btn" type="reset">Reset</button>
                 </div>
-                
-                <button class="btn" type="reset">Reset</button>
-                </div>
-                
             </form>
-
-            
-
             <div class="container">
                     <div class="card mx-auto card-center" onclick="centerClicked()">
                             <div class="card-body">
@@ -116,13 +112,13 @@
                                 <p class="card-text">Description....</p>
                                 <div class="d-flex justify-content-end">
                                     <div class="d-flex flex-wrap justify-content-center grp">
-                                        <a onclick="event.stopPropagation()" href="./add-event.html" >
-                                            <button type="button" class="btn btn-primary grp-btn" style="background-color:orange; color:white; border:orange; margin-top:5px;">Add Event</button>
-                                        </a>
-                                        <a onclick="event.stopPropagation()" href="./add-center.html">
-                                            <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Edit</button>
-                                        </a>
-                                        <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Delete</button>
+                                            <a type="button" onclick="event.stopPropagation()" href="./add-event.html" class="btn btn-warning grp-btn">
+                                                Add Event
+                                            </a>
+                                            <a onclick="event.stopPropagation()" class="btn btn-primary grp-btn" href="./add-center.html">
+                                                Edit
+                                            </a>
+                                        <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()" ">Delete</button>
                                     </div>
                                 </div>
                             </div>
@@ -134,13 +130,17 @@
                         <p class="card-text">Description....</p>
                         <div class="d-flex justify-content-end">
                             <div class="d-flex flex-wrap justify-content-center grp">
-                                <a onclick="event.stopPropagation()" href="./add-event.html" >
-                                    <button type="button" class="btn btn-primary grp-btn" style="background-color:orange; color:white; border:orange; margin-top:5px;">Add Event</button>
-                                </a>
-                                <a onclick="event.stopPropagation()" href="./add-center.html">
-                                    <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Edit</button>
-                                </a>
-                                <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Delete</button>
+                                <button type="button" class="btn grp-btn">
+                                    <a onclick="event.stopPropagation()" href="./add-event.html">
+                                        Add Event
+                                    </a>
+                                </button>
+                                <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()">
+                                    <a onclick="event.stopPropagation()" href="./add-center.html">
+                                        Edit
+                                    </a>
+                                </button>
+                                <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()">Delete</button>
                             </div>
                         </div>
                     </div>
@@ -153,13 +153,17 @@
                             <p class="card-text">Description....</p>
                             <div class="d-flex justify-content-end">
                                 <div class="d-flex flex-wrap justify-content-center grp">
-                                    <a onclick="event.stopPropagation()" href="./add-event.html" >
-                                        <button type="button" class="btn btn-primary grp-btn" style="background-color:orange; color:white; border:orange; margin-top:5px;">Add Event</button>
-                                    </a>
-                                    <a onclick="event.stopPropagation()" href="./add-center.html">
-                                        <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Edit</button>
-                                    </a>
-                                    <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Delete</button>
+                                    <button type="button" class="btn grp-btn">
+                                        <a onclick="event.stopPropagation()" href="./add-event.html">
+                                            Add Event
+                                        </a>
+                                    </button>
+                                    <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()">
+                                        <a onclick="event.stopPropagation()" href="./add-center.html">
+                                            Edit
+                                        </a>
+                                    </button>
+                                    <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()">Delete</button>
                                 </div>
                             </div>
                         </div>
@@ -171,13 +175,18 @@
                                 <p class="card-text">Description....</p>
                                 <div class="d-flex justify-content-end">
                                     <div class="d-flex flex-wrap justify-content-center grp">
-                                        <a onclick="event.stopPropagation()" href="./add-event.html" >
-                                            <button type="button" class="btn btn-primary grp-btn" style="background-color:orange; color:white; border:orange; margin-top:5px;">Add Event</button>
-                                        </a>
-                                        <a onclick="event.stopPropagation()" href="./add-center.html">
-                                            <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Edit</button>
-                                        </a>
-                                        <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Delete</button>
+                                        <button type="button" class="btn grp-btn">
+                                            <a onclick="event.stopPropagation()" href="./add-event.html">
+                                                Add Event
+                                            </a>
+                                        </button>
+                                        <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()">
+                                            <a onclick="event.stopPropagation()" href="./add-center.html">
+                                                Edit
+                                            </a>
+                                        </button>
+                                
+                                        <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()">Delete</button>
                                     </div>
                                 </div>
                             </div>
@@ -189,13 +198,17 @@
                                     <p class="card-text">Description....</p>
                                     <div class="d-flex justify-content-end">
                                         <div class="d-flex flex-wrap justify-content-center grp">
-                                            <a onclick="event.stopPropagation()" href="./add-event.html" >
-                                                <button type="button" class="btn btn-primary grp-btn" style="background-color:orange; color:white; border:orange; margin-top:5px;">Add Event</button>
-                                            </a>
-                                            <a onclick="event.stopPropagation()" href="./add-center.html">
-                                                <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Edit</button>
-                                            </a>
-                                            <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Delete</button>
+                                            <button type="button" class="btn grp-btn">
+                                                <a onclick="event.stopPropagation()" href="./add-event.html">
+                                                    Add Event
+                                                </a>
+                                            </button>
+                                            <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()">
+                                                <a onclick="event.stopPropagation()" href="./add-center.html">
+                                                    Edit
+                                                </a>
+                                            </button>
+                                            <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()">Delete</button>
                                         </div>
                                     </div>
                                 </div>
@@ -207,42 +220,50 @@
                                         <p class="card-text">Description....</p>
                                         <div class="d-flex justify-content-end">
                                             <div class="d-flex flex-wrap justify-content-center grp">
-                                                <a onclick="event.stopPropagation()" href="./add-event.html" >
-                                                    <button type="button" class="btn btn-primary grp-btn" style="background-color:orange; color:white; border:orange; margin-top:5px;">Add Event</button>
-                                                </a>
-                                                <a onclick="event.stopPropagation()" href="./add-center.html">
-                                                    <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Edit</button>
-                                                </a>
-                                                <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Delete</button>
+                                                <button type="button" class="btn grp-btn">
+                                                    <a onclick="event.stopPropagation()" href="./add-event.html">
+                                                        Add Event
+                                                    </a>
+                                                </button>
+                                                <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()">
+                                                    <a onclick="event.stopPropagation()" href="./add-center.html">
+                                                        Edit
+                                                    </a>
+                                                </button>
+                                                <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()">Delete</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card mx-auto card-center" onclick="centerClicked()">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Ventura Event Center</h4>
-                                            <h6 class="card-subtitle mb-2 text-muted">5, Adebowale street Idumota Lagos Nigeria</h6>
-                                            <h6 class="card-subtitle mb-2">Capacity: 1500</h6>
-                                            <p class="card-text">Description....</p>
-                                            <div class="d-flex justify-content-end">
-                                                <div class="d-flex flex-wrap justify-content-center grp">
-                                                    <a onclick="event.stopPropagation()" href="./add-event.html" >
-                                                        <button type="button" class="btn btn-primary grp-btn" style="background-color:orange; color:white; border:orange; margin-top:5px;">Add Event</button>
+                                    <div class="card-body">
+                                        <h4 class="card-title">Ventura Event Center</h4>
+                                        <h6 class="card-subtitle mb-2 text-muted">5, Adebowale street Idumota Lagos Nigeria</h6>
+                                        <h6 class="card-subtitle mb-2">Capacity: 1500</h6>
+                                        <p class="card-text">Description....</p>
+                                        <div class="d-flex justify-content-end">
+                                            <div class="d-flex flex-wrap justify-content-center grp">
+                                                <button type="button" class="btn grp-btn">
+                                                    <a onclick="event.stopPropagation()" href="./add-event.html">
+                                                        Add Event
                                                     </a>
+                                                </button>
+                                                <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()">
                                                     <a onclick="event.stopPropagation()" href="./add-center.html">
-                                                        <button type="button" class="btn btn-primary grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Edit</button>
+                                                        Edit
                                                     </a>
-                                                    <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()" style="margin-top:5px;">Delete</button>
-                                                </div>
+                                                </button>                               
+                                                <button type="button" class="btn btn-danger grp-btn disabled" onclick="event.stopPropagation()">Delete</button>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
             </div>
         </main>
-        <footer style="background-color:orange;" class="d-flex justify-content-end flex-wrap">
-            <p style="margin-right:20px;" class="p-footer"> <a href="#" style="color:lightgray">About us</a> </p>
-            <p style="margin-right:20px; color:lightgray" class="p-footer">EM@gmail.com </p>
-            <p style="margin-right:20px; color:lightgray" class="p-footer">(+234) 818 154 6011</p>
+        <footer class="d-flex justify-content-end flex-wrap">
+            <p class="p-footer"> <a href="#">About us</a> </p>
+            <p class="p-footer">EM@gmail.com </p>
+            <p class="p-footer">(+234) 818 154 6011</p>
         </footer>
 
         <script>
