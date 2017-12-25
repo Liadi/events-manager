@@ -1,0 +1,40 @@
+$primary-color: orange;
+$secondary-color: lightgray;
+
+#centerImage {
+  border: 1px, solid;
+  max-width: 720px;
+}
+
+label.custom-control {
+  span.custom-control-indicator {
+    background-color: $primary-color;
+  }
+}
+
+.container {
+  margin-top: 10px;
+}
+
+.small-card {
+  border-width: 0px;
+  width: 100%;
+}
+
+.card-body {
+  p.card-text {
+    max-width: 500px;
+  }
+}
+
+img {
+  width: 100%;
+}
+
+button {
+  background-color: $primary-color;
+  border-color: &primary-color; 
+  color: white;
+}
+
+@import 'nav-main-footer';

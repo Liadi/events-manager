@@ -1,5 +1,5 @@
 const config = {
-  entry: './main.js',
+  entry: './client/main.js',
 
   output: {
     path: __dirname.replace('config', 'dist'),
