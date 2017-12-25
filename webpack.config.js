@@ -2,8 +2,8 @@ const config = {
   entry: './main.js',
 
   output: {
-    path: __dirname.replace('config', 'dist/temp.js'),
-    filename: 'index.js',
+    path: __dirname.replace('config', 'dist'),
+    filename: 'client.js',
   },
 
   module: {
@@ -17,11 +17,23 @@ const config = {
       },
 
       {
+        test: /\.scss$/,
+        use: [
+          {loader: 'style-loader'},
+          {loader: 'css-loader'},
+          {loader: 'sass-loader'}
+        ],
+      },
+
+      {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
-          presets: ['es2015', 'react'],
+          presets: [
+            'babel-preset-es2015',
+            'babel-preset-react',
+          ].map(require.resolve),
         }
       },
 
