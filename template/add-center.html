@@ -3,47 +3,45 @@
   <head>
     <title>Add a center</title>
 
-    
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-    
+
     <!-- Fontawesome -->
     <link rel="stylesheet" href="./font-awesome-4.7.0/css/font-awesome.min.css">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="./styles/add-center.css">
-    
 
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light p-big" >
-        <a class="navbar-brand" href="./dashboard.html" style="color:orange">EM</a>
+        <a class="navbar-brand" href="./dashboard.html">EM</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                 <ul class="navbar-nav">
           
-                    <li class="nav-item" style="margin-left:20px;">
-                        <a class="nav-link" href="./centers.html"style="color:orange">Centers</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./centers.html">Centers</a>
                     </li>
-                    <li class="nav-item" style="margin-left:20px;">
-                        <a class="nav-link" href="./add-center.html"style="color:orange">Add Center</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./add-center.html">Add Center</a>
                     </li>
           
-                    <li class="nav-item dropdown" style="margin-left:20px;">
+                    <li class="nav-item dropdown">
                         <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-user fa-1x mx-auto" aria-hidden="true" style="color:orange"></i>
+                            <i class="fa fa-user fa-1x mx-auto" aria-hidden="true"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="./events.html" style="color:orange">My Events</a>
-                            <a class="dropdown-item" href="./add-event.html" style="color:orange">Create Event</a>
+                            <a class="dropdown-item" href="./events.html">My Events</a>
+                            <a class="dropdown-item" href="./add-event.html">Create Event</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="./index.html" style="color:orange">Log out</a>
+                            <a class="dropdown-item" href="./index.html">Log out</a>
                         </div>
                     </li>
                 </ul>
@@ -51,9 +49,9 @@
         </nav>
 
 
-    <main class="container mx-auto" style="margin:30px 0px">
-        <h3 style="color:orange;">Create Center</h3>
-        <div class="container main-container mx-auto" id="main-div" style="margin-top: 30px; margin-bottom:30px;">
+    <main class="container mx-auto">
+        <h3>Create Center</h3>
+        <div class="container mx-auto" id="main-div">
             <form>
                 <div class="form-group">
                     <label for="inputCenterName"><h6>Name</h6></label>
@@ -100,15 +98,15 @@
 
                 <div class="form-group">
                     <input type="file" name="pic" accept="image/*" id="imgFile">
-                    <button type="button" class="btn btn-warning grp-btn" onclick="getImage()" style="margin-top: 5px; margin-bottom: 5px;color: white; background-color:orange;border:none;">Upload</button>
+                    <button type="button" class="btn btn-warning grp-btn" onclick="getImage()">Upload</button>
                 </div>
 
                 <div class="d-flex flex-wrap" id="imagesContainer">
                         
                 </div>
 
-                <div class="d-flex  justify-content-end grp">
-                    <button type="submit" class="btn btn-warning grp-btn" style="color: white; background-color:orange; border:none">Add</button>
+                <div class="d-flex  justify-content-end grp form-group">
+                    <button type="submit" class="btn btn-warning grp-btn">Add</button>
                     <button type="reset" class="btn btn-danger grp-btn">Clear</button>
                 </div>
 
@@ -119,10 +117,10 @@
         </div>
     </main>
 
-    <footer style="background-color:orange;" class="d-flex justify-content-end flex-wrap">
-        <p style="margin-right:20px;" class="p-footer"> <a href="#" style="color:lightgray">About us</a> </p>
-        <p style="margin-right:20px; color:lightgray" class="p-footer">EM@gmail.com </p>
-        <p style="margin-right:20px; color:lightgray" class="p-footer">(+234) 818 154 6011</p>
+    <footer class="d-flex justify-content-end flex-wrap">
+        <p class="p-footer"> <a href="#">About us</a> </p>
+        <p class="p-footer">EM@gmail.com </p>
+        <p class="p-footer">(+234) 818 154 6011</p>
     </footer>
 
     <script>

@@ -1,60 +1,67 @@
-.flex-container {
-    display: flex;
-    flex-wrap: wrap;
-  }
-.carousel-image {
-    height: 400px;
-    max-height: 400px;
-}
+.navbar .navbar-brand {
+  color: orange; }
 
-main{
-    margin: 10px;
-}
+.flex-container {
+  display: flex;
+  flex-wrap: wrap; }
+
+.carousel-image {
+  height: 400px;
+  margin: 10px; }
+
+.search-form {
+  margin: 30px; }
+
+main {
+  padding-bottom: 20px; }
 
 .navbar-item {
-    padding-left: 20px;
-}
+  padding-left: 20px; }
 
 #caro-div {
-    margin-top: 50px;
-}
-
+  margin-top: 50px;
+  border: 1px, solid;
+  max-width: 720px; }
 
 .search-widget {
-    min-width: 100px;
-    height: 60px;
-}
+  min-width: 100px;
+  height: 60px;
+  border-color: orange; }
+
+.search-toggle {
+  margin-left: 0px;
+  padding-left: 0px;
+  color: orange; }
+
+.space-top {
+  margin-top: 20px; }
+
+.div-price-range div {
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-right: 0px; }
+  .div-price-range div div {
+    padding-left: 20px; }
+    .div-price-range div div div input {
+      max-width: 100px; }
+
+#reset-btn {
+  margin-top: 30px; }
 
 button {
-    background-color: orange;
-    border-color: orange; 
-    color: white;
-}
+  background-color: orange;
+  border-color: orange;
+  color: white; }
 
 footer {
-    border-top: 5px solid lightgray;
-}
-/* @media screen and (min-width: 480px) {
-    .topDescrip{
-        font-size: 40px;
-    }
-}
+  border-top: 5px solid lightgray;
+  height: 50px;
+  background-color: orange;
+  padding-top: 10px; }
+  footer p {
+    margin-right: 20px;
+    color: lightgray; }
+    footer p a {
+      color: lightgray; }
 
-@media screen and (min-width: 720px) {
-    .topDescrip{
-        font-size: 50px;
-    }
-}
-
-@media screen and (min-width: 800px) {
-    .topDescrip{
-        font-size: 60px;
-    }
-}
-
-
-@media screen and (min-width: 1020px) {
-    .topDescrip{
-        font-size: 80px;
-    }
-} */
+/*# sourceMappingURL=index.css.map */
