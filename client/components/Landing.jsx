@@ -1,12 +1,9 @@
 import React from 'react';
-import { Switch, Link, Route } from 'react-router-dom';
-import SignUp from './SignUp.jsx';
-import Login from './Login.jsx';
+import { Link, Route } from 'react-router-dom';
 import '../style/index.scss';
 import '../awesome/scss/font-awesome.scss';
 
 const Landing = () => (
-  <div>
   <nav class="navbar navbar-expand-lg navbar-light bg-light p-big" >
     <a class="navbar-brand" href="#">EM</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,18 +15,11 @@ const Landing = () => (
           <Link class="nav-link" to='/signup'>Sign up</Link>
         </li>
         <li class="navbar-item">
-          <a class="nav-link btn btn-light" href="signin.html">Log in</a>
+          <Link class="nav-link btn btn-light" to='/login'>Log in</Link>
         </li>
       </ul>
     </div>
   </nav>
-
-  <Switch>
-    <Route exact path='/signup' component={SignUp}/>
-    <Route path='/login' component={Login}/>
-  </Switch>
-  
-  </div>
  )
 
 export default Landing;
