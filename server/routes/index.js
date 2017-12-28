@@ -1,6 +1,6 @@
 import { centerControllers, eventControllers, userControllers } from '../controllers';
 import { centerMiddlewares, eventMiddlewares, userMiddlewares, cleanData } from '../middlewares/';
-import app from './../../index';
+import app from '../index';
 
 module.exports = (app) => {
   app.get('/api/v1/', (req, res) => {
