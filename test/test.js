@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import supertest from 'supertest';
-import app from './../index';
+import app from './../server/index';
 import db from './../server/models';
 
 const { Center, User, Event } = db;
