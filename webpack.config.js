@@ -1,9 +1,16 @@
+import path from 'path';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import CleanWebpackPlugin from 'clean-webpack-plugin';
+
 const config = {
-  entry: './client/main.js',
+  entry: {
+    app: './client/main.js',
+  },
 
   output: {
-    path: __dirname.replace('config', 'dist'),
-    filename: 'client.js',
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js',
+    publicPath: '/'
   },
 
   module: {
@@ -51,9 +58,6 @@ const config = {
       { 
         test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file-loader' 
       },
-        
-      
-
     ]
   }
 };
