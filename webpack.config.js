@@ -47,7 +47,13 @@ const config = {
       {
         test: /\.(png|svg|jpg|gif)$/,
         use:[
-          {loader: 'file-loader'}
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 25000,
+              name: 'images/[hash]-[name].[ext]',
+            },
+          },
         ]
       },
         
