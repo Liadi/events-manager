@@ -7,9 +7,8 @@
     "seed:testdb": "cross-env NODE_ENV=test sequelize db:seed:undo:all &&cross-env NODE_ENV=test sequelize db:seed:all",
     "test:db": "cross-env NODE_ENV=test sequelize db:migrate:undo:all &&cross-env NODE_ENV=test sequelize db:migrate && npm run seed:testdb",
     "test": "npm run test:db && cross-env NODE_ENV=test mocha  bin/test --exit",
-    "api": "npm run production",
-    "start": "node bin/client",
-    "start:dev": "nodemon --exec babel-node bin/dev",
+    "start": "npm run production",
+    "dev": "nodemon --exec babel-node bin/dev",
     "clean": "rimraf ./dist",
     "build": "npm run clean mkdir dist && babel server -s -d dist",
     "production": "npm run build && node bin/production",
@@ -52,6 +51,7 @@
     "mocha": "^4.0.1",
     "node-sass": "^4.7.2",
     "nodemon": "^1.14.3",
+    "redux-logger": "^3.0.6",
     "rimraf": "^2.6.2",
     "sass-loader": "^6.0.6",
     "sequelize-cli": "^3.1.0",
@@ -63,6 +63,8 @@
     "webpack-dev-server": "^2.9.7"
   },
   "dependencies": {
+    "axios": "^0.17.1",
+    "babel-plugin-transform-react-jsx-img-import": "^0.1.4",
     "bcrypt": "^1.0.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
@@ -75,7 +77,12 @@
     "pg-hstore": "^2.3.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
-    "sequelize": "^4.22.9"
+    "redux": "^3.7.2",
+    "redux-promise-middleware": "^5.0.0",
+    "redux-thunk": "^2.2.0",
+    "sequelize": "^4.22.9",
+    "superagent": "^3.8.2"
   }
 }
