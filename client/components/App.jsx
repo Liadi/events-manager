@@ -6,11 +6,11 @@ import Login from './Login.jsx';
 
 const App = () => {
 	return (
-	<Switch>
-		<Route exact path='/' component={Landing}/>
-    <Route path='/signup' component={SignUp}/>
-    <Route path='/login' component={Login}/>
-  </Switch>
+    <Switch>
+      <Route exact path='/' component={Landing}/>
+      <Route path='/signup' component={SignUp}/>
+      <Route path='/login' component={Login}/>
+    </Switch>
 	)
 }
 
