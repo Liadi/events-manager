@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import supertest from 'supertest';
-import app from './../server/index';
+import app from '../server';
 import db from './../server/models';
 
 const { Center, User, Event } = db;
@@ -999,7 +999,7 @@ describe('api', () => {
       data.eventTime = '2017-02-29';
       request.post('/api/v1/events').send(data).end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal(`invalid eventTime. For year ${year}, february should not exceed 28 days`);
+        expect(res.body.message).to.equal('invalid eventTime. For year 2017, february should not exceed 28 days');
         expect(res.body.status).to.equal(false);
         done();
       });
