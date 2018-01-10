@@ -8,7 +8,7 @@
     "test:db": "cross-env NODE_ENV=test sequelize db:migrate:undo:all &&cross-env NODE_ENV=test sequelize db:migrate && npm run seed:testdb",
     "test": "npm run test:db && cross-env NODE_ENV=test mocha  bin/test --exit",
     "start": "npm run production",
-    "dev": "nodemon --exec babel-node bin/dev",
+    "dev": "babel-node bin/dev",
     "clean": "rimraf ./dist",
     "build": "npm run clean mkdir dist && babel server -s -d dist",
     "production": "npm run build && node bin/production",
