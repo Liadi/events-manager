@@ -154,7 +154,6 @@ module.exports = {
         finalParams[field] = tempParams[field].toLowerCase();
       }
     }
-
     if (req.userType){
       Center.findAll().then((centers) => {
         return findCenter(centers, finalParams, res);
@@ -165,18 +164,20 @@ module.exports = {
           status: false,
         });
       });
-    }
-    Center.findAll({
-      attributes: { exclude: ['centerStatus'] },
-    }).then((centers) => {
-      return findCenter(centers, finalParams, res);
-    })
-    .catch((error) => {
-      return res.status(400).json({
-        message: 'invalid query',
-        status: false,
+    } else {
+      Center.findAll({
+        attributes: { exclude: ['centerStatus'] },
+      }).then((centers) => {
+        const ret = findCenter(centers, finalParams, res);
+        return ret;
+      })
+      .catch((error) => {
+        return res.status(400).json({
+          message: 'invalid query',
+          status: false,
+        });
       });
-    });
+    }
   },
 };
 
