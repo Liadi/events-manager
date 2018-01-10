@@ -1,17 +1,51 @@
-export default function reducer(state={
-  user: {},
-  fetching: false,
-  fetched: false,
-  error: null,
-}, action) {
+export default function reducer(
+  state={
+    user: {},
+    accountUser: {},
+    fetching: false,
+    fetched: false,
+    error: {
+      fieldError: {},
+      fetchUserError: null,
+    },
+  }, action) {
 
 	switch (action.type) {
-		case 'FETCH_USER' : {
+    case 'USER_FIELD_ERROR': {
+      let temp = state.error.fieldError;
+      temp = {...temp};
+      temp[action.payload.field] = action.payload.msg;
+      return {
+        ...state,
+        error: Object.assign({}, state.error, {fieldError: temp}),
+      }
+    }
+
+    case 'UPDATE_USER_FIELD': {
+      let temp = state.center;
+      temp = {...temp};
+      temp[action.payload.field] = action.payload.value;
+      
+      let errTemp = state.error.fieldError;
+      errTemp = {...errTemp};
+      errTemp[action.payload.field] = action.payload.msg;
+      
+
+      const ret = {
+        ...state,
+        center: {...temp},
+        error: Object.assign({}, state.error, {fieldError: errTemp}),
+      }
+      delete ret.error.fieldError[action.payload.field];
+
+      return ret
+    }
+
+		case 'FETCH_USER_PENDING' : {
 			return {
         ...state,
         fetching: true,
         fetched: false,
-        user: action.payload,
       }
 		}
 
@@ -20,7 +54,7 @@ export default function reducer(state={
         ...state,
         fetching: false,
         fetched: false,
-        error: action.payload.message,
+        error: Object.assign({}, state.error, {fetchUserError: action.payload.message}),
       }
     }
 
@@ -29,26 +63,72 @@ export default function reducer(state={
         ...state,
         fetching: false,
         fetched: true,
-        error: null,
-        user: action.payload.user,
+        error: Object.assign({}, state.error, {fetchUserError: null}),
+        user: action.payload.data.user,
       }
     }
 
-    case 'ADD_USER' : {
+    case 'CREATE_USER_PENDING' : {
       return {
         ...state,
         user: action.payload,
       }
     }
 
-    case 'UPDATE_USER' : {
+    case 'CREATE_USER_FULFILLED' : {
       return {
         ...state,
         user: action.payload,
       }
     }
 
-    case 'DELETE_USER' : {
+    case 'CREATE_USER_REJECTED' : {
+      return {
+        ...state,
+        user: action.payload,
+      }
+    }
+
+    case 'UPDATE_USER_PENDING' : {
+      return {
+        ...state,
+        user: action.payload,
+      }
+    }
+
+    case 'UPDATE_USER_REJECTED' : {
+      return {
+        ...state,
+        user: action.payload,
+      }
+    }
+
+    case 'UPDATE_USER_FULFILLED' : {
+      return {
+        ...state,
+        user: action.payload,
+      }
+    }
+
+    case 'DELETE_USER_PENDING' : {
+      return {
+        ...state,
+        user: {
+          id: action.payload,
+        },
+      }
+    }
+
+    case 'DELETE_USER_REJECTED' : {
+      return {
+        ...state,
+        user: {
+          id: action.payload,
+        },
+      }
+    }
+
+    case 'DELETE_USER_FULFILLED' : {
       return {
         ...state,
         user: {
