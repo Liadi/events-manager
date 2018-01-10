@@ -1,0 +1,115 @@
+import React from 'react';
+import AdvancedSearch from './AdvancedSearch.jsx';
+import SearchedCenters from './SearchedCenters.jsx';
+import '../style/index.scss';
+import { connect } from 'react-redux';
+import { toggleAdvancedSearch, updateCenterField, fetchCenters, fieldInputError } from '../actions/centerAction'
+
+let JumboSearch = ({ showAdvanced, fieldError, fetching, fetched, centers, toggleAdvancedSearchFunc, updateCenterFieldFunc, fetchSearchedCenterFunc }) => {
+  return (
+  	<form className="search-form">
+      <div className="row">
+        <div className="input-group space-top">
+          <input type="text" className="form-control form-control-lg search-widget" placeholder="Search for a center" 
+          onChange={ e => {
+            updateCenterFieldFunc('centerName', e.target.value);
+          }}/>
+          <span className="input-group-btn">
+            <button type="submit" className="btn btn-lg search-widget" onClick={ e => {
+              e.preventDefault();
+              fetchSearchedCenterFunc();
+            }}>
+              Search
+            </button>
+          </span>
+          <div id= 'searchCenterResult'></div>
+        </div>
+        <div className="space-top">
+          <button type="button" className="btn btn-link btn-lg search-toggle" onClick={ e => {
+            e.preventDefault();
+            toggleAdvancedSearchFunc();
+          }}
+          >
+          Advanced Search
+          </button>
+        </div>
+      </div>
+      <AdvancedSearch showAdvanced={showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} fieldError={fieldError}/>
+      <SearchedCenters fetching={fetching} fetched={fetched} centers={centers}/>
+    </form>
+  )
+}
+
+const mapStateToProps = (state) => {
+  return {
+    showAdvanced: state.center.advancedSearch,
+    fieldError: state.center.error.fieldError,
+    fetching: state.center.fetching,
+    fetched: state.center.fetched,
+    centers: state.center.centers,
+  }
+}
+
+const mapDispatchToProps = (dispatch, state) => {
+  return {
+    toggleAdvancedSearchFunc: () => {
+      dispatch(toggleAdvancedSearch());
+    },
+
+    updateCenterFieldFunc: (field, value) => {
+      switch (field) {
+        case 'centerCapacity': {
+          if (String(parseInt(value)) !== value) {
+            const msg = 'enter a valid number'
+            dispatch(fieldInputError(field, msg));
+          }
+          else {
+            dispatch(updateCenterField(field, value));
+          }
+          break;
+        }
+
+        case 'centerPriceRangeLower': {
+          if (String(parseInt(value)) !== value) {
+            const msg = 'enter a valid number'
+            dispatch(fieldInputError(field, msg));
+          }
+          else {
+            dispatch(updateCenterField(field, value));
+          }
+          break;
+        }
+
+        case 'centerPriceRangeUpper': {
+          if (String(parseInt(value)) !== value) {
+            const msg = 'enter a valid number'
+            dispatch(fieldInputError(field, msg));
+          }
+          else {
+            dispatch(updateCenterField(field, value));
+          }
+          break;
+        }
+
+        default: {
+          dispatch(updateCenterField(field, value));
+        }
+      }
+    },
+
+    fetchSearchedCenterFunc: () => {
+      dispatch(fetchCenters());
+
+    },
+  }
+}
+
+JumboSearch = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(JumboSearch)
+
+
+JumboSearch = connect()(JumboSearch)
+
+export default JumboSearch;

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import supertest from 'supertest';
-import app from './../index';
+import app from '../server';
 import db from './../server/models';
 
 const { Center, User, Event } = db;
@@ -882,30 +882,10 @@ describe('api', () => {
       };
     });
 
-    it('rejects null token', (done) => {
-      data.token = null;
-      request.get('/api/v1/centers').send(data).end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.message).to.equal('You only have access, if you\'re logged in');
-        expect(res.body.status).to.equal(false);
-        done();
-      });
-    });
-
-    it('rejects invalid token', (done) => {
-      data.token = 'invalidTokenwomp2ps1jnno2.wioj2oiiunj0I9hbjJNJnbn2iubbK0';
-      request.get('/api/v1/centers').send(data).end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('pls, login');
-        expect(res.body.status).to.equal(false);
-        done();
-      });
-    });
-
     it('returns centers', (done) => {
       request.get('/api/v1/centers').send(data).end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.message).to.equal('all centers found');
+        expect(res.body.message).to.equal('centers found');
         expect(res.body.status).to.equal(true);
         done();
       });
@@ -999,7 +979,7 @@ describe('api', () => {
       data.eventTime = '2017-02-29';
       request.post('/api/v1/events').send(data).end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal(`invalid eventTime. For year ${year}, february should not exceed 28 days`);
+        expect(res.body.message).to.equal('invalid eventTime. For year 2017, february should not exceed 28 days');
         expect(res.body.status).to.equal(false);
         done();
       });
