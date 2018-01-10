@@ -1,23 +1,41 @@
 import axios from 'axios';
 
 module.exports = {
-  fetchCenters(id) {
-    return function(dispatch) {
-      axios.get('api/v1/centers')
-      .then((response) => {
-        dispatch({type: 'FETCH_CENTER_FULFILLED', payload: response.data})
-      })
-      .catch((err) => {
-        dispatch({type: 'FETCH_CENTER_REJECTED', payload: response.message})
-      })
+  fetchCenters() {
+    return function(dispatch, getState) {
+      const {center} = getState().center;
+      center.search = 'true';
+      dispatch({
+        type: 'FETCH_CENTERS',
+        payload: axios.get('api/v1/centers', {params: center,})
+      });
     }
-
 	},
 
   toggleAdvancedSearch() {
     return {
       type: 'TOGGLE_ADVANCED_SEARCH',
     }
-  }
+  },
+
+  fieldInputError(field, msg) {
+    return{
+      type: 'FIELD_ERROR',
+      payload: {
+        field,
+        msg,
+      },
+    }
+  },
+
+  updateCenterField(field, value) {
+    return {
+      type: 'UPDATE_CENTER_FIELD',
+      payload: {
+        field,
+        value,
+      },
+    } 
+  },
 
 }
