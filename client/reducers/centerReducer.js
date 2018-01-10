@@ -1,54 +1,82 @@
-export default function reducer(state={
-  center: {},
-  centers: [],
-  fetching: false,
-  fetched: false,
-  error: null,
-  advancedSearch: false,
-}, action) {
+export default function reducer(
+  state = {
+    center: {},
+    centers: [],
+    fetching: false,
+    fetched: false,
+    error: {
+      fieldError: {},
+      fetchCenterError: null,
+    },
+    advancedSearch: false,
+  },
+  action) {
 
 	switch (action.type) {
-		case 'TOGGLE_ADVANCED_SEARCH': {
+    case 'FIELD_ERROR': {
+      let temp = state.error.fieldError;
+      temp = {...temp};
+      temp[action.payload.field] = action.payload.msg;
       return {
         ...state,
-        advancedSearch: !state.advancedSearch
+        error: Object.assign({}, state.error, {fieldError: temp}),
       }
     }
 
-    case 'FETCH_CENTER' : {
+		case 'TOGGLE_ADVANCED_SEARCH': {
+      let centerNameTemp = state.center.centerName || '';
+      let centerTemp = Object.assign({}, {centerName: centerNameTemp});
+      
+      return {
+        ...state,
+        advancedSearch: !state.advancedSearch,
+        center: centerTemp,
+        error: Object.assign({}, state.error, {fieldError: {}}),
+      }
+    }
+
+    case 'UPDATE_CENTER_FIELD': {
+      let temp = state.center;
+      temp = {...temp};
+      temp[action.payload.field] = action.payload.value;
+      
+      let errTemp = state.error.fieldError;
+      errTemp = {...errTemp};
+      errTemp[action.payload.field] = action.payload.msg;
+      
+
+      const ret = {
+        ...state,
+        center: {...temp},
+        error: Object.assign({}, state.error, {fieldError: errTemp}),
+      }
+      delete ret.error.fieldError[action.payload.field];
+
+      return ret
+    }
+
+    case 'FETCH_CENTER_PENDING' : {
 			return {
         ...state,
         fetching: true,
         fetched: false,
-        center: action.payload,
       }
 		}
 
-    case 'FETCH_CENTERS' : {
+    case 'FETCH_CENTERS_PENDING' : {
       return {
         ...state,
         fetching: true,
         fetched: false,
-        centers: action.payload,
       }
     }
 
-    case 'FETCH_CENTER_REJECTED' : {
+    case 'FETCH_CENTERS_REJECTED' : {
       return {
         ...state,
         fetching: false,
         fetched: false,
-        error: action.payload.message,
-      }
-    }
-
-    case 'FETCH_CENTER_FULFILLED' : {
-      return {
-        ...state,
-        fetching: false,
-        fetched: true,
-        error: null,
-        center: action.payload.center,
+        error: Object.assign({}, state.error, {fetchCenterError: action.payload.message}),
       }
     }
 
@@ -57,8 +85,8 @@ export default function reducer(state={
         ...state,
         fetching: false,
         fetched: true,
-        error: null,
-        centers: action.payload.centers,
+        error: Object.assign({}, state.error, {fetchCenterError: null}),
+        centers: action.payload.data.centers,
       }
     }
 
@@ -85,7 +113,7 @@ export default function reducer(state={
       }
     }
 
-    // case default: {
+    //`default: {
     
     // }
 	}
