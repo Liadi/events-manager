@@ -8,8 +8,18 @@
   }
 }
 
+.searchOutputBox {
+  height: 200px;
+  overflow: auto;
+}
+
 .nav-item {
   margin-left: 20px;
+}
+
+.field-error {
+  border-color: tomato;
+  border-style: solid;
 }
 
 main {
