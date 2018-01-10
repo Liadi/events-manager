@@ -23,7 +23,7 @@ router.post('/centers/', cleanData, userMiddlewares.validateToken, userMiddlewar
 router.put('/centers/:centerId', cleanData, userMiddlewares.validateToken, userMiddlewares.isAdmin, centerControllers.modifyCenter);
 router.get('/centers/:centerId', cleanData, userMiddlewares.determineUser, centerControllers.getCenter);
 router.delete('/centers/:centerId', cleanData, userMiddlewares.validateToken, userMiddlewares.isAdmin, centerControllers.deleteCenter);
-router.get('/centers/', cleanData, userMiddlewares.validateToken, centerControllers.getAllCenters);
+router.get('/centers/', cleanData, userMiddlewares.determineUser, centerControllers.getAllCenters);
 
 // event route
 router.post('/events/', cleanData, userMiddlewares.validateToken, eventMiddlewares.validateEventFields, eventControllers.createEvent);

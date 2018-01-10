@@ -146,18 +146,117 @@ module.exports = {
   },
 
   getAllCenters(req, res){
-    Center.findAll().then((centers) => {
-      if (centers.length > 0){
-        return res.status(200).json({
-          message: 'all centers found',
-          status: true,
-          centers,
-        });
+    const tempParams = req.query;
+    const finalParams = {};
+
+    for (let field in tempParams) {
+      if (tempParams.hasOwnProperty(field) && tempParams[field] !== undefined && tempParams[field] !== '') {
+        finalParams[field] = tempParams[field].toLowerCase();
       }
-      return res.status(200).json({
-        message: 'presently have no center',
-        status: true
+    }
+
+    if (req.userType){
+      Center.findAll().then((centers) => {
+        return findCenter(centers, finalParams, res);
       })
+      .catch((error) => {
+        return res.status(400).json({
+          message: 'invalid query',
+          status: false,
+        });
+      });
+    }
+    Center.findAll({
+      attributes: { exclude: ['centerStatus'] },
+    }).then((centers) => {
+      return findCenter(centers, finalParams, res);
+    })
+    .catch((error) => {
+      return res.status(400).json({
+        message: 'invalid query',
+        status: false,
+      });
     });
   },
 };
+
+const searchCenters = ((centers, finalParams) => {
+  const retCenters = [];
+  for(let i in centers) {
+    const center = centers[i];
+    let foundIndex = 0;
+    for (let key in finalParams) {
+      switch(key) {
+        case 'centerName':{
+          foundIndex = center[key].search(finalParams[key])
+          break;
+        }
+
+        case 'centerCountry':{
+          if (center[key] !== finalParams[key]){
+            foundIndex = -1;
+          }
+          break;
+        }
+
+        case 'centerState':{
+          if (center[key] !== finalParams[key]){
+            foundIndex = -1;
+          }
+          break;
+        }
+
+        case 'centerCity':{
+          if (center[key] !== finalParams[key]){
+            foundIndex = -1;
+          }
+          break;
+        }
+
+        case 'centerCapacity':{
+          if (parseInt(center[key]) > parseInt(finalParams[key])){
+            foundIndex = -1;
+          }
+          break;
+        }
+
+        case 'centerPriceLower':{
+          if (parseInt(center[key]) < parseInt(finalParams[key])){
+            foundIndex = -1;
+          }
+          break;
+        }
+
+        case 'centerPriceUpper':{
+          if (parseInt(center[key]) > parseInt(finalParams[key])){
+            foundIndex = -1;
+          }
+          break;
+        }
+      }
+      if (foundIndex === -1) {
+        break;
+      }
+    }
+    if (foundIndex !== -1) {
+      center['searchIndex'] = foundIndex;
+      retCenters.push(center);
+    }
+  }
+  return retCenters;
+});
+
+const findCenter = ((centers, finalParams, res ) => {
+  const retCenters = searchCenters(centers, finalParams)
+  if (retCenters.length > 0){
+    return res.status(200).json({
+      message: 'centers found',
+      status: true,
+      centers: retCenters,
+    });
+  }
+  return res.status(404).json({
+    message: 'centers not found',
+    status: false,
+  })
+});
