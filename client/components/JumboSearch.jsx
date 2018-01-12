@@ -3,7 +3,7 @@ import AdvancedSearch from './AdvancedSearch.jsx';
 import SearchedCenters from './SearchedCenters.jsx';
 import '../style/index.scss';
 import { connect } from 'react-redux';
-import { toggleAdvancedSearch, updateCenterField, fetchCenters, fieldInputError } from '../actions/centerAction'
+import { toggleAdvancedSearch, updateCenterField, fetchCenters, fieldInputError } from '../actions/centerAction';
 
 let JumboSearch = ({ showAdvanced, fieldError, fetching, fetched, centers, toggleAdvancedSearchFunc, updateCenterFieldFunc, fetchSearchedCenterFunc }) => {
   return (
@@ -69,7 +69,7 @@ const mapDispatchToProps = (dispatch, state) => {
           break;
         }
 
-        case 'centerPriceRangeLower': {
+        case 'centerPriceLower': {
           if (String(parseInt(value)) !== value) {
             const msg = 'enter a valid number'
             dispatch(fieldInputError(field, msg));
@@ -80,7 +80,7 @@ const mapDispatchToProps = (dispatch, state) => {
           break;
         }
 
-        case 'centerPriceRangeUpper': {
+        case 'centerPriceUpper': {
           if (String(parseInt(value)) !== value) {
             const msg = 'enter a valid number'
             dispatch(fieldInputError(field, msg));
@@ -108,8 +108,5 @@ JumboSearch = connect(
   mapStateToProps,
   mapDispatchToProps
 )(JumboSearch)
-
-
-JumboSearch = connect()(JumboSearch)
 
 export default JumboSearch;

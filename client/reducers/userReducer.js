@@ -2,12 +2,14 @@ export default function reducer(
   state={
     user: {},
     accountUser: {},
+    passwordConfirmed: false,
     fetching: false,
     fetched: false,
     error: {
       fieldError: {},
       fetchUserError: null,
     },
+    infoTabMsg: '',
   }, action) {
 
 	switch (action.type) {
@@ -22,7 +24,7 @@ export default function reducer(
     }
 
     case 'UPDATE_USER_FIELD': {
-      let temp = state.center;
+      let temp = state.user;
       temp = {...temp};
       temp[action.payload.field] = action.payload.value;
       
@@ -33,7 +35,7 @@ export default function reducer(
 
       const ret = {
         ...state,
-        center: {...temp},
+        user: {...temp},
         error: Object.assign({}, state.error, {fieldError: errTemp}),
       }
       delete ret.error.fieldError[action.payload.field];
@@ -41,7 +43,21 @@ export default function reducer(
       return ret
     }
 
-		case 'FETCH_USER_PENDING' : {
+    case 'PASSWORD_CONFIRMATION': {
+      return {
+        ...state,
+        passwordConfirmed: action.payload.status,
+      }
+    }
+
+    case 'PASSWORD_CONFIRMATION_ERROR': {
+      return {
+        ...state,
+        infoTabMsg: action.payload.msg
+      }
+    }
+
+		case 'USER_SIGNUP_PENDING' : {
 			return {
         ...state,
         fetching: true,
@@ -49,7 +65,7 @@ export default function reducer(
       }
 		}
 
-    case 'FETCH_USER_REJECTED' : {
+    case 'USER_SIGNUP_REJECTED' : {
       return {
         ...state,
         fetching: false,
@@ -58,7 +74,7 @@ export default function reducer(
       }
     }
 
-    case 'FETCH_USER_FULFILLED' : {
+    case 'USER_SIGNUP_FULFILLED' : {
       return {
         ...state,
         fetching: false,
@@ -137,9 +153,9 @@ export default function reducer(
       }
     }
 
-    // case default: {
-    return state
-    // }
+    default: {
+      return state;
+    }
 	}
 
 }

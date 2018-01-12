@@ -17,19 +17,19 @@ const AdvancedSearch = (props) => {
   }
 
   let errorPriceLowerStyle = '';
-  if (props.fieldError.centerPriceRangeLower !== undefined) {
-    errorPriceLowerStyle = 'form-control form-control-sm col-md-4 field-error';
+  if (props.fieldError.centerPriceLower !== undefined) {
+    errorPriceLowerStyle = 'form-control form-control-sm field-error';
   }
   else {
-    errorPriceLowerStyle = 'form-control form-control-sm col-md-4';
+    errorPriceLowerStyle = 'form-control form-control-sm';
   }
 
   let errorPriceUpperStyle = '';
-  if (props.fieldError.centerPriceRangeUpper !== undefined) {
-    errorPriceUpperStyle = 'form-control form-control-sm col-md-4 field-error';
+  if (props.fieldError.centerPriceUpper !== undefined) {
+    errorPriceUpperStyle = 'form-control form-control-sm field-error';
   }
   else {
-    errorPriceUpperStyle = 'form-control form-control-sm col-md-4';
+    errorPriceUpperStyle = 'form-control form-control-sm';
   }
 
   return (
@@ -68,8 +68,8 @@ const AdvancedSearch = (props) => {
             <div className="form-group col-sm-6">
               <label htmlFor="searchPriceLower" className="form-label-sm">From</label>
               <input type="text" className={errorPriceLowerStyle} id="searchPriceLower" onChange={ e => {
-            updateCenterFieldFunc('centerPriceLower', e.target.value);
-          }}/>
+                updateCenterFieldFunc('centerPriceLower', e.target.value);
+              }}/>
             </div>
             <div className="form-group col-sm-6">
               <label htmlFor="searchPriceUpper" className="form-label-sm">To</label>
