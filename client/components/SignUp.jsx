@@ -3,16 +3,16 @@ import '../style/signup.scss';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import InfoTab from './InfoTab.jsx';
-import { updateUserField, updatePasswordConfirmation, fetchUser, userFieldInputError } from '../actions/userAction';
+import { updateUserField, deleteUserFieldError, updatePasswordConfirmation, fetchUser, userFieldInputError, userSignUp } from '../actions/userAction';
 
-let SignUp = ({ userFieldError, updateUserFieldFunc, infoTabMsg }) => {
+let SignUp = ({ userFieldError, updateUserFieldFunc, infoTabMsg, showInfoMsg, userSignUpFunc }) => {
   return (
     <div>
-      <InfoTab infoTabMsg={ infoTabMsg } />
+      <InfoTab className='infoTab' infoTabMsg={infoTabMsg} showInfoMsg={showInfoMsg} />
       <nav className="navbar navbar-light bg-light">
         <Link className="navbar-brand mx-auto" to='/'>
           <h2>EM</h2>
-        </Link> 
+        </Link>
       </nav>
       <main>
         <div className="card board box mx-auto">
@@ -56,7 +56,12 @@ let SignUp = ({ userFieldError, updateUserFieldFunc, infoTabMsg }) => {
             </div>
                     
             <div className="form-group">
-              <button type="button" className="btn">Sign up</button>
+              <button type="button" className="btn" onClick={ e => {
+                e.preventDefault();
+                userSignUpFunc();
+              }}>
+                Sign up
+              </button>
               <p>Already have an account? <Link to="/login">Login</Link></p>
             </div>
           </form>
@@ -71,42 +76,84 @@ const mapStateToProps = (state) => {
   return {
     userFieldError: state.user.error.fieldError,
     infoTabMsg: state.user.infoTabMsg,
+    showInfoMsg: state.user.showInfoMsg,
   }
 }
 
 const mapDispatchToProps = (dispatch, state) => {
   return {
     updateUserFieldFunc: (field = null, value = null) => {
+      dispatch(updateUserField(field, value));
       switch (field) {
+        case 'userFirstName': {
+          if (value) {
+            const len = value.length;
+            if(len < 2 || len > 30) {
+              const msg = 'first name should have 2-30 characters';
+              dispatch(userFieldInputError(field, msg));
+            } else {
+              dispatch(deleteUserFieldError(field));
+            }
+          } else {
+            const msg = 'firstname is required';
+            dispatch(userFieldInputError(field, msg));
+          }
+          break;
+        }
+
+        case 'userLastName': {
+          if (value) {
+            const len = value.length;
+            if(len < 2 || len > 30) {
+              const msg = 'last name should have 2-30 characters';
+              dispatch(userFieldInputError(field, msg));
+            } else {
+              dispatch(deleteUserFieldError(field));
+            }
+          } else {
+            dispatch(deleteUserFieldError(field));
+          }
+          break;
+        }
+
         case 'userEmail': {
           if (!validateEmail(value)){
             const msg = 'invalid email';
             dispatch(userFieldInputError(field, msg));
-          }
-          else {
-            dispatch(updateUserField(field, value));
+          } else {
+            dispatch(deleteUserFieldError(field));
           }
           break;
         }
+
         case 'userPassword': {
-          if (value.length < 6){
+          if (value.length === 0) {
+            const msg = 'password required';
+            dispatch(userFieldInputError(field, msg));
+          } else if (value.length < 6){
             const msg = 'password should have at least 6 characters';
             dispatch(userFieldInputError(field, msg));
           } else {
-            dispatch(updateUserField(field, value));
+            dispatch(deleteUserFieldError(field));
           }
           break;
         }
+
         case 'userConfirmPassword': {
-          if (value.length  >= 6){
-            dispatch(updateUserField(field, value));
-            dispatch(updatePasswordConfirmation());
-          }
+          dispatch(updatePasswordConfirmation());
           break;
         }
       }
     },
+    userSignUpFunc: () => {
+      dispatch(userSignUp());
+    },
   }
+}
+
+const validateEmail = (email) => {
+  const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
 }
 
 SignUp = connect(
@@ -115,8 +162,3 @@ SignUp = connect(
 )(SignUp)
 
 export default SignUp;
-
-const validateEmail = (email) => {
-  const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(email);
-}

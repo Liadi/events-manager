@@ -6,17 +6,18 @@ export default function reducer(
     fetching: false,
     fetched: false,
     error: {
-      fieldError: {},
+      fieldError: new Map(),
       fetchUserError: null,
     },
-    infoTabMsg: '',
+    infoTabMsg: null,
+    showInfoMsg: false,
   }, action) {
 
 	switch (action.type) {
     case 'USER_FIELD_ERROR': {
       let temp = state.error.fieldError;
-      temp = {...temp};
-      temp[action.payload.field] = action.payload.msg;
+      temp = new Map([...temp]);
+      temp.set(action.payload.field, action.payload.msg);
       return {
         ...state,
         error: Object.assign({}, state.error, {fieldError: temp}),
@@ -28,19 +29,22 @@ export default function reducer(
       temp = {...temp};
       temp[action.payload.field] = action.payload.value;
       
-      let errTemp = state.error.fieldError;
-      errTemp = {...errTemp};
-      errTemp[action.payload.field] = action.payload.msg;
       
-
-      const ret = {
+      return {
         ...state,
         user: {...temp},
-        error: Object.assign({}, state.error, {fieldError: errTemp}),
       }
-      delete ret.error.fieldError[action.payload.field];
+    }
 
-      return ret
+    case 'DELETE_USER_FIELD_ERROR': {
+      let temp = state.error.fieldError;
+      temp = new Map([...temp]);
+
+      temp.delete(action.payload.field);
+      return {
+        ...state,
+        error: Object.assign({}, state.error, {fieldError: temp}),
+      }
     }
 
     case 'PASSWORD_CONFIRMATION': {
@@ -50,10 +54,20 @@ export default function reducer(
       }
     }
 
-    case 'PASSWORD_CONFIRMATION_ERROR': {
+    case 'SHOW_INFO_MESSAGE': {
+      const temp = state.error.fieldError;
+      const msg = [];
+      temp.forEach((value, key) => {
+        msg.push(temp.get(key));
+      });
+
+      // if (!state.passwordConfirmed) {
+      //   msg.push('\'confirm password\' entry is different from \'password\' entry');
+      // }
       return {
         ...state,
-        infoTabMsg: action.payload.msg
+        showInfoMsg: action.payload.status,
+        infoTabMsg: msg,
       }
     }
 

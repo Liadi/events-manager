@@ -1,10 +1,9 @@
 import React from 'react';
 
 const InfoTab = (props) => {
-	if (props.infoTabMsg === '') {
+	if (!props.showInfoMsg) {
 		return null;
-	}
-	else if (props.infoTabMsg === 'loading') {
+	} else if (props.infoTabMsg === 'loading') {
 		return (
 			<div className='container'>
 				<div className="mx-auto col-2">
@@ -13,11 +12,18 @@ const InfoTab = (props) => {
 				</div>
 			</div>
 		)
-	} else {
+	} else if (props.infoTabMsg.length > 0) {
 		return(
-			<div className=''> { props.infoTabMsg } </div>
-		)
+			<div className='searchOutputBox'>
+        {props.infoTabMsg.map((msg, index) => 
+          <div key={index} className='container'>
+            <p className="mx-auto col-9">{msg}</p>
+          </div>
+        )}
+      </div>
+		);
 	}
+	return null;
 }
 
 export default InfoTab;
