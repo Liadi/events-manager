@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { toggleAdvancedSearch } from '../actions/appAction';
 import { updateCenterField, fetchCenters, fieldInputError } from '../actions/centerAction';
 
-let JumboSearch = ({ showAdvanced, fieldError, fetching, fetched, centers, center, toggleAdvancedSearchFunc, updateCenterFieldFunc, fetchSearchedCenterFunc }) => {
+let JumboSearch = ({ showAdvanced, fetching, fetched, centers, center, toggleAdvancedSearchFunc, updateCenterFieldFunc, fetchSearchedCenterFunc }) => {
   return (
   	<form className="search-form">
       <div className="row">
@@ -35,7 +35,7 @@ let JumboSearch = ({ showAdvanced, fieldError, fetching, fetched, centers, cente
           </button>
         </div>
       </div>
-      <AdvancedSearch showAdvanced={showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} fieldError={fieldError} center={center}/>
+      <AdvancedSearch showAdvanced={showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} center={center}/>
       <SearchedCenters fetching={fetching} fetched={fetched} centers={centers}/>
     </form>
   )
@@ -44,7 +44,6 @@ let JumboSearch = ({ showAdvanced, fieldError, fetching, fetched, centers, cente
 const mapStateToProps = (state) => {
   return {
     showAdvanced: state.app.advancedSearch,
-    fieldError: state.center.error.fieldError,
     fetching: state.center.fetching,
     fetched: state.center.fetched,
     centers: state.center.centers,

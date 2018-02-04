@@ -8,31 +8,6 @@ const AdvancedSearch = (props) => {
   if (!props.showAdvanced){
     return null;
   }
-  
-  let errorCapacityStyle = '';
-  if (props.fieldError.centerCapacity !== undefined) {
-    errorCapacityStyle = 'form-control form-control-sm col-md-4 field-error';
-  }
-  else {
-    errorCapacityStyle = 'form-control form-control-sm col-md-4';
-  }
-
-  let errorPriceLowerStyle = '';
-  if (props.fieldError.centerPriceLower !== undefined) {
-    errorPriceLowerStyle = 'form-control form-control-sm field-error';
-  }
-  else {
-    errorPriceLowerStyle = 'form-control form-control-sm';
-  }
-
-  let errorPriceUpperStyle = '';
-  if (props.fieldError.centerPriceUpper !== undefined) {
-    errorPriceUpperStyle = 'form-control form-control-sm field-error';
-  }
-  else {
-    errorPriceUpperStyle = 'form-control form-control-sm';
-  }
-
   return (
     <div id= "advancedSearchFrame">
       <div className="form-row">    
@@ -58,8 +33,7 @@ const AdvancedSearch = (props) => {
       </div>
       <div className="form-group">
         <label htmlFor="searchCapacity" className="form-label-sm">Capacity</label>
-        <input type="text" className={errorCapacityStyle} id="searchCapacity" onChange={ e => {
-          console.log(center.centerCapacity, e.target.value);
+        <input type="text" className="form-control form-control-sm col-md-4" id="searchCapacity" onChange={ e => {
           if (String(parseInt(e.target.value)) === e.target.value || e.target.value === "") {
             updateCenterFieldFunc('centerCapacity', e.target.value);
           } else {
@@ -73,7 +47,7 @@ const AdvancedSearch = (props) => {
           <div className="form-row mx-auto" id="searchPrice">
             <div className="form-group col-sm-6">
               <label htmlFor="searchPriceLower" className="form-label-sm">From</label>
-              <input type="text" className={errorPriceLowerStyle} id="searchPriceLower" onChange={ e => {
+              <input type="text" className="form-control form-control-sm" id="searchPriceLower" onChange={ e => {
                 if (String(parseInt(e.target.value)) === e.target.value || e.target.value === "") {
                   updateCenterFieldFunc('centerPriceLower', e.target.value);
                 } else {
@@ -83,7 +57,7 @@ const AdvancedSearch = (props) => {
             </div>
             <div className="form-group col-sm-6">
               <label htmlFor="searchPriceUpper" className="form-label-sm">To</label>
-              <input type="text" className={errorPriceUpperStyle} id="searchPriceUpper" onChange={ e => {
+              <input type="text" className="form-control form-control-sm" id="searchPriceUpper" onChange={ e => {
                 if (String(parseInt(e.target.value)) === e.target.value || e.target.value === "") {
                   updateCenterFieldFunc('centerPriceUpper', e.target.value);
                 } else {

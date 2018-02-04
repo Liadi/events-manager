@@ -1,7 +1,7 @@
 export default function reducer(
   state = {
     advancedSearch: false,
-    infoTab: false,
+    showInfoTab: false,
     infoTabMsg: [],
   },
   action) {
@@ -13,16 +13,19 @@ export default function reducer(
         advancedSearch: !state.advancedSearch,
       }
     }
-    case 'TOGGLE_INFO_TAB': {
+    case 'CLOSE_INFO_TAB': {
       return {
         ...state,
-        infoTab: !infoTab,
+        showInfoTab: false,
+        infoTabMsg: [],
       }
     }
-    case 'ADD_TAB_MSG': {
+    case 'OPEN_INFO_TAB': {
+      /* action.payload.msg should be array */ 
       return {
         ...state,
-        infoTabMsg: action.payload.tabMsg,
+        showInfoTab: true,
+        infoTabMsg: action.payload.msg,
       }
     }
     // default: {

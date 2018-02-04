@@ -8,7 +8,6 @@ export default function reducer(
       fieldError: {},
       fetchCenterError: null,
     },
-    advancedSearch: false,
   },
   action) {
 
@@ -20,18 +19,6 @@ export default function reducer(
       return {
         ...state,
         error: Object.assign({}, state.error, {fieldError: temp}),
-      }
-    }
-
-		case 'TOGGLE_ADVANCED_SEARCH': {
-      let centerNameTemp = state.center.centerName || '';
-      let centerTemp = Object.assign({}, {centerName: centerNameTemp});
-      
-      return {
-        ...state,
-        advancedSearch: !state.advancedSearch,
-        center: centerTemp,
-        error: Object.assign({}, state.error, {fieldError: {}}),
       }
     }
 

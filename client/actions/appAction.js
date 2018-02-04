@@ -5,18 +5,9 @@ module.exports = {
     }
   },
 
-  toggleInfoTab() {
+  closeInfoTab() {
     return {
-      type: 'TOGGLE_INFO_TAB',
+      type: 'CLOSE_INFO_TAB',
     }
   },
-
-  updateTabMsg(msg) {
-  	return {
-      type: 'UPDATE_TAB_MSG',
-      payload: {
-        tabMsg,
-      }
-  	}
-  }
 }

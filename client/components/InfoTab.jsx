@@ -1,14 +1,18 @@
 import React from 'react';
 
 const InfoTab = (props) => {
-	if (!props.showInfoMsg) {
+	if (!props.showInfoTab) {
 		return null;
-	} else if (props.infoTabMsg === 'loading') {
+	}/* this condition doesn't work for now */
+	 else if (props.infoTabMsg === 'loading') {
 		return (
 			<div className='container'>
 				<div className="mx-auto col-2">
 					<i className='fa fa-spinner fa-spin fa-3x fa-fw'></i>
 					<span className='sr-only'>Loading...</span>
+					<button onClick={props.closeInfoTabFunc}>
+						<i className="fas fa-times"></i>
+					</button>
 				</div>
 			</div>
 		)
@@ -20,6 +24,9 @@ const InfoTab = (props) => {
             <p className="mx-auto col-9">{msg}</p>
           </div>
         )}
+        <button onClick={props.closeInfoTabFunc}>
+			<i className="fas fa-times"></i>
+		</button>
       </div>
 		);
 	}

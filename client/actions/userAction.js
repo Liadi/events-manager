@@ -12,13 +12,6 @@ module.exports = {
             msg: 'firstname required',
           }
         });
-      } else {
-        dispatch({
-          type: 'DELETE_USER_FIELD_ERROR',
-          payload: {
-            field: 'userFirstName',
-          }
-        });
       }
 
       if (!getState().user.user.userEmail) {
@@ -29,13 +22,6 @@ module.exports = {
             msg: 'email required',
           }
         })
-      } else {
-        dispatch({
-          type: 'DELETE_USER_FIELD_ERROR',
-          payload: {
-            field: 'userEmail',
-          }
-        });
       }
 
       if (!getState().user.user.userPassword){
@@ -46,14 +32,6 @@ module.exports = {
             msg: 'password required',
           }
         });
-      } else if (getState().user.user.userPassword.length < 6){
-        dispatch({
-          type: 'USER_FIELD_ERROR',
-          payload: {
-            field: 'userPassword',
-            msg: 'password should not be less than 6 characters',
-          }
-        });
       } else if (!getState().user.passwordConfirmed) {
         dispatch({
           type: 'USER_FIELD_ERROR',
@@ -62,28 +40,23 @@ module.exports = {
             msg: 'password confirmation failed',
           }
         });
-      } else {
-        dispatch({
-          type: 'DELETE_USER_FIELD_ERROR',
-          payload: {
-            field: 'userPassword',
-          }
-        });
       }
       if (getState().user.error.fieldError.size > 0) {
+        const temp = getState().user.error.fieldError;
+        const msg = [];
+        temp.forEach((value, key) => {
+          msg.push(value);
+        });
         dispatch ({
-          type: 'SHOW_INFO_MESSAGE',
+          type: 'OPEN_INFO_TAB',
           payload: {
-            status: true,
+            msg,
           }
         });
       } else {
-        const temp = getState().user.user;
-        delete temp.userConfirmPassword;
-        const user = temp;
         dispatch({
           type: 'USER_SIGNUP',
-          payload: axios.post('api/v1/users/signup', user),
+          payload: axios.post('api/v1/users/signup', getState().user.user),
         });
       }
     }
@@ -125,6 +98,14 @@ module.exports = {
             status: true,
           },
         });
+        if (getState().user.error.fieldError.get('userPassword') === 'password confirmation failed') {
+          dispatch({
+            type: 'DELETE_USER_FIELD_ERROR',
+            payload: {
+              field: 'userPassword',
+            }
+          });
+        }
       }
     }
   },

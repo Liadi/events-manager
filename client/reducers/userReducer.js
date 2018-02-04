@@ -2,15 +2,13 @@ export default function reducer(
   state={
     user: {},
     accountUser: {},
-    passwordConfirmed: false,
+    passwordConfirmed: true,
     fetching: false,
     fetched: false,
     error: {
       fieldError: new Map(),
       fetchUserError: null,
     },
-    infoTabMsg: null,
-    showInfoMsg: false,
   }, action) {
 
 	switch (action.type) {
@@ -54,23 +52,6 @@ export default function reducer(
       }
     }
 
-    case 'SHOW_INFO_MESSAGE': {
-      const temp = state.error.fieldError;
-      const msg = [];
-      temp.forEach((value, key) => {
-        msg.push(temp.get(key));
-      });
-
-      // if (!state.passwordConfirmed) {
-      //   msg.push('\'confirm password\' entry is different from \'password\' entry');
-      // }
-      return {
-        ...state,
-        showInfoMsg: action.payload.status,
-        infoTabMsg: msg,
-      }
-    }
-
 		case 'USER_SIGNUP_PENDING' : {
 			return {
         ...state,
@@ -94,7 +75,6 @@ export default function reducer(
         fetching: false,
         fetched: true,
         error: Object.assign({}, state.error, {fetchUserError: null}),
-        user: action.payload.data.user,
       }
     }
 

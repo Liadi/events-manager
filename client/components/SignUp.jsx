@@ -3,12 +3,14 @@ import '../style/signup.scss';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import InfoTab from './InfoTab.jsx';
+import { closeInfoTab } from '../actions/appAction';
 import { updateUserField, deleteUserFieldError, updatePasswordConfirmation, fetchUser, userFieldInputError, userSignUp } from '../actions/userAction';
 
-let SignUp = ({ userFieldError, updateUserFieldFunc, infoTabMsg, showInfoMsg, userSignUpFunc }) => {
+let SignUp = ({ passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabMsg, showInfoTab, closeInfoTabFunc, userSignUpFunc }) => {
+
   return (
     <div>
-      <InfoTab className='infoTab' infoTabMsg={infoTabMsg} showInfoMsg={showInfoMsg} />
+      <InfoTab className='infoTab' infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} closeInfoTabFunc={closeInfoTabFunc}/>
       <nav className="navbar navbar-light bg-light">
         <Link className="navbar-brand mx-auto" to='/'>
           <h2>EM</h2>
@@ -20,28 +22,44 @@ let SignUp = ({ userFieldError, updateUserFieldFunc, infoTabMsg, showInfoMsg, us
           <form>
             <div className="form-group">
               <label htmlFor="inputFirstName">First Name</label>
-              <input type="text" className="form-control" id="inputFirstName" onChange={ e => {
+              <input type="text" className={
+                (userFieldError.get('userFirstName') === undefined) ? "form-control" : "form-control field-error"
+              } 
+              id="inputFirstName" 
+              onChange={ e => {
                   updateUserFieldFunc('userFirstName', e.target.value);
                 }
               }/>
             </div>
             <div className="form-group">
               <label htmlFor="inputLastName">Last Name</label>
-              <input type="text" className="form-control" id="inputLastName" onChange={ e => {
+              <input type="text" className={
+                (userFieldError.get('userLastName') === undefined) ? "form-control" : "form-control field-error"
+              } 
+              id="inputLastName" 
+              onChange={ e => {
                   updateUserFieldFunc('userLastName', e.target.value);
                 }
               }/>
             </div>
             <div className="form-group">
               <label htmlFor="inputEmail">Email address</label>
-              <input type="email" className="form-control" id="inputEmail" aria-describedby="emailHelp" onChange={ e => {
+              <input type="text" className={
+                (userFieldError.get('userEmail') === undefined) ? "form-control" : "form-control field-error"
+              } 
+              id="inputEmail" 
+              onChange={ e => {
                   updateUserFieldFunc('userEmail', e.target.value);
                 }
               }/>
             </div>
             <div className="form-group">
               <label htmlFor="inputPassword">Password</label>
-              <input type="password" className="form-control" id="inputPassword" onChange={ e => {
+              <input type="text" className={
+                (userFieldError.get('userPassword') === undefined || !passwordConfirmed ) ? "form-control" : "form-control field-error"
+              } 
+              id="inputPassword" 
+              onChange={ e => {
                   updateUserFieldFunc('userPassword', e.target.value);
                 }
               }/>
@@ -49,7 +67,11 @@ let SignUp = ({ userFieldError, updateUserFieldFunc, infoTabMsg, showInfoMsg, us
                     
             <div className="form-group">
               <label htmlFor="inputConfirmPassword">Confirm Password</label>
-              <input type="password" className="form-control" id="inputConfirmPassword" onChange={ e => {
+              <input type="text" className={
+                passwordConfirmed ? "form-control" : "form-control field-error"
+              } 
+              id="inputConfirmPassword"
+              onChange={ e => {
                   updateUserFieldFunc('userConfirmPassword', e.target.value);
                 }
               }/>
@@ -75,13 +97,17 @@ let SignUp = ({ userFieldError, updateUserFieldFunc, infoTabMsg, showInfoMsg, us
 const mapStateToProps = (state) => {
   return {
     userFieldError: state.user.error.fieldError,
-    infoTabMsg: state.user.infoTabMsg,
-    showInfoMsg: state.user.showInfoMsg,
+    passwordConfirmed: state.user.passwordConfirmed,
+    infoTabMsg: state.app.infoTabMsg,
+    showInfoTab: state.app.showInfoTab,
   }
 }
 
 const mapDispatchToProps = (dispatch, state) => {
   return {
+    closeInfoTabFunc: () => {
+      dispatch(closeInfoTab());
+    },
     updateUserFieldFunc: (field = null, value = null) => {
       dispatch(updateUserField(field, value));
       switch (field) {
@@ -119,8 +145,10 @@ const mapDispatchToProps = (dispatch, state) => {
         case 'userEmail': {
           if (!validateEmail(value)){
             const msg = 'invalid email';
+            console.log('invalid');
             dispatch(userFieldInputError(field, msg));
           } else {
+            console.log('valid');
             dispatch(deleteUserFieldError(field));
           }
           break;
@@ -146,6 +174,7 @@ const mapDispatchToProps = (dispatch, state) => {
       }
     },
     userSignUpFunc: () => {
+      dispatch(updatePasswordConfirmation());
       dispatch(userSignUp());
     },
   }
