@@ -1,14 +1,4 @@
 module.exports = {
-  fetchCenters() {
-    return function(dispatch, getState) {
-      const {center} = getState().center;
-      dispatch({
-        type: 'FETCH_CENTERS',
-        payload: axios.get('api/v1/centers', {params: center,})
-      });
-    }
-  },
-
   toggleAdvancedSearch() {
     return {
       type: 'TOGGLE_ADVANCED_SEARCH',
@@ -17,9 +7,10 @@ module.exports = {
 
   toggleInfoTab() {
     return {
-      type: 'TOGGLE_ADVANCED_SEARCH',
+      type: 'TOGGLE_INFO_TAB',
     }
   },
+
   updateTabMsg(msg) {
   	return {
       type: 'UPDATE_TAB_MSG',

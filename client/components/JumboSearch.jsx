@@ -3,7 +3,8 @@ import AdvancedSearch from './AdvancedSearch.jsx';
 import SearchedCenters from './SearchedCenters.jsx';
 import '../style/index.scss';
 import { connect } from 'react-redux';
-import { toggleAdvancedSearch, updateCenterField, fetchCenters, fieldInputError } from '../actions/centerAction';
+import { toggleAdvancedSearch } from '../actions/appAction';
+import { updateCenterField, fetchCenters, fieldInputError } from '../actions/centerAction';
 
 let JumboSearch = ({ showAdvanced, fieldError, fetching, fetched, centers, toggleAdvancedSearchFunc, updateCenterFieldFunc, fetchSearchedCenterFunc }) => {
   return (
@@ -42,7 +43,7 @@ let JumboSearch = ({ showAdvanced, fieldError, fetching, fetched, centers, toggl
 
 const mapStateToProps = (state) => {
   return {
-    showAdvanced: state.center.advancedSearch,
+    showAdvanced: state.app.advancedSearch,
     fieldError: state.center.error.fieldError,
     fetching: state.center.fetching,
     fetched: state.center.fetched,
