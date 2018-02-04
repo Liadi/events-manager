@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { toggleAdvancedSearch } from '../actions/appAction';
 import { updateCenterField, fetchCenters, fieldInputError } from '../actions/centerAction';
 
-let JumboSearch = ({ showAdvanced, fieldError, fetching, fetched, centers, toggleAdvancedSearchFunc, updateCenterFieldFunc, fetchSearchedCenterFunc }) => {
+let JumboSearch = ({ showAdvanced, fieldError, fetching, fetched, centers, center, toggleAdvancedSearchFunc, updateCenterFieldFunc, fetchSearchedCenterFunc }) => {
   return (
   	<form className="search-form">
       <div className="row">
@@ -35,7 +35,7 @@ let JumboSearch = ({ showAdvanced, fieldError, fetching, fetched, centers, toggl
           </button>
         </div>
       </div>
-      <AdvancedSearch showAdvanced={showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} fieldError={fieldError}/>
+      <AdvancedSearch showAdvanced={showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} fieldError={fieldError} center={center}/>
       <SearchedCenters fetching={fetching} fetched={fetched} centers={centers}/>
     </form>
   )
@@ -48,6 +48,7 @@ const mapStateToProps = (state) => {
     fetching: state.center.fetching,
     fetched: state.center.fetched,
     centers: state.center.centers,
+    center: state.center.center,
   }
 }
 
@@ -58,44 +59,7 @@ const mapDispatchToProps = (dispatch, state) => {
     },
 
     updateCenterFieldFunc: (field, value) => {
-      switch (field) {
-        case 'centerCapacity': {
-          if (String(parseInt(value)) !== value) {
-            const msg = 'enter a valid number'
-            dispatch(fieldInputError(field, msg));
-          }
-          else {
-            dispatch(updateCenterField(field, value));
-          }
-          break;
-        }
-
-        case 'centerPriceLower': {
-          if (String(parseInt(value)) !== value) {
-            const msg = 'enter a valid number'
-            dispatch(fieldInputError(field, msg));
-          }
-          else {
-            dispatch(updateCenterField(field, value));
-          }
-          break;
-        }
-
-        case 'centerPriceUpper': {
-          if (String(parseInt(value)) !== value) {
-            const msg = 'enter a valid number'
-            dispatch(fieldInputError(field, msg));
-          }
-          else {
-            dispatch(updateCenterField(field, value));
-          }
-          break;
-        }
-
-        default: {
-          dispatch(updateCenterField(field, value));
-        }
-      }
+      dispatch(updateCenterField(field, value));
     },
 
     fetchSearchedCenterFunc: () => {

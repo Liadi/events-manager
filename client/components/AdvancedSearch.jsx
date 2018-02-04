@@ -4,6 +4,7 @@ import '../style/index.scss';
 
 const AdvancedSearch = (props) => {
   const updateCenterFieldFunc = props.updateCenterFieldFunc;
+  const center = props.center;
   if (!props.showAdvanced){
     return null;
   }
@@ -58,7 +59,12 @@ const AdvancedSearch = (props) => {
       <div className="form-group">
         <label htmlFor="searchCapacity" className="form-label-sm">Capacity</label>
         <input type="text" className={errorCapacityStyle} id="searchCapacity" onChange={ e => {
-          updateCenterFieldFunc('centerCapacity', e.target.value);
+          console.log(center.centerCapacity, e.target.value);
+          if (String(parseInt(e.target.value)) === e.target.value || e.target.value === "") {
+            updateCenterFieldFunc('centerCapacity', e.target.value);
+          } else {
+            e.target.value = center.centerCapacity || "";
+          }
         }}/>
       </div>
       <div className="row container div-price-range">
@@ -68,14 +74,22 @@ const AdvancedSearch = (props) => {
             <div className="form-group col-sm-6">
               <label htmlFor="searchPriceLower" className="form-label-sm">From</label>
               <input type="text" className={errorPriceLowerStyle} id="searchPriceLower" onChange={ e => {
-                updateCenterFieldFunc('centerPriceLower', e.target.value);
+                if (String(parseInt(e.target.value)) === e.target.value || e.target.value === "") {
+                  updateCenterFieldFunc('centerPriceLower', e.target.value);
+                } else {
+                  e.target.value = center.centerPriceLower || "";
+                }
               }}/>
             </div>
             <div className="form-group col-sm-6">
               <label htmlFor="searchPriceUpper" className="form-label-sm">To</label>
               <input type="text" className={errorPriceUpperStyle} id="searchPriceUpper" onChange={ e => {
-            updateCenterFieldFunc('centerPriceUpper', e.target.value);
-          }}/>
+                if (String(parseInt(e.target.value)) === e.target.value || e.target.value === "") {
+                  updateCenterFieldFunc('centerPriceUpper', e.target.value);
+                } else {
+                  e.target.value = center.centerPriceUpper || "";
+                }
+              }}/>
             </div>
           </div>
         </div>    
