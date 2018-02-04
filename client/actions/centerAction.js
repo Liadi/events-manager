@@ -11,12 +11,6 @@ module.exports = {
     }
 	},
 
-  toggleAdvancedSearch() {
-    return {
-      type: 'TOGGLE_ADVANCED_SEARCH',
-    }
-  },
-
   fieldInputError(field, msg) {
     return{
       type: 'FIELD_ERROR',
