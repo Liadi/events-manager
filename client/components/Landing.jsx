@@ -1,6 +1,5 @@
 import React from 'react';
-import { Link, Route } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import Footer from './Footer.jsx';
 import JumboSearch from './JumboSearch.jsx';

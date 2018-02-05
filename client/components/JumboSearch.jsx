@@ -3,9 +3,10 @@ import AdvancedSearch from './AdvancedSearch.jsx';
 import SearchedCenters from './SearchedCenters.jsx';
 import '../style/index.scss';
 import { connect } from 'react-redux';
-import { toggleAdvancedSearch, updateCenterField, fetchCenters, fieldInputError } from '../actions/centerAction'
+import { toggleAdvancedSearch } from '../actions/appAction';
+import { updateCenterField, fetchCenters, fieldInputError } from '../actions/centerAction';
 
-let JumboSearch = ({ showAdvanced, fieldError, fetching, fetched, centers, toggleAdvancedSearchFunc, updateCenterFieldFunc, fetchSearchedCenterFunc }) => {
+let JumboSearch = ({ showAdvanced, fetching, fetched, centers, center, toggleAdvancedSearchFunc, updateCenterFieldFunc, fetchSearchedCenterFunc }) => {
   return (
   	<form className="search-form">
       <div className="row">
@@ -34,7 +35,7 @@ let JumboSearch = ({ showAdvanced, fieldError, fetching, fetched, centers, toggl
           </button>
         </div>
       </div>
-      <AdvancedSearch showAdvanced={showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} fieldError={fieldError}/>
+      <AdvancedSearch showAdvanced={showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} center={center}/>
       <SearchedCenters fetching={fetching} fetched={fetched} centers={centers}/>
     </form>
   )
@@ -42,11 +43,11 @@ let JumboSearch = ({ showAdvanced, fieldError, fetching, fetched, centers, toggl
 
 const mapStateToProps = (state) => {
   return {
-    showAdvanced: state.center.advancedSearch,
-    fieldError: state.center.error.fieldError,
+    showAdvanced: state.app.advancedSearch,
     fetching: state.center.fetching,
     fetched: state.center.fetched,
     centers: state.center.centers,
+    center: state.center.center,
   }
 }
 
@@ -57,44 +58,7 @@ const mapDispatchToProps = (dispatch, state) => {
     },
 
     updateCenterFieldFunc: (field, value) => {
-      switch (field) {
-        case 'centerCapacity': {
-          if (String(parseInt(value)) !== value) {
-            const msg = 'enter a valid number'
-            dispatch(fieldInputError(field, msg));
-          }
-          else {
-            dispatch(updateCenterField(field, value));
-          }
-          break;
-        }
-
-        case 'centerPriceRangeLower': {
-          if (String(parseInt(value)) !== value) {
-            const msg = 'enter a valid number'
-            dispatch(fieldInputError(field, msg));
-          }
-          else {
-            dispatch(updateCenterField(field, value));
-          }
-          break;
-        }
-
-        case 'centerPriceRangeUpper': {
-          if (String(parseInt(value)) !== value) {
-            const msg = 'enter a valid number'
-            dispatch(fieldInputError(field, msg));
-          }
-          else {
-            dispatch(updateCenterField(field, value));
-          }
-          break;
-        }
-
-        default: {
-          dispatch(updateCenterField(field, value));
-        }
-      }
+      dispatch(updateCenterField(field, value));
     },
 
     fetchSearchedCenterFunc: () => {
@@ -108,8 +72,5 @@ JumboSearch = connect(
   mapStateToProps,
   mapDispatchToProps
 )(JumboSearch)
-
-
-JumboSearch = connect()(JumboSearch)
 
 export default JumboSearch;

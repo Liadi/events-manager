@@ -29,7 +29,6 @@ module.exports = {
           });
         }
       }
-      console.log('creating event');
       Event.create({
         eventName: req.eventName,
         eventTime: req.eventTime,
@@ -52,14 +51,12 @@ module.exports = {
   },
 
   modifyEvent(req, res) {
-    console.log('0');
     if (!req.eventId){
       return res.status(400).json({
         message: 'invalid eventId param',
         status: false,
       });
     }
-    console.log('1');
     Event.findOne({
       where: {id: req.eventId, userId: req.userId},
       include: [{
@@ -81,28 +78,24 @@ module.exports = {
       'userId',
       ],
     }).then((event) => {
-      console.log('2');
       if (!event) {
         return res.status(404).json({
           message: 'event does not exist',
           status: false,
         });
       }
-      console.log('3');
       event.update({
         eventName: req.eventName || event.eventName,
         eventAmountPaid: req.eventAmountPaid || event.eventAmountPaid,
         eventTime: req.eventTime || event.eventTime,
         centerId: req.centerId || event.centerId,
       }).then((event) => {
-        console.log('4');
         return res.status(200).json({
           message: 'event updated',
           event,
           status: true,
         });
       }).catch((error) => {
-        console.log('5');
         const err = error.errors[0].message;
         return res.status(400).json({
           message: err,

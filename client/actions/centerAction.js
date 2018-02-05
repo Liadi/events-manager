@@ -4,19 +4,12 @@ module.exports = {
   fetchCenters() {
     return function(dispatch, getState) {
       const {center} = getState().center;
-      center.search = 'true';
       dispatch({
         type: 'FETCH_CENTERS',
         payload: axios.get('api/v1/centers', {params: center,})
       });
     }
 	},
-
-  toggleAdvancedSearch() {
-    return {
-      type: 'TOGGLE_ADVANCED_SEARCH',
-    }
-  },
 
   fieldInputError(field, msg) {
     return{

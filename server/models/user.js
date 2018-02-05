@@ -4,10 +4,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        is: {
-          args: /^[a-z]+$/i,
-          msg: 'invalid input, first name should be letters only',
-        },
         len: {
           args: [2, 30],
           msg: 'invalid input, first name should have 2-30 letters only',
@@ -18,10 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     userLastName: {
       type: DataTypes.STRING,
       validate: {
-        is: {
-          args: /^[a-z]+$/i,
-          msg: 'invalid input, last name should be letters only',
-        },
         len: {
           args: [2, 30],
           msg: 'invalid input, last name should have 2-30 letters only',
@@ -44,6 +36,12 @@ module.exports = (sequelize, DataTypes) => {
     userPassword: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate:{
+        len: {
+          args: 6,
+          msg: 'Password should have minimum of 6 characters'
+        },
+      },
     },
 
     userPhoneNumber: {
