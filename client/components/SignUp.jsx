@@ -3,10 +3,11 @@ import '../style/signup.scss';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import InfoTab from './InfoTab.jsx';
-import { closeInfoTab } from '../actions/appAction';
+import ModalView from './ModalView.jsx';
+import { closeInfoTab, closeModal } from '../actions/appAction';
 import { updateUserField, deleteUserFieldError, updatePasswordConfirmation, fetchUser, userFieldInputError, userSignUp } from '../actions/userAction';
 
-let SignUp = ({ passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabMsg, showInfoTab, closeInfoTabFunc, userSignUpFunc }) => {
+let SignUp = ({ passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabMsg, showInfoTab, closeInfoTabFunc, userSignUpFunc, closeModalFunc, modalContent, showModal }) => {
 
   return (
     <div>
@@ -90,6 +91,7 @@ let SignUp = ({ passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabM
         </div>
         </div>
       </main>
+      <ModalView closeModalFunc={closeModalFunc} modalContent={modalContent} showModal={showModal}/>
     </div>
   );
 }
@@ -100,6 +102,8 @@ const mapStateToProps = (state) => {
     passwordConfirmed: state.user.passwordConfirmed,
     infoTabMsg: state.app.infoTabMsg,
     showInfoTab: state.app.showInfoTab,
+    modalContent: state.app.modalContent,
+    showModal: state.app.showModal,
   }
 }
 
@@ -176,6 +180,9 @@ const mapDispatchToProps = (dispatch, state) => {
     userSignUpFunc: () => {
       dispatch(updatePasswordConfirmation());
       dispatch(userSignUp());
+    },
+    closeModalFunc: () => {
+      dispatch(closeModal());
     },
   }
 }

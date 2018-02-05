@@ -3,6 +3,8 @@ export default function reducer(
     advancedSearch: false,
     showInfoTab: false,
     infoTabMsg: [],
+    showModal: false,
+    modalContent: null,
   },
   action) {
 
@@ -28,9 +30,20 @@ export default function reducer(
         infoTabMsg: action.payload.msg,
       }
     }
-    // default: {
-    
-    // }
+    case 'OPEN_MODAL': {
+      return {
+        ...state,
+        modalContent: action.payload.htmlContent,
+        showModal: true,
+      }
+    }
+    case 'CLOSE_MODAL': {
+      return {
+        ...state,
+        showModal: false,
+        modalContent: null,
+      }
+    }
 	}
   return state
 }

@@ -11,7 +11,7 @@ const InfoTab = (props) => {
 					<i className='fa fa-spinner fa-spin fa-3x fa-fw'></i>
 					<span className='sr-only'>Loading...</span>
 					<button onClick={props.closeInfoTabFunc}>
-						<i className="fas fa-times"></i>
+						<i className="fa fa-times"></i>
 					</button>
 				</div>
 			</div>
@@ -25,7 +25,7 @@ const InfoTab = (props) => {
           </div>
         )}
         <button onClick={props.closeInfoTabFunc}>
-			<i className="fas fa-times"></i>
+			<i className="fa fa-times"></i>
 		</button>
       </div>
 		);

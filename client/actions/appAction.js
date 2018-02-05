@@ -10,4 +10,9 @@ module.exports = {
       type: 'CLOSE_INFO_TAB',
     }
   },
+  closeModal() {
+    return {
+      type: 'CLOSE_MODAL',
+    }
+  }
 }

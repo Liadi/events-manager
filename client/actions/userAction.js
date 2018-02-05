@@ -42,8 +42,8 @@ module.exports = {
         });
       }
       if (getState().user.error.fieldError.size > 0) {
-        const temp = getState().user.error.fieldError;
-        const msg = [];
+        let temp = getState().user.error.fieldError;
+        let msg = [];
         temp.forEach((value, key) => {
           msg.push(value);
         });
@@ -57,6 +57,21 @@ module.exports = {
         dispatch({
           type: 'USER_SIGNUP',
           payload: axios.post('api/v1/users/signup', getState().user.user),
+        }).then(res => {
+          dispatch({
+            type: 'OPEN_MODAL',
+            payload: {
+              htmlContent: '<Link to="/login">Log in</Link>',
+            },
+          });
+        }).catch(err =>{
+          let msg = [err.response.data.message];
+          dispatch({
+            type: 'OPEN_INFO_TAB',
+            payload: {
+              msg
+            },
+          });
         });
       }
     }
