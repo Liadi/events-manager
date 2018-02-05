@@ -56,7 +56,7 @@ let SignUp = ({ passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabM
             </div>
             <div className="form-group">
               <label htmlFor="inputPassword">Password</label>
-              <input type="text" className={
+              <input type="password" className={
                 (userFieldError.get('userPassword') === undefined || !passwordConfirmed ) ? "form-control" : "form-control field-error"
               } 
               id="inputPassword" 
@@ -68,7 +68,7 @@ let SignUp = ({ passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabM
                     
             <div className="form-group">
               <label htmlFor="inputConfirmPassword">Confirm Password</label>
-              <input type="text" className={
+              <input type="password" className={
                 passwordConfirmed ? "form-control" : "form-control field-error"
               } 
               id="inputConfirmPassword"

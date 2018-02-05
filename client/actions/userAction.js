@@ -61,7 +61,7 @@ module.exports = {
           dispatch({
             type: 'OPEN_MODAL',
             payload: {
-              htmlContent: '<Link to="/login">Log in</Link>',
+              htmlContent: '<div><h4>Signup Successful</h4><Link to="/login">Log in</Link> to you account<div>',
             },
           });
         }).catch(err =>{
