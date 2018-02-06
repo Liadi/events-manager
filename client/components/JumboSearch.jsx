@@ -55,6 +55,10 @@ const mapDispatchToProps = (dispatch, state) => {
   return {
     toggleAdvancedSearchFunc: () => {
       dispatch(toggleAdvancedSearch());
+      const advancedSearchFields = ['centerCountry', 'centerState', 'centerCity', 'centerCapacity', 'centerPriceLoewer', 'centerPriceUpper'];
+      advancedSearchFields.forEach((field)=> {
+        dispatch(updateCenterField(field, ""));
+      })
     },
 
     updateCenterFieldFunc: (field, value) => {
@@ -63,7 +67,6 @@ const mapDispatchToProps = (dispatch, state) => {
 
     fetchSearchedCenterFunc: () => {
       dispatch(fetchCenters());
-
     },
   }
 }
