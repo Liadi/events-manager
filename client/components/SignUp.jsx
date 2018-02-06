@@ -7,16 +7,18 @@ import ModalView from './ModalView.jsx';
 import { closeInfoTab, closeModal } from '../actions/appAction';
 import { updateUserField, deleteUserFieldError, updatePasswordConfirmation, fetchUser, userFieldInputError, userSignUp } from '../actions/userAction';
 
+const inputFieldSet = new Set();
+
 let SignUp = ({ passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabMsg, showInfoTab, closeInfoTabFunc, userSignUpFunc, closeModalFunc, modalContent, showModal }) => {
 
   return (
     <div>
-      <InfoTab className='infoTab' infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} closeInfoTabFunc={closeInfoTabFunc}/>
       <nav className="navbar navbar-light bg-light">
         <Link className="navbar-brand mx-auto" to='/'>
           <h2>EM</h2>
         </Link>
       </nav>
+      <InfoTab className='infoTab' infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} closeInfoTabFunc={closeInfoTabFunc}/>
       <main>
         <div className="card board box mx-auto">
         <div className="card-body">
@@ -29,6 +31,7 @@ let SignUp = ({ passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabM
               id="inputFirstName" 
               onChange={ e => {
                   updateUserFieldFunc('userFirstName', e.target.value);
+                  inputFieldSet.add(e.target);
                 }
               }/>
             </div>
@@ -40,6 +43,7 @@ let SignUp = ({ passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabM
               id="inputLastName" 
               onChange={ e => {
                   updateUserFieldFunc('userLastName', e.target.value);
+                  inputFieldSet.add(e.target);
                 }
               }/>
             </div>
@@ -51,6 +55,7 @@ let SignUp = ({ passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabM
               id="inputEmail" 
               onChange={ e => {
                   updateUserFieldFunc('userEmail', e.target.value);
+                  inputFieldSet.add(e.target);
                 }
               }/>
             </div>
@@ -62,6 +67,7 @@ let SignUp = ({ passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabM
               id="inputPassword" 
               onChange={ e => {
                   updateUserFieldFunc('userPassword', e.target.value);
+                  inputFieldSet.add(e.target);
                 }
               }/>
             </div>
@@ -74,6 +80,7 @@ let SignUp = ({ passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabM
               id="inputConfirmPassword"
               onChange={ e => {
                   updateUserFieldFunc('userConfirmPassword', e.target.value);
+                  inputFieldSet.add(e.target);
                 }
               }/>
             </div>
@@ -81,7 +88,7 @@ let SignUp = ({ passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabM
             <div className="form-group">
               <button type="button" className="btn" onClick={ e => {
                 e.preventDefault();
-                userSignUpFunc();
+                userSignUpFunc(inputFieldSet);
               }}>
                 Sign up
               </button>
@@ -177,9 +184,9 @@ const mapDispatchToProps = (dispatch, state) => {
         }
       }
     },
-    userSignUpFunc: () => {
+    userSignUpFunc: (inputFieldSetArg) => {
       dispatch(updatePasswordConfirmation());
-      dispatch(userSignUp());
+      dispatch(userSignUp(inputFieldSetArg));
     },
     closeModalFunc: () => {
       dispatch(closeModal());

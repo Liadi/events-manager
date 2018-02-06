@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 module.exports = {
-  userSignUp() {
+  userSignUp(inputFieldSetArg) {
     return function(dispatch, getState) {
       const fieldError = getState().user.error.fieldError;
       if (!getState().user.user.userFirstName) {
@@ -64,8 +64,12 @@ module.exports = {
               htmlContent: '<div><h4>Signup Successful</h4><Link to="/login">Log in</Link> to you account<div>',
             },
           });
+          dispatch({
+            type: 'CLEAR_USER',
+          });
+          for (let item of inputFieldSetArg) item.value = "";
         }).catch(err =>{
-          let msg = [err.response.data.message];
+          let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
           dispatch({
             type: 'OPEN_INFO_TAB',
             payload: {
@@ -76,6 +80,65 @@ module.exports = {
       }
     }
 	},
+
+  userLogin(inputFieldSetArg) {
+    return function(dispatch, getState) {
+      if (!getState().user.user.userEmail) {
+        dispatch({
+          type: 'USER_FIELD_ERROR',
+          payload: {
+            field: 'userEmail',
+            msg: 'email address is required',
+          }
+        });
+      }
+
+      if (!getState().user.user.userPassword) {
+        dispatch({
+          type: 'USER_FIELD_ERROR',
+          payload: {
+            field: 'userPassword',
+            msg: 'password is required',
+          }
+        });
+      }
+
+      if (getState().user.error.fieldError.size > 0) {
+        let temp = getState().user.error.fieldError;
+        let msg = [];
+        temp.forEach((value, key) => {
+          msg.push(value);
+        });
+        dispatch ({
+          type: 'OPEN_INFO_TAB',
+          payload: {
+            msg,
+          }
+        });
+      } else {
+        dispatch({
+          type: 'USER_SIGNIN',
+          payload: axios.post('api/v1/users/signin', getState().user.user),
+        }).then(res => {
+          // REDIRECT TO DASHBOARD
+          console.log('redirect should occur');
+          dispatch({
+            type: 'CLEAR_USER',
+          });
+          for (let item of inputFieldSetArg) item.value = "";
+        }).catch(err =>{
+          let msg = [err.response.data.message] || ['Server error. If this persists contact our technical team'];
+          dispatch({
+            type: 'OPEN_INFO_TAB',
+            payload: {
+              msg
+            },
+          });
+        });
+      } 
+
+    }
+  },
 
   userFieldInputError(field, msg) {
     return {
