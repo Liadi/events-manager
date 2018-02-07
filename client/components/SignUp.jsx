@@ -42,7 +42,7 @@ let SignUp = ({ passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabM
               } 
               id="inputLastName" 
               onChange={ e => {
-                  updateUserFieldFunc('userLastName', e.target.value);
+                  updateUserFieldFunc('userLastName', e.target.value.trim());
                   inputFieldSet.add(e.target);
                 }
               }/>
@@ -54,7 +54,7 @@ let SignUp = ({ passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabM
               } 
               id="inputEmail" 
               onChange={ e => {
-                  updateUserFieldFunc('userEmail', e.target.value);
+                  updateUserFieldFunc('userEmail', e.target.value.trim());
                   inputFieldSet.add(e.target);
                 }
               }/>

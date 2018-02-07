@@ -120,8 +120,6 @@ module.exports = {
           type: 'USER_SIGNIN',
           payload: axios.post('api/v1/users/signin', getState().user.user),
         }).then(res => {
-          // REDIRECT TO DASHBOARD
-          console.log('redirect should occur');
           dispatch({
             type: 'CLEAR_USER',
           });

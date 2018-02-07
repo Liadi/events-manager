@@ -14,20 +14,20 @@ const AdvancedSearch = (props) => {
         <div className="form-group col-md-2">
           <label htmlFor="searchCountry" className="form-label-sm">Country</label>
           <input type="text" className= "form-control form-control-sm" id="searchCountry" placeholder="Nigeria" disabled onChange={ e => {
-            updateCenterFieldFunc('centerCountry', e.target.value);
+            updateCenterFieldFunc('centerCountry', e.target.value.trim());
           }}/>
 
         </div>
         <div className="form-group col-md-2">
           <label htmlFor="searchState" className="form-label-sm">State</label>
           <input type="text" className="form-control form-control-sm" id="searchState" onChange={ e => {
-            updateCenterFieldFunc('centerState', e.target.value);
+            updateCenterFieldFunc('centerState', e.target.value.trim());
           }}/>
         </div>
         <div className="form-group col-md-2">
           <label htmlFor="searchCity" className="form-label-sm">City</label>
           <input type="text" className="form-control form-control-sm" id="searchCity" onChange={ e => {
-            updateCenterFieldFunc('centerCity', e.target.value);
+            updateCenterFieldFunc('centerCity', e.target.value.trim());
           }}/>
         </div>
       </div>
