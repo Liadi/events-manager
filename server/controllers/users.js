@@ -73,6 +73,7 @@ module.exports = {
             const token = jwt.sign({ userId, userType }, secret, { expiresIn: '60m' });
             return res.status(200).send({
               user: {
+                userId: user.id,
                 userFirstName: user.userFirstName,
                 userLastName: user.userLastName,
                 userEmail: user.userEmail,

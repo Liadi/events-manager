@@ -2,12 +2,13 @@ export default function reducer(
   state={
     user: {},
     accountUser: {},
+    userToken: null,
     passwordConfirmed: true,
     fetching: false,
     fetched: false,
     error: {
       fieldError: new Map(),
-      fetchUserError: null,
+      serverError: null,
     },
   }, action) {
 
@@ -45,6 +46,14 @@ export default function reducer(
       }
     }
 
+    case 'CLEAR_USER': {
+      return {
+        ...state,
+        user: {},
+        error: Object.assign({}, state.error, {fieldError: new Map()}), 
+      }
+    }
+
     case 'PASSWORD_CONFIRMATION': {
       return {
         ...state,
@@ -65,7 +74,7 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: false,
-        error: Object.assign({}, state.error, {fetchUserError: action.payload.message}),
+        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message}),
       }
     }
 
@@ -74,7 +83,35 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: true,
-        error: Object.assign({}, state.error, {fetchUserError: null}),
+        error: Object.assign({}, state.error, {serverError: null}),
+      }
+    }
+
+    case 'USER_SIGNIN_PENDING' : {
+      return {
+        ...state,
+        fetching: true,
+        fetched: false,
+      }
+    }
+
+    case 'USER_SIGNIN_REJECTED' : {
+      return {
+        ...state,
+        fetching: false,
+        fetched: false,
+        error: Object.assign({}, state.error, {serverError: action.payload.message}),
+      }
+    }
+
+    case 'USER_SIGNIN_FULFILLED' : {
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        error: Object.assign({}, state.error, {serverError: null}),
+        accountUser: action.payload.data.user,
+        userToken: action.payload.data.token,
       }
     }
 

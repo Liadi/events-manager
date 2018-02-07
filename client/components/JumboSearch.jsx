@@ -13,7 +13,7 @@ let JumboSearch = ({ showAdvanced, fetching, fetched, centers, center, toggleAdv
         <div className="input-group space-top">
           <input type="text" className="form-control form-control-lg search-widget" placeholder="Search for a center" 
           onChange={ e => {
-            updateCenterFieldFunc('centerName', e.target.value);
+            updateCenterFieldFunc('centerName', e.target.value.trim());
           }}/>
           <span className="input-group-btn">
             <button type="submit" className="btn btn-lg search-widget" onClick={ e => {
@@ -55,6 +55,10 @@ const mapDispatchToProps = (dispatch, state) => {
   return {
     toggleAdvancedSearchFunc: () => {
       dispatch(toggleAdvancedSearch());
+      const advancedSearchFields = ['centerCountry', 'centerState', 'centerCity', 'centerCapacity', 'centerPriceLoewer', 'centerPriceUpper'];
+      advancedSearchFields.forEach((field)=> {
+        dispatch(updateCenterField(field, ""));
+      })
     },
 
     updateCenterFieldFunc: (field, value) => {
@@ -63,7 +67,6 @@ const mapDispatchToProps = (dispatch, state) => {
 
     fetchSearchedCenterFunc: () => {
       dispatch(fetchCenters());
-
     },
   }
 }
