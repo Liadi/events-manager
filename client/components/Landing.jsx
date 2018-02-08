@@ -1,9 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import Footer from './Footer.jsx';
 import JumboSearch from './JumboSearch.jsx';
-
 import '../style/index.scss';
 import '../awesome/scss/font-awesome.scss';
 

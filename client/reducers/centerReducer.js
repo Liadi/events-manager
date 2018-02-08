@@ -5,8 +5,8 @@ export default function reducer(
     fetching: false,
     fetched: false,
     error: {
-      fieldError: {},
-      fetchCenterError: null,
+      fieldError: new Map(),
+      serverError: null,
     },
   },
   action) {
@@ -42,6 +42,17 @@ export default function reducer(
       return ret
     }
 
+    case 'RESET_CENTER_FIELDS': {
+      return {
+        ...state,
+        center: {},
+        error: {
+          fieldError: new Map(),
+          serverError: null,
+        }
+      }
+    }
+
     case 'FETCH_CENTER_PENDING' : {
 			return {
         ...state,
@@ -63,7 +74,7 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: false,
-        error: Object.assign({}, state.error, {fetchCenterError: action.payload.message}),
+        error: Object.assign({}, state.error, {serverError: action.payload.message}),
       }
     }
 
@@ -72,7 +83,7 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: true,
-        error: Object.assign({}, state.error, {fetchCenterError: null}),
+        error: Object.assign({}, state.error, {serverError: null}),
         centers: action.payload.data.centers,
       }
     }

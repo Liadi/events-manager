@@ -65,7 +65,7 @@ module.exports = {
             },
           });
           dispatch({
-            type: 'CLEAR_USER',
+            type: 'RESET_USER_FIELDS',
           });
           for (let item of inputFieldSetArg) item.value = "";
         }).catch(err =>{
@@ -121,7 +121,7 @@ module.exports = {
           payload: axios.post('api/v1/users/signin', getState().user.user),
         }).then(res => {
           dispatch({
-            type: 'CLEAR_USER',
+            type: 'RESET_USER_FIELDS',
           });
           for (let item of inputFieldSetArg) item.value = "";
         }).catch(err =>{

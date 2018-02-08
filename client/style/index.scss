@@ -80,20 +80,4 @@ button {
   color: white;
 }
 
-footer {
-  border-top: 5px solid $secondary-color;
-  height: 50px;
-  background-color: $primary-color;
-  padding-top: 10px;
-
-  p {
-    margin-right: 20px;
-    color: $secondary-color;
-
-    a {
-      color: $secondary-color;
-    }
-  }
-}
-
 @import 'nav-main-footer';

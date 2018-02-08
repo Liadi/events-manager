@@ -14,5 +14,14 @@ module.exports = {
     return {
       type: 'CLOSE_MODAL',
     }
-  }
+  },
+  changeDashboardContent(newContent) {
+    console.log(newContent);
+    return {
+      type: 'CHANGE_DASHBOARD_CONTENT',
+      payload: {
+        newContent,
+      }
+    }
+  },
 }

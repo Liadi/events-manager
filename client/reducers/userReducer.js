@@ -46,11 +46,22 @@ export default function reducer(
       }
     }
 
-    case 'CLEAR_USER': {
+    // case 'CLEAR_USER': {
+    //   return {
+    //     ...state,
+    //     user: {},
+    //     error: Object.assign({}, state.error, {fieldError: new Map()}), 
+    //   }
+    // }
+
+    case 'RESET_USER_FIELDS': {
       return {
         ...state,
         user: {},
-        error: Object.assign({}, state.error, {fieldError: new Map()}), 
+        error: {
+          fieldError: new Map(),
+          serverError: null,
+        }
       }
     }
 
