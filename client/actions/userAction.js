@@ -81,7 +81,7 @@ module.exports = {
     }
 	},
 
-  userLogin(inputFieldSetArg) {
+  userLogin() {
     return function(dispatch, getState) {
       if (!getState().user.user.userEmail) {
         dispatch({
@@ -119,11 +119,6 @@ module.exports = {
         dispatch({
           type: 'USER_SIGNIN',
           payload: axios.post('api/v1/users/signin', getState().user.user),
-        }).then(res => {
-          dispatch({
-            type: 'RESET_USER_FIELDS',
-          });
-          for (let item of inputFieldSetArg) item.value = "";
         }).catch(err =>{
           let msg = [err.response.data.message] || ['Server error. If this persists contact our technical team'];
           dispatch({
@@ -196,4 +191,9 @@ module.exports = {
     } 
   },
 
+  resetUserFields() {
+    return {
+      type: 'RESET_USER_FIELDS',
+    }
+  },
 }

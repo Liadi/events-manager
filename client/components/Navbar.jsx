@@ -4,7 +4,29 @@ import { Link } from 'react-router-dom';
 
 import Footer from './Footer.jsx';
 
-const Dashboard = () => {
+const AddCenterLink = (props) => {
+  if (props.userType === 'admin') {
+    return (
+      <li className="nav-item navbar-item mx-auto">
+        <Link className="nav-link" to='/add-center'>Add Center</Link>
+      </li>
+    );
+  }
+  return null;
+}
+
+const EventsLink = (props) => {
+  if (props.userType === 'admin') {
+    return (
+      <li className="nav-item navbar-item mx-auto">
+        <Link className="nav-link" to='/events'>Events</Link>
+      </li>
+    );
+  }
+  return null;
+} 
+
+const Dashboard = (props) => {
   return (
   	<nav className="navbar navbar-expand-lg navbar-light bg-light p-big" >
       <Link className="navbar-brand" to='/dashboard'>EM</Link>
@@ -16,9 +38,8 @@ const Dashboard = () => {
           <li className="nav-item navbar-item mx-auto">
             <Link className="nav-link" to='/centers'>Centers</Link>
           </li>
-          <li className="nav-item navbar-item mx-auto">
-            <Link className="nav-link" to='/add-center'>Add Center</Link>
-          </li>
+          <AddCenterLink userType={props.userType}/>
+          <EventsLink userType={props.userType}/>
           <li className="nav-item navbar-item mx-auto dropdown">
             <Link className="nav-link" to="/dashboard" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i className="fa fa-user fa-1x mx-auto" aria-hidden="true"></i>

@@ -5,7 +5,7 @@ export default function reducer(
     infoTabMsg: [],
     showModal: false,
     modalContent: null,
-    dashboardContent: 'timeline',
+    dashboardContent: null,
   },
   action) {
 

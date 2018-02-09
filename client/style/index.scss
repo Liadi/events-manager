@@ -43,9 +43,11 @@ main {
 }
 
 .search-toggle {
-  margin-left: 0px;
-  padding-left: 0px;
+  padding: 5px;
   color: $primary-color;
+  background-color: white;
+  border: 0.1px $primary-color solid;
+  border-radius: 3px;
 }
 
 .space-top {
