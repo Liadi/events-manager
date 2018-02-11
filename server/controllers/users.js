@@ -1,9 +1,9 @@
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import db from './../models';
+import { log } from './util';
 
 const { User } = db;
-
 
 process.env.SECRET_KEY = 'mysecretkey';
 const secret = process.env.SECRET_KEY;
@@ -32,11 +32,28 @@ module.exports = {
         userPassword: req.userPassword,
         userPhonNumber: req.userPhone,
         userType: req.newUserType || 'regular',
-      }).then(() => {
-        return res.status(201).json({
+      }).then((user) => {
+        res.status(201).json({
           message: 'user created',
           status: true,
         });
+        const logData = {
+          entityName: user.userFirstName,
+          entity: 'User',
+          entityId: user.id,
+          userId: req.userId || user.id,
+          action: 'POST',
+          before: JSON.stringify({}),
+          after: JSON.stringify({
+            id: user.id,
+            userFirstName: user.userFirstName,
+            userLastName: user.userLastName,
+            userEmail: user.userEmail,
+            userPhonNumber: user.userPhone,
+            userType: user.userType,
+          }),
+        }
+        log(logData);
       }).catch((error) => {
         const err = error.errors[0].message;
         return res.status(400).json({
@@ -44,6 +61,9 @@ module.exports = {
           status: false,
         });
       });
+
+      
+
     });
   },
 
@@ -51,6 +71,7 @@ module.exports = {
     if (req.userEmail === null) {
       return res.status(400).send({
         message: 'email is required',
+     
         status: false,
       });
     }

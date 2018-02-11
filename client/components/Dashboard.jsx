@@ -66,9 +66,10 @@ class Dashboard extends React.Component {
 
 const mapStateToProps = (state) => {
   const loggedIn = validateUser(state.user.userToken, state.user.accountUser.userId);
+  const userType = state.user.accountUser.userType || 'admin';
   return {
     dashboardContent: state.app.dashboardContent,
-    userType: state.user.accountUser.userType,
+    userType,
     loggedIn,
   }
 }

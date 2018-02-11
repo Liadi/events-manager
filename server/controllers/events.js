@@ -1,8 +1,8 @@
-import { error } from 'util';
+// import { error } from 'util';
+import db from './../models';
+import { log } from './util';
 
-// import Event from './../models';
-const Event = require('./../models').Event;
-const Center = require('./../models').Center;
+const { Center, Event } = db;
 
 module.exports = {
   createEvent(req, res) {
@@ -35,11 +35,29 @@ module.exports = {
         centerId: req.centerId,
         userId: req.userId,
       }).then((event) => {
-        return res.status(201).json({
+        res.status(201).json({
           message: 'event created',
           event,
           status: true,
         });
+
+        const logData = {
+          entityName: event.eventName,
+          entity: 'Event',
+          entityId: event.id,
+          userId: req.userId,
+          action: 'POST',
+          before: JSON.stringify({}),
+          after: JSON.stringify({
+            eventName: event.eventName,
+            eventTime: event.eventTime,
+            centerId: event.centerId,
+            userId: event.userId,
+          }),
+        };
+
+        log(logData);
+
       }).catch((error) => {
         const err = error.errors[0].message;
         return res.status(400).json({
@@ -84,17 +102,43 @@ module.exports = {
           status: false,
         });
       }
+      const oldEvent = event;
       event.update({
         eventName: req.eventName || event.eventName,
         eventAmountPaid: req.eventAmountPaid || event.eventAmountPaid,
         eventTime: req.eventTime || event.eventTime,
         centerId: req.centerId || event.centerId,
       }).then((event) => {
-        return res.status(200).json({
+        res.status(200).json({
           message: 'event updated',
           event,
           status: true,
         });
+
+
+        const logData = {
+          entityName: oldEvent.eventName,
+          entity: 'Event',
+          entityId: event.id,
+          userId: req.userId,
+          action: 'UPDATE',
+          before: JSON.stringify({
+            eventName: oldEvent.eventName,
+            eventTime: oldEvent.eventTime,
+            centerId: oldEvent.centerId,
+            userId: oldEvent.userId,
+          }),
+          after: JSON.stringify({
+            eventName: event.eventName,
+            eventTime: event.eventTime,
+            centerId: event.centerId,
+            userId: event.userId,
+          }),
+        };
+
+        log(logData);
+
+
       }).catch((error) => {
         const err = error.errors[0].message;
         return res.status(400).json({
@@ -179,11 +223,31 @@ module.exports = {
           status: false,
         });
       }
+      const oldEvent = event;
       event.destroy();
-      return res.status(200).json({
+      res.status(200).json({
         message: 'event deleted',
         status: true,
       });
+
+
+      const logData = {
+        entityName: oldEvent.eventName,
+        entity: 'Event',
+        entityId: oldEvent.id,
+        userId: req.userId,
+        action: 'DELETE',
+        before: JSON.stringify({
+          eventName: oldEvent.eventName,
+          eventTime: oldEvent.eventTime,
+          centerId: oldEvent.centerId,
+          userId: oldEvent.userId,
+        }),
+        after: JSON.stringify({}),
+      };
+
+      log(logData);
+
     });
   },
 

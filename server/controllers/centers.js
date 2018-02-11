@@ -1,4 +1,5 @@
 import db from './../models';
+import { log } from './util';
 
 const { Center, Event, Image } = db;
 
@@ -17,11 +18,35 @@ module.exports = {
       centerStatus: req.centerStatus,
       centerAmenities: req.centerAmenities,
     }).then((center) => {
-      return res.status(201).json({
+      res.status(201).json({
         message: 'center created',
         center,
         status: true,
       });
+      const logData = {
+        entityName: center.centerName,
+        entity: 'Center',
+        entityId: center.id,
+        userId: req.userId,
+        action: 'POST',
+        before: JSON.stringify({}),
+        after: JSON.stringify({
+          centerName: center.centerName,
+          centerAddress: center.centerAddress,
+          centerState: center.centerState,
+          centerCity: center.centerCity,
+          centerCountry: center.centerCountry,
+          centerDescription: center.centerDescription,
+          centerMantra: center.centerMantra,
+          centerCapacity: center.centerCapacity,
+          centerRate: center.centerRate,
+          centerStatus: center.centerStatus,
+          centerAmenities: center.centerAmenities,
+        }),
+      };
+
+      log(logData);
+
     }).catch((error) => {
       const err = error.errors[0].message;
       return res.status(400).json({
@@ -45,6 +70,7 @@ module.exports = {
           status: false,
         });
       }
+      const oldCenter = center;
       center.update({
         centerName: req.centerName || center.centerName,
         centerAddress: req.centerAddress || center.centerAddress,
@@ -58,11 +84,48 @@ module.exports = {
         centerStatus: req.centerStatus || center.centerStatus,
         centerAmenities: req.centerAmenities || center.centerAmenities,
       }).then((center) => {
-        return res.status(200).json({
+        res.status(200).json({
           message: 'center updated',
           center,
           status: true,
         });
+
+        const logData = {
+          entityName: oldCenter.centerName,
+          entity: 'Center',
+          entityId: center.id,
+          userId: req.userId,
+          action: 'UPDATE',
+          before: JSON.stringify({
+            centerName: oldCenter.centerName,
+            centerAddress: oldCenter.centerAddress,
+            centerState: oldCenter.centerState,
+            centerCity: oldCenter.centerCity,
+            centerCountry: oldCenter.centerCountry,
+            centerDescription: oldCenter.centerDescription,
+            centerMantra: oldCenter.centerMantra,
+            centerCapacity: oldCenter.centerCapacity,
+            centerRate: oldCenter.centerRate,
+            centerStatus: oldCenter.centerStatus,
+            centerAmenities: oldCenter.centerAmenities,
+          }),
+          after: JSON.stringify({
+            centerName: center.centerName,
+            centerAddress: center.centerAddress,
+            centerState: center.centerState,
+            centerCity: center.centerCity,
+            centerCountry: center.centerCountry,
+            centerDescription: center.centerDescription,
+            centerMantra: center.centerMantra,
+            centerCapacity: center.centerCapacity,
+            centerRate: center.centerRate,
+            centerStatus: center.centerStatus,
+            centerAmenities: center.centerAmenities,
+          }),
+        }
+
+        log(logData);
+
       }).catch((error) => {
         const err = error.errors[0].message;
         return res.status(400).json({
@@ -137,11 +200,38 @@ module.exports = {
           status: false,
         });
       }
+      const oldCenter = center;
       center.destroy();
-      return res.status(200).json({
+      res.status(200).json({
         message: 'center deleted',
         status: true,
       });
+
+      const logData = {
+        entityName: oldCenter.centerName,
+        entity: 'Center',
+        entityId: oldCenter.id,
+        userId: req.userId,
+        action: 'DELETE',
+        before: JSON.stringify({
+          centerName: oldCenter.centerName,
+          centerAddress: oldCenter.centerAddress,
+          centerState: oldCenter.centerState,
+          centerCity: oldCenter.centerCity,
+          centerCountry: oldCenter.centerCountry,
+          centerDescription: oldCenter.centerDescription,
+          centerMantra: oldCenter.centerMantra,
+          centerCapacity: oldCenter.centerCapacity,
+          centerRate: oldCenter.centerRate,
+          centerStatus: oldCenter.centerStatus,
+          centerAmenities: oldCenter.centerAmenities,
+        }),
+        after: JSON.stringify({}),
+      }
+
+      log(logData);
+
+
     });
   },
 
