@@ -6,6 +6,7 @@ export default function reducer(
     showModal: false,
     modalContent: null,
     dashboardContent: null,
+    records: {},
   },
   action) {
 

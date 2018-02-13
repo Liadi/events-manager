@@ -252,6 +252,15 @@ module.exports = {
   },
 
   getAllEvents(req, res) {
+    const tempParams = req.query;
+    const finalParams = {};
+
+    for (let field in tempParams) {
+      if (tempParams.hasOwnProperty(field) && tempParams[field] !== undefined && tempParams[field] !== '') {
+        finalParams[field] = tempParams[field];
+      }
+    }
+
     if (req.userType === 'admin') {
       Event.findAll({
         include: [{
@@ -307,18 +316,99 @@ module.exports = {
         'userId',
         ],
       }).then((events) => {
-        if (events.length > 0){
-          return res.status(200).json({
-            message: 'all events found',
-            status: true,
-            events,
-          });
-        }
-        return res.status(200).json({
-          message: 'no events',
-          status: true
-        })
+        return findEvents(events, finalParams, res);
+      }).catch((error) => {
+        console.log('error => ', error);
+        return res.status(400).json({
+          message: 'invalid query',
+          status: false,
+        });
       });
     }
   },
 };
+
+
+const searchEvents = ((events, finalParams) => {
+  const retEvents = [];
+  for(let i in events) {
+    const event = events[i];
+    let foundIndex = 0;
+    for (let key in finalParams) {
+      switch(key) {
+        case 'eventName': {
+          foundIndex = event[key].search(finalParams[key])
+          break;
+        }
+
+        case 'eventStatus': {
+          if (event[key] !== finalParams[key]){
+            foundIndex = -1;
+          }
+          break;
+        }
+
+        case 'eventAmountPaid': {
+          if (parseInt(event[key]) < parseInt(finalParams[key])){
+            foundIndex = -1;
+          }
+          break;
+        }
+
+        case 'eventTime': {
+          const timeParam = JSON.parse(finalParams[key]);
+          console.log('time parameters => ', new Date(timeParam['low']), new Date(event[key]), new Date(timeParam['high']));
+          if (parseInt(timeParam['low']) > parseInt(event[key]) || parseInt(event[key]) > parseInt(timeParam['high'])){
+            foundIndex = -1;
+          }
+          break;
+        }
+
+        case 'centerId':{
+          if (parseInt(event[key]) !== parseInt(finalParams[key])){
+            foundIndex = -1;
+          }
+          break;
+        }
+      }
+      if (foundIndex === -1) {
+        break;
+      }
+    }
+    if (foundIndex !== -1) {
+      event['searchIndex'] = foundIndex;
+      retEvents.push(event);
+    }
+  }
+  return retEvents;
+});
+
+const findEvents = (( events, finalParams, res ) => {
+  console.log('finalParams => ', finalParams);
+  let retEvents = searchEvents(events, finalParams);
+
+  if (finalParams['sort']) {
+    const tempSortObj = JSON.parse(finalParams['sort'])
+    retEvents.sort((a, b) => {
+      if (tempSortObj['order'] === 'decreasing'){
+        return b[tempSortObj['item']] - a[tempSortObj['item']];
+      }
+      return a[tempSortObj['item']] - b[tempSortObj['item']];
+    });
+  }
+  if ( finalParams['limit'] ) {
+    retEvents = retEvents.slice(0, parseInt(finalParams['limit']));
+  }
+
+  if (retEvents.length > 0){
+    return res.status(200).json({
+      message: 'events found',
+      status: true,
+      events: retEvents,
+    });
+  }
+  return res.status(404).json({
+    message: 'events not found',
+    status: false,
+  })
+});

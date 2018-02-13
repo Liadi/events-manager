@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken';
 
 module.exports = {
 	validateUser(token, userId) {
-	  return true
 	  const [ decoded, currentTime, tempUserId ] = [ jwt.decode(token), (Date.now().valueOf() / 1000), parseInt(userId) ];
 	  if (!tempUserId || !token) {
 	    return false;

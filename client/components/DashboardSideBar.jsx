@@ -4,7 +4,9 @@ const DashboardSideBar = (props) => {
   return (
     <div id="side-bar">
       {(props.userType === 'regular')? (<div>
-        <button className="tab-btn" onClick={ e => {props.changeDashboardContentFunc('timeline')}}>
+        <button className="tab-btn" onClick={ e => {
+          props.changeDashboardContentFunc('timeline');
+        }}>
           <span className="mx-auto">
             <span>
               <i className="fa fa-calendar-o fa-2x" aria-hidden="true"></i>

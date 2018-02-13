@@ -2,6 +2,7 @@ import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { closeInfoTab, resetAppState, changeDashboardContent } from '../actions/appAction';
+import { fetchEvents } from '../actions/eventAction';
 import { resetUserFields } from '../actions/userAction';
 import Footer from './Footer.jsx';
 import Navbar from './Navbar.jsx';
@@ -23,7 +24,7 @@ class Dashboard extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.unmountFunc();
+    this.props.unmountDashboardFunc();
   }
 
   componentWillMount() {
@@ -31,7 +32,8 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { dashboardContent, changeDashboardContentFunc, loggedIn, userType } = this.props;
+    const { dashboardContent, changeDashboardContentFunc, loggedIn, userType, events } = this.props;
+    console.log('ev => ', events);
     return (
       <Route render={() => (
         loggedIn ? (
@@ -41,7 +43,7 @@ class Dashboard extends React.Component {
               <DashboardSideBar changeDashboardContentFunc={changeDashboardContentFunc} userType={userType}/>
               <div className="mx-auto">
                 <div id="tabContentContainer">
-                  <TimelineContent show={ dashboardContent === 'timeline' ? true : false } />
+                  <TimelineContent show={ dashboardContent === 'timeline' ? true : false } events={events} />
                   <RecentContent show={ dashboardContent === 'recent' ? true : false } />
                   <RecordsContent show={ dashboardContent === 'records' ? true : false } />
                   <HowContent show={ dashboardContent === 'how' ? true : false } />
@@ -66,9 +68,10 @@ class Dashboard extends React.Component {
 
 const mapStateToProps = (state) => {
   const loggedIn = validateUser(state.user.userToken, state.user.accountUser.userId);
-  const userType = state.user.accountUser.userType || 'admin';
+  const userType = state.user.accountUser.userType;
   return {
     dashboardContent: state.app.dashboardContent,
+    events: state.event.events,
     userType,
     loggedIn,
   }
@@ -78,8 +81,25 @@ const mapDispatchToProps = (dispatch, state) => {
   return {
     changeDashboardContentFunc: (newContent) => {
       dispatch(changeDashboardContent(newContent));
+      
+      if (newContent === 'timeline') {
+        const now = new Date(Date.now());
+        const farthestFuture = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const timeFrame = JSON.stringify({
+          low: now,
+          high: farthestFuture,
+        });
+        const tempParams = {
+          limit: 7,
+          sort: JSON.stringify({item: 'eventTime', order: 'increasing'}),
+          eventTime: timeFrame,
+        }
+        dispatch(fetchEvents(tempParams));
+      }
+
     },
-    unmountFunc: () => {
+
+    unmountDashboardFunc: () => {
       dispatch(resetUserFields());
       dispatch(resetAppState());
     },

@@ -246,7 +246,7 @@ module.exports = {
     }
     if (req.userType){
       Center.findAll().then((centers) => {
-        return findCenter(centers, finalParams, res);
+        return findCenters(centers, finalParams, res);
       })
       .catch((error) => {
         return res.status(400).json({
@@ -258,8 +258,7 @@ module.exports = {
       Center.findAll({
         attributes: { exclude: ['centerStatus'] },
       }).then((centers) => {
-        const ret = findCenter(centers, finalParams, res);
-        return ret;
+        return findCenters(centers, finalParams, res);
       })
       .catch((error) => {
         return res.status(400).json({
@@ -337,7 +336,7 @@ const searchCenters = ((centers, finalParams) => {
   return retCenters;
 });
 
-const findCenter = ((centers, finalParams, res ) => {
+const findCenters = ((centers, finalParams, res ) => {
   const retCenters = searchCenters(centers, finalParams)
   if (retCenters.length > 0){
     return res.status(200).json({

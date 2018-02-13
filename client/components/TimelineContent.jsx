@@ -1,32 +1,41 @@
 import React from 'react';
 
-const TimelineContent = (props) => {
-  if (props.show) {
-    return (
-      <div id="timelineContent" className="tab-content">
-        <h4>
-          Timeline
-        </h4>
-        <div className="tabSection">
-          <h5>
-            Upcoming Events
-          </h5>
-          <div>
-            You do not have any Upcoming event
-          </div>
-        </div>
-        <div className="tabSection">
-          <h5>
-            Past Events
-          </h5>
-          <div>
-            No past events  
-          </div>
-        </div>
-      </div>
-    );
+class TimelineContent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.props = props;
   }
-  return null
+
+  componentWillMount() {
+    // this.props.mountTimelineFunc();
+  }
+
+  render() {
+    const { show, events } = this.props;
+    console.log('patapata => ', events);
+    if (show) {
+      return (
+        <div id="timelineContent" className="tab-content">
+          <h4>
+            Timeline
+          </h4>
+          <div className="tabSection">
+            <h5>
+              Events
+            </h5>
+            <div>
+              {events.map((event) => 
+                <div key={event.id} className='container'>
+                  <p className="mx-auto col-9">{event.eventName}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return null
+  }
 }
 
 export default TimelineContent;

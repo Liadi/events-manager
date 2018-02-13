@@ -14,7 +14,7 @@ export default function reducer(
 	switch (action.type) {
     case 'FIELD_ERROR': {
       let temp = state.error.fieldError;
-      temp = {...temp};
+      temp = new Map([...temp]);
       temp[action.payload.field] = action.payload.msg;
       return {
         ...state,
