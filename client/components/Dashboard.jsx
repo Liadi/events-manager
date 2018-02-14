@@ -84,7 +84,8 @@ const mapDispatchToProps = (dispatch, state) => {
       
       if (newContent === 'timeline') {
         const now = new Date(Date.now());
-        const farthestFuture = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const farthestFuture = new Date(now.getFullYear() + 2, now.getMonth(), now.getDate());
+        console.log('now, farthest Time => ', now, ' ', farthestFuture);
         const timeFrame = JSON.stringify({
           low: now,
           high: farthestFuture,

@@ -357,8 +357,9 @@ const searchEvents = ((events, finalParams) => {
 
         case 'eventTime': {
           const timeParam = JSON.parse(finalParams[key]);
-          console.log('time parameters => ', new Date(timeParam['low']), new Date(event[key]), new Date(timeParam['high']));
-          if (parseInt(timeParam['low']) > parseInt(event[key]) || parseInt(event[key]) > parseInt(timeParam['high'])){
+          const [low, mainTime, high] = [ new Date(timeParam['low']), new Date(event[key]) , new Date(timeParam['high']) ]; 
+          console.log('time parameters => ', 'low =', low, ' event\'s =', mainTime, ' high =', high);
+          if (low >= mainTime || mainTime > high){
             foundIndex = -1;
           }
           break;
