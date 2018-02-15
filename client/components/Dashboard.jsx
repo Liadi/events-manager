@@ -3,7 +3,7 @@ import { Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { closeInfoTab, resetAppState, changeDashboardContent } from '../actions/appAction';
 import { fetchEvents } from '../actions/eventAction';
-import { resetUserFields, fetchUserLogs } from '../actions/userAction';
+import { resetUserFields, fetchUserLogs, userLogout } from '../actions/userAction';
 import Footer from './Footer.jsx';
 import Navbar from './Navbar.jsx';
 import TimelineContent from './TimelineContent.jsx';
@@ -31,12 +31,12 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { dashboardContent, changeDashboardContentFunc, loggedIn, userType, events, logs } = this.props;
+    const { dashboardContent, changeDashboardContentFunc, loggedIn, userType, events, logs, userLogoutFunc } = this.props;
     return (
       <Route render={() => (
         loggedIn ? (
           <div>
-            <Navbar userType={userType} />
+            <Navbar userType={userType} userLogoutFunc={userLogoutFunc} />
             <main className="container-fluid d-flex">
               <DashboardSideBar changeDashboardContentFunc={changeDashboardContentFunc} userType={userType}/>
               <div className="mx-auto">
@@ -111,6 +111,10 @@ const mapDispatchToProps = (dispatch, state) => {
     unmountDashboardFunc: () => {
       dispatch(resetUserFields());
       dispatch(resetAppState());
+    },
+
+    userLogoutFunc: () => {
+      dispatch(userLogout());
     },
   }
 }

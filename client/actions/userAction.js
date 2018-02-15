@@ -142,6 +142,12 @@ module.exports = {
     }
   },
 
+  userLogout() {
+    return {
+      type: 'USER_LOGOUT',
+    }
+  },
+
   userFieldInputError(field, msg) {
     return {
       type: 'USER_FIELD_ERROR',

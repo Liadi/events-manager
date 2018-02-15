@@ -26,7 +26,7 @@ const EventsLink = (props) => {
   return null;
 } 
 
-const Dashboard = (props) => {
+const Navbar = (props) => {
   return (
   	<nav className="navbar navbar-expand-lg navbar-light bg-light p-big" >
       <Link className="navbar-brand" to='/dashboard'>EM</Link>
@@ -48,7 +48,11 @@ const Dashboard = (props) => {
               <Link className="dropdown-item" to="events">My Events</Link>
               <Link className="dropdown-item" to="create-event">Create Event</Link>
               <div className="dropdown-divider"></div>
-              <Link className="dropdown-item" to="/">Log out</Link>
+              <button className="dropdown-item" 
+                onClick={ e => {
+                  props.userLogoutFunc();
+                }
+              }>Log out</button>
             </div>
           </li>
         </ul>
@@ -57,4 +61,4 @@ const Dashboard = (props) => {
   );
 }
 
-export default Dashboard;
+export default Navbar;

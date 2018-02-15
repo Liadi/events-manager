@@ -127,6 +127,14 @@ export default function reducer(
       }
     }
 
+    case 'USER_LOGOUT': {
+      return {
+        ...state,
+        accountUser: {},
+        userToken: null,
+      }
+    }
+
     case 'CREATE_USER_PENDING' : {
       return {
         ...state,
