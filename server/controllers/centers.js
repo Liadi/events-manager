@@ -241,7 +241,7 @@ module.exports = {
 
     for (let field in tempParams) {
       if (tempParams.hasOwnProperty(field) && tempParams[field] !== undefined && tempParams[field] !== '') {
-        finalParams[field] = tempParams[field].toLowerCase();
+        finalParams[field] = tempParams[field];
       }
     }
     if (req.userType){
@@ -249,6 +249,7 @@ module.exports = {
         return findCenters(centers, finalParams, res);
       })
       .catch((error) => {
+        console.log('error => ', error);
         return res.status(400).json({
           message: 'invalid query',
           status: false,
@@ -274,6 +275,7 @@ const searchCenters = ((centers, finalParams) => {
   const retCenters = [];
   for(let i in centers) {
     const center = centers[i];
+    console.log('in loop, id is => ', center.id);
     let foundIndex = 0;
     for (let key in finalParams) {
       switch(key) {
@@ -337,12 +339,32 @@ const searchCenters = ((centers, finalParams) => {
 });
 
 const findCenters = ((centers, finalParams, res ) => {
-  const retCenters = searchCenters(centers, finalParams)
+  let retCenters = searchCenters(centers, finalParams)
+  if (finalParams['sort']) {
+    const tempSortObj = JSON.parse(finalParams['sort']);
+    retCenters.sort((a, b) => {
+      if (tempSortObj['order'] === 'decreasing'){
+        return b[tempSortObj['item']] - a[tempSortObj['item']];
+      }
+      return a[tempSortObj['item']] - b[tempSortObj['item']];
+    });
+  }
+  const n = retCenters.length;
+  const [limit, page] = [parseInt(finalParams['limit']), parseInt(finalParams['page'])];
+  if ( limit && limit > 0) {
+    if (page && page > 0) {
+      retCenters = retCenters.slice((page - 1) * limit, page * limit);
+    } else {
+      retCenters = retCenters.slice(0, limit);
+    }
+  }
+
   if (retCenters.length > 0){
     return res.status(200).json({
       message: 'centers found',
       status: true,
       centers: retCenters,
+      n,
     });
   }
   return res.status(404).json({

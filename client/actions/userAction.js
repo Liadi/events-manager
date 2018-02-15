@@ -196,4 +196,20 @@ module.exports = {
       type: 'RESET_USER_FIELDS',
     }
   },
+
+  fetchUserLogs(param) {
+    return function(dispatch, getState) {  
+      dispatch({
+        type: 'FETCH_LOGS',
+        payload: axios({
+          method: 'get',
+          url: 'api/v1/logs',
+          params: param,
+          headers: {
+            'token': getState().user.userToken,
+          }
+        }),
+      });
+    }
+  }
 }

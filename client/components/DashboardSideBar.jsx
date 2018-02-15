@@ -29,18 +29,6 @@ const DashboardSideBar = (props) => {
       </div>) : (null)
       }
 
-      {(props.userType === 'admin')? (<div>
-        <button className="tab-btn" onClick={ e => {props.changeDashboardContentFunc('records')}}>
-          <span className="mx-auto">
-            <span>
-              <i className="fa fa-calendar-o fa-2x" aria-hidden="true"></i>
-            </span>
-            <h3 className="d-inline">Records</h3>
-          </span>
-        </button>
-      </div>) : (null)
-      }
-
       <div>
         <button className="tab-btn" onClick={ e => {props.changeDashboardContentFunc('how')}}> 
           <span className="mx-auto">

@@ -1,5 +1,5 @@
 import express from 'express';
-import { centerControllers, eventControllers, userControllers } from '../controllers';
+import { centerControllers, eventControllers, userControllers, logControllers } from '../controllers';
 import { centerMiddlewares, eventMiddlewares, userMiddlewares, cleanData } from '../middlewares/';
 import app from '../index';
 
@@ -33,5 +33,8 @@ router.put('/events/:eventId', cleanData, userMiddlewares.validateToken, eventMi
 router.get('/events/:eventId', cleanData, userMiddlewares.validateToken, eventControllers.getEvent);
 router.delete('/events/:eventId', cleanData, userMiddlewares.validateToken, eventControllers.deleteEvent);
 router.get('/events/', cleanData, userMiddlewares.validateToken, eventControllers.getAllEvents);
+
+// log
+router.get('/logs/', cleanData, userMiddlewares.validateToken, logControllers.getAllLogs);
 
 export default router;

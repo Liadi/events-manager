@@ -385,7 +385,6 @@ const searchEvents = ((events, finalParams) => {
 });
 
 const findEvents = (( events, finalParams, res ) => {
-  console.log('finalParams => ', finalParams);
   let retEvents = searchEvents(events, finalParams);
 
   if (finalParams['sort']) {
@@ -397,8 +396,14 @@ const findEvents = (( events, finalParams, res ) => {
       return a[tempSortObj['item']] - b[tempSortObj['item']];
     });
   }
-  if ( finalParams['limit'] ) {
-    retEvents = retEvents.slice(0, parseInt(finalParams['limit']));
+  const n = retEvents.length;
+  const [limit, page] = [parseInt(finalParams['limit']), parseInt(finalParams['page'])];
+  if ( limit && limit > 0) {
+    if (page && page > 0) {
+      retEvents = retEvents.slice((page - 1) * limit, page * limit);
+    } else {
+      retEvents = retEvents.slice(0, limit);
+    }
   }
 
   if (retEvents.length > 0){
@@ -406,6 +411,7 @@ const findEvents = (( events, finalParams, res ) => {
       message: 'events found',
       status: true,
       events: retEvents,
+      n,
     });
   }
   return res.status(404).json({
