@@ -47,7 +47,7 @@ class Login extends React.Component {
                         }
                       }
                       className={
-                        (userFieldError.get('userEmail') === undefined) ? "form-control" : "form-control field-error"
+                        (userFieldError['userEmail'] === undefined) ? "form-control" : "form-control field-error"
                       }
                       />
                     </div>
@@ -59,7 +59,7 @@ class Login extends React.Component {
                         }
                       }
                       className={
-                        (userFieldError.get('userPassword') === undefined) ? "form-control" : "form-control field-error"
+                        (userFieldError['userPassword'] === undefined) ? "form-control" : "form-control field-error"
                       }
                       />
                     </div>

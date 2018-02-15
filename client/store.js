@@ -1,4 +1,5 @@
 import { applyMiddleware, createStore } from 'redux';
+import { loadState } from './localStorage';
 
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
@@ -8,4 +9,6 @@ import reducer from './reducers';
 
 const middleware = applyMiddleware(promise(), thunk, logger);
 
-export default createStore(reducer, middleware)
+const persistedState = loadState();
+
+export default createStore(reducer, persistedState, middleware);

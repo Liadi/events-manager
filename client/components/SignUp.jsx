@@ -43,7 +43,7 @@ class SignUp extends React.Component {
                   <div className="form-group">
                     <label htmlFor="inputFirstName">First Name</label>
                     <input type="text" className={
-                      (userFieldError.get('userFirstName') === undefined) ? "form-control" : "form-control field-error"
+                      (userFieldError['userFirstName'] === undefined) ? "form-control" : "form-control field-error"
                     } 
                     id="inputFirstName" 
                     onChange={ e => {
@@ -55,7 +55,7 @@ class SignUp extends React.Component {
                   <div className="form-group">
                     <label htmlFor="inputLastName">Last Name</label>
                     <input type="text" className={
-                      (userFieldError.get('userLastName') === undefined) ? "form-control" : "form-control field-error"
+                      (userFieldError['userLastName'] === undefined) ? "form-control" : "form-control field-error"
                     } 
                     id="inputLastName" 
                     onChange={ e => {
@@ -67,7 +67,7 @@ class SignUp extends React.Component {
                   <div className="form-group">
                     <label htmlFor="inputEmail">Email address</label>
                     <input type="text" className={
-                      (userFieldError.get('userEmail') === undefined) ? "form-control" : "form-control field-error"
+                      (userFieldError['userEmail'] === undefined) ? "form-control" : "form-control field-error"
                     } 
                     id="inputEmail" 
                     onChange={ e => {
@@ -79,7 +79,7 @@ class SignUp extends React.Component {
                   <div className="form-group">
                     <label htmlFor="inputPassword">Password</label>
                     <input type="password" className={
-                      (userFieldError.get('userPassword') === undefined || !passwordConfirmed ) ? "form-control" : "form-control field-error"
+                      (userFieldError['userPassword'] === undefined || !passwordConfirmed ) ? "form-control" : "form-control field-error"
                     } 
                     id="inputPassword" 
                     onChange={ e => {

@@ -5,7 +5,7 @@ export default function reducer(
     fetching: false,
     fetched: false,
     error: {
-      fieldError: new Map(),
+      fieldError: {},
       serverError: null,
     },
   },

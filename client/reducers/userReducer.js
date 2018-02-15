@@ -8,7 +8,7 @@ export default function reducer(
     fetching: false,
     fetched: false,
     error: {
-      fieldError: new Map(),
+      fieldError: {},
       serverError: null,
     },
   }, action) {
@@ -16,8 +16,8 @@ export default function reducer(
 	switch (action.type) {
     case 'USER_FIELD_ERROR': {
       let temp = state.error.fieldError;
-      temp = new Map([...temp]);
-      temp.set(action.payload.field, action.payload.msg);
+      temp = {...temp};
+      temp[action.payload.field] =  action.payload.msg;
       return {
         ...state,
         error: Object.assign({}, state.error, {fieldError: temp}),
@@ -38,9 +38,9 @@ export default function reducer(
 
     case 'DELETE_USER_FIELD_ERROR': {
       let temp = state.error.fieldError;
-      temp = new Map([...temp]);
+      temp = {...temp};
 
-      temp.delete(action.payload.field);
+      delete temp[action.payload.field];
       return {
         ...state,
         error: Object.assign({}, state.error, {fieldError: temp}),
@@ -60,7 +60,7 @@ export default function reducer(
         ...state,
         user: {},
         error: {
-          fieldError: new Map(),
+          fieldError: {},
           serverError: null,
         }
       }

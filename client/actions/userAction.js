@@ -47,6 +47,13 @@ module.exports = {
         temp.forEach((value, key) => {
           msg.push(value);
         });
+
+        for (let field in temp) {
+          if (temp.hasOwnProperty(field)) {
+            msg.push(temp[field]);
+          }
+        }
+        
         dispatch ({
           type: 'OPEN_INFO_TAB',
           payload: {
@@ -106,9 +113,11 @@ module.exports = {
       if (getState().user.error.fieldError.size > 0) {
         let temp = getState().user.error.fieldError;
         let msg = [];
-        temp.forEach((value, key) => {
-          msg.push(value);
-        });
+        for (let field in temp) {
+          if (temp.hasOwnProperty(field)) {
+            msg.push(temp[field]);
+          }
+        }
         dispatch ({
           type: 'OPEN_INFO_TAB',
           payload: {

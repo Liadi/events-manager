@@ -5,7 +5,7 @@ export default function reducer(
     fetching: false,
     fetched: false,
     error: {
-      fieldError: new Map(),
+      fieldError: {},
       serverError: null,
     },
   },
@@ -14,7 +14,7 @@ export default function reducer(
 	switch (action.type) {
     case 'FIELD_ERROR': {
       let temp = state.error.fieldError;
-      temp = new Map([...temp]);
+      temp = {...temp};
       temp[action.payload.field] = action.payload.msg;
       return {
         ...state,
@@ -47,7 +47,7 @@ export default function reducer(
         ...state,
         center: {},
         error: {
-          fieldError: new Map(),
+          fieldError: {},
           serverError: null,
         }
       }
