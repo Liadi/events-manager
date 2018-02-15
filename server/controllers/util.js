@@ -12,8 +12,11 @@ function log(logData) {
     before: logData.before,
     after: logData.after,
   }).catch((e)=> {
-    // console.log('error => ', e);
+    // console.log('not logged, error => ', e);
+    return;
   })
+  // console.log('logged');
+  return;
 }
 
 export {log};

@@ -70,7 +70,7 @@ module.exports = {
           status: false,
         });
       }
-      const oldCenter = center;
+      const oldCenter = {...center.dataValues};
       center.update({
         centerName: req.centerName || center.centerName,
         centerAddress: req.centerAddress || center.centerAddress,
@@ -200,7 +200,7 @@ module.exports = {
           status: false,
         });
       }
-      const oldCenter = center;
+      const oldCenter = {...center.dataValues};
       center.destroy();
       res.status(200).json({
         message: 'center deleted',

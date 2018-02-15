@@ -13,8 +13,10 @@ module.exports = {
       req.userFirstName = (req.body.userFirstName && req.body.userFirstName.trim().toLowerCase()) || null;
       req.userLastName = (req.body.userLastName && req.body.userLastName.trim().toLowerCase()) || null;
       req.userEmail = (req.body.userEmail && req.body.userEmail.trim().toLowerCase()) || null;
-      req.userPassword = (req.body.userPassword && req.body.userPassword.trim()) || null;
-      req.userPhoneNumber = (req.body.userPhone && req.body.userPhone.trim()) || null;
+      req.userPassword = req.body.userPassword || null;
+      req.oldUserPassword = req.body.oldUserPassword || null;
+      req.newUserPassword = req.body.newUserPassword || null;
+      req.userPhoneNumber = (req.body.userPhoneNumber && req.body.userPhoneNumber.trim()) || null;
       req.userType = null;
 
       // event fields

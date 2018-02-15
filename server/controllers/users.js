@@ -30,7 +30,7 @@ module.exports = {
         userLastName: req.userLastName,
         userEmail: req.userEmail,
         userPassword: req.userPassword,
-        userPhonNumber: req.userPhone,
+        userPhoneNumber: req.userPhoneNumber,
         userType: req.newUserType || 'regular',
       }).then((user) => {
         res.status(201).json({
@@ -49,7 +49,7 @@ module.exports = {
             userFirstName: user.userFirstName,
             userLastName: user.userLastName,
             userEmail: user.userEmail,
-            userPhonNumber: user.userPhone,
+            userPhoneNumber: user.userPhoneNumber,
             userType: user.userType,
           }),
         }
@@ -122,6 +122,81 @@ module.exports = {
       return res.status(400).send({
         message: err,
         status: false,
+      });
+    });
+  },
+
+  modifyUser(req, res) {
+    User.findById(req.userId).then((user) => {
+      if (!user) {
+        return res.status(404).json({
+          message: 'user data not found',
+          status: false,
+        }); 
+      }
+      // Password Confirmation (if exists)
+      if (req.oldUserPassword && req.newUserPassword){
+        if(bcryptjs.compareSync(req.oldUserPassword, user.userPassword)){
+          if(req.newUserPassword.length < 6) {
+            return res.status(400).json({
+              message: 'password should have at least 6 characters',
+              status: false,
+            });
+          }
+          req.userPassword = bcryptjs.hashSync(req.newUserPassword, 8);
+        } else {
+          return res.status(400).json({
+            message: 'wrong password',
+            status: false,
+          })
+        }
+      } else {
+        req.userPassword = null;
+      }
+
+      const oldUser = {...user.dataValues};
+      user.update({
+        userFirstName: req.userFirstName || user.userFirstName,
+        userLastName: req.userLastName || user.userLastName,
+        userEmail: req.userEmail || user.userEmail,
+        userPassword: req.userPassword || user.userPassword,
+        userPhoneNumber: req.userPhoneNumber || user.userPhoneNumber,
+      }).then((user) => {
+        res.status(200).json({
+          message: 'user updated',
+          user,
+          status: true,
+        });
+        
+        const logData = {
+          entityName: oldUser.userFirstName,
+          entity: 'User',
+          entityId: user.id,
+          userId: req.userId,
+          action: 'UPDATE',
+          before: JSON.stringify({
+            userFirstName: oldUser.userFirstName,
+            userLastName: oldUser.userLastName,
+            userEmail: oldUser.userEmail,
+            userPassword: oldUser.userPassword === user.userPassword? '****' : '***',
+            userPhoneNumber: oldUser.userPhoneNumber,
+          }),
+          after: JSON.stringify({
+            userFirstName: user.userFirstName,
+            userLastName: user.userLastName,
+            userEmail: user.userEmail,
+            userPassword: '****',
+            userPhoneNumber: user.userPhoneNumber,
+          }),
+        }
+
+        log(logData);
+      }).catch((error) => {
+        const err = error.errors[0].message;
+        return res.status(400).json({
+          message: err,
+          status: false,
+        });
       });
     });
   },

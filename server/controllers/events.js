@@ -102,7 +102,7 @@ module.exports = {
           status: false,
         });
       }
-      const oldEvent = event;
+      const oldEvent = {...event.dataValues};
       event.update({
         eventName: req.eventName || event.eventName,
         eventAmountPaid: req.eventAmountPaid || event.eventAmountPaid,
@@ -223,7 +223,7 @@ module.exports = {
           status: false,
         });
       }
-      const oldEvent = event;
+      const oldEvent = {...event.dataValues};
       event.destroy();
       res.status(200).json({
         message: 'event deleted',
