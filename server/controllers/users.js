@@ -155,6 +155,22 @@ module.exports = {
       }
 
       const oldUser = {...user.dataValues};
+      let nothingToChange = true;
+      const tempFields = [req.userFirstName, req.userLastName, req.userEmail, req.userPassword, req.userPhoneNumber];
+      console.log('tempFields ', tempFields, req.userLastName);
+      for (let i in tempFields) {
+        console.log('@ i => ', tempFields[i], (tempFields[i] || false));
+        if (tempFields[i]) {
+          nothingToChange = false;
+          break;
+        }
+      }
+      if (nothingToChange) {
+        return res.status(400).json({
+          message: 'No new entry',
+          status: false,
+        });
+      }
       user.update({
         userFirstName: req.userFirstName || user.userFirstName,
         userLastName: req.userLastName || user.userLastName,
@@ -164,7 +180,14 @@ module.exports = {
       }).then((user) => {
         res.status(200).json({
           message: 'user updated',
-          user,
+          user: {
+            userId: user.id,
+            userFirstName: user.userFirstName,
+            userLastName: user.userLastName,
+            userEmail: user.userEmail,
+            userPhoneNumber: user.userPhoneNumber,
+            userType: user.userType,
+          },
           status: true,
         });
         

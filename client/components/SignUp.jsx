@@ -6,7 +6,7 @@ import InfoTab from './InfoTab.jsx';
 import ModalView from './ModalView.jsx';
 import { closeInfoTab, closeModal, resetAppState } from '../actions/appAction';
 import { updateUserField, resetUserFields, deleteUserFieldError, updatePasswordConfirmation, fetchUser, userFieldInputError, userSignUp } from '../actions/userAction';
-import { validateUser } from '../util';
+import { validateUser, validateEmail } from '../util';
 
 const inputFieldSet = new Set();
 
@@ -179,10 +179,8 @@ const mapDispatchToProps = (dispatch, state) => {
         case 'userEmail': {
           if (!validateEmail(value)){
             const msg = 'invalid email';
-            console.log('invalid');
             dispatch(userFieldInputError(field, msg));
           } else {
-            console.log('valid');
             dispatch(deleteUserFieldError(field));
           }
           break;
@@ -219,11 +217,6 @@ const mapDispatchToProps = (dispatch, state) => {
       dispatch(resetAppState());
     },
   }
-}
-
-const validateEmail = (email) => {
-  const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(email);
 }
 
 export default connect(

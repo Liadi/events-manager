@@ -41,13 +41,9 @@ module.exports = {
           }
         });
       }
-      if (getState().user.error.fieldError.size > 0) {
+      if (Object.keys(getState().user.error.fieldError).length > 0) {
         let temp = getState().user.error.fieldError;
         let msg = [];
-        temp.forEach((value, key) => {
-          msg.push(value);
-        });
-
         for (let field in temp) {
           if (temp.hasOwnProperty(field)) {
             msg.push(temp[field]);
@@ -110,7 +106,7 @@ module.exports = {
         });
       }
 
-      if (getState().user.error.fieldError.size > 0) {
+      if (Object.keys(getState().user.error.fieldError).length > 0) {
         let temp = getState().user.error.fieldError;
         let msg = [];
         for (let field in temp) {
@@ -184,7 +180,7 @@ module.exports = {
             status: true,
           },
         });
-        if (getState().user.error.fieldError.get('userPassword') === 'password confirmation failed') {
+        if (getState().user.error.fieldError['userPassword'] === 'password confirmation failed') {
           dispatch({
             type: 'DELETE_USER_FIELD_ERROR',
             payload: {
@@ -204,6 +200,77 @@ module.exports = {
         value,
       },
     } 
+  },
+
+  updateUser(inputFieldSetArg) {
+      return function(dispatch, getState) {
+        let nothingToChange = true;
+      for (let item of inputFieldSetArg) {
+        if (item.value !== "") {
+          nothingToChange = false;
+        };
+      }
+      if (nothingToChange) {
+        dispatch ({
+          type: 'OPEN_INFO_TAB',
+          payload: {
+            msg: ['pls, fill 1 or more fields'],
+          }
+        });
+        return;
+      }
+      if (Object.keys(getState().user.error.fieldError).length > 0) {
+        let temp = getState().user.error.fieldError;
+        let msg = [];
+        for (let field in temp) {
+          if (temp.hasOwnProperty(field)) {
+            msg.push(temp[field]);
+          }
+        }
+        dispatch ({
+          type: 'OPEN_INFO_TAB',
+          payload: {
+            msg,
+          }
+        });
+      } else {
+        // dispatch({
+        //   type: 'UPDATE_USER',
+        //   payload: axios.put('api/v1/users', getState().user.user),
+        // })
+        console.log('data => ', getState().user.user);
+        dispatch({
+          type: 'UPDATE_USER',
+          payload: axios({
+            method: 'put',
+            url: 'api/v1/users',
+            data: getState().user.user,
+            headers: {
+              'token': getState().user.userToken,
+            }
+          }),
+        }).then(res => {
+          dispatch({
+            type: 'OPEN_MODAL',
+            payload: {
+              htmlContent: '<div><h4>Update Successful</h4><div>',
+            },
+          });
+          dispatch({
+            type: 'RESET_USER_FIELDS',
+          });
+          for (let item of inputFieldSetArg) item.value = "";
+        }).catch(err =>{
+          let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
+          dispatch({
+            type: 'OPEN_INFO_TAB',
+            payload: {
+              msg
+            },
+          });
+        });
+      }
+    }
   },
 
   resetUserFields() {

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { closeInfoTab, resetAppState, changeDashboardContent } from '../actions/appAction';
+import { closeInfoTab, closeModal, resetAppState, changeDashboardContent } from '../actions/appAction';
 import { fetchEvents } from '../actions/eventAction';
-import { resetUserFields, fetchUserLogs, userLogout } from '../actions/userAction';
+import { resetUserFields, fetchUserLogs, userLogout, updateUser, updateUserField, deleteUserFieldError, userFieldInputError } from '../actions/userAction';
 import Footer from './Footer.jsx';
 import Navbar from './Navbar.jsx';
 import TimelineContent from './TimelineContent.jsx';
@@ -13,7 +13,7 @@ import SecurityContent from './SecurityContent.jsx';
 import RecentContent from './RecentContent.jsx';
 import DashboardSideBar from './DashboardSideBar.jsx';
 import '../style/dashboard.scss';
-import { validateUser } from '../util';
+import { validateUser, validateEmail } from '../util';
 
 
 class Dashboard extends React.Component {
@@ -31,7 +31,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { dashboardContent, changeDashboardContentFunc, loggedIn, userType, events, logs, userLogoutFunc } = this.props;
+    const { dashboardContent, changeDashboardContentFunc, loggedIn, userType, events, logs, userLogoutFunc, userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, closeInfoTabFunc, closeModalFunc, updateUserFieldFunc,props, updateUserFunc } = this.props;
     return (
       <Route render={() => (
         loggedIn ? (
@@ -42,10 +42,14 @@ class Dashboard extends React.Component {
               <div className="mx-auto">
                 <div id="tabContentContainer">
                   <TimelineContent show={ dashboardContent === 'timeline' ? true : false } events={events} />
+                  
                   <RecentContent show={ dashboardContent === 'recent' ? true : false } logs={logs} />
+                  
                   <HowContent show={ dashboardContent === 'how' ? true : false } />
-                  <ProfileContent show={ dashboardContent === 'profile' ? true : false } />
-                  <SecurityContent show={ dashboardContent === 'security' ? true : false } />
+                  
+                  <ProfileContent show={ dashboardContent === 'profile' ? true : false } userFieldError={userFieldError} infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} modalContent={modalContent} showModal={showModal} updateUserFieldFunc={updateUserFieldFunc} closeInfoTabFunc={closeInfoTabFunc} closeModalFunc={closeModalFunc} updateUserFunc={updateUserFunc}/>
+                  
+                  <SecurityContent show={ dashboardContent === 'security' ? true : false } updateUserFieldFunc={updateUserFieldFunc} />
                 </div>
               </div>
             </main>
@@ -67,6 +71,11 @@ const mapStateToProps = (state) => {
   const loggedIn = validateUser(state.user.userToken, state.user.accountUser.userId);
   const userType = state.user.accountUser.userType;
   return {
+    userFieldError: state.user.error.fieldError,
+    infoTabMsg: state.app.infoTabMsg,
+    showInfoTab: state.app.showInfoTab,
+    modalContent: state.app.modalContent,
+    showModal: state.app.showModal,
     dashboardContent: state.app.dashboardContent,
     events: state.event.events,
     logs: state.user.logs,
@@ -93,6 +102,7 @@ const mapDispatchToProps = (dispatch, state) => {
             eventTime: timeFrame,
           }
           dispatch(fetchEvents(tempParams));
+          break;
         }
         case 'recent': {
           const tempParams = {
@@ -100,13 +110,55 @@ const mapDispatchToProps = (dispatch, state) => {
             sort: JSON.stringify({item: 'createdAt', order: 'decreasing'}),
           }
           dispatch(fetchUserLogs(tempParams));
+          break;
         }
       }
 
     },
 
+    closeInfoTabFunc: () => {
+      dispatch(closeInfoTab());
+    },
+    updateUserFieldFunc: (field, value) => {
+      dispatch(updateUserField(field, value));
+      switch(field) {
+        case 'userFirstName': {
+          if (value.length === 1 || value.length > 30) {
+            const msg = 'first name should have 2-30 characters';
+            dispatch(userFieldInputError(field, msg));
+          } else {
+            dispatch(deleteUserFieldError(field));
+          }
+          break;
+        }
+        case 'userLastName': {
+          if (value.length === 1 || value.length > 30) {
+            const msg = 'first name should have 2-30 characters';
+            dispatch(userFieldInputError(field, msg));
+          } else {
+            dispatch(deleteUserFieldError(field));
+          }
+          break;
+        }
+        case 'userEmail': {
+          if (value.length > 0 && !validateEmail(value)){
+            const msg = 'invalid email';
+            dispatch(userFieldInputError(field, msg));
+          } else {
+            dispatch(deleteUserFieldError(field));
+          }
+          break;
+        }
+      }
+    },
 
-    // update
+    closeModalFunc: () => {
+      dispatch(closeModal());
+    },
+
+    updateUserFunc: (inputFieldSet) => {
+      dispatch(updateUser(inputFieldSet));
+    },
 
     unmountDashboardFunc: () => {
       dispatch(resetUserFields());

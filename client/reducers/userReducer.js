@@ -159,21 +159,26 @@ export default function reducer(
     case 'UPDATE_USER_PENDING' : {
       return {
         ...state,
-        user: action.payload,
+        fetching: true,
+        fetched: false,
       }
     }
 
     case 'UPDATE_USER_REJECTED' : {
       return {
         ...state,
-        user: action.payload,
+        fetching: false,
+        fetched: false,
+        error: Object.assign({}, state.error, {serverError: action.payload.message}),
       }
     }
 
     case 'UPDATE_USER_FULFILLED' : {
       return {
         ...state,
-        user: action.payload,
+        fetching: false,
+        fetched: true,
+        accountUser: action.payload.data.user,
       }
     }
 
