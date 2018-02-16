@@ -3,7 +3,7 @@ import { Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { closeInfoTab, closeModal, resetAppState, changeDashboardContent } from '../actions/appAction';
 import { fetchEvents } from '../actions/eventAction';
-import { resetUserFields, fetchUserLogs, userLogout, updateUser, updateUserField, deleteUserFieldError, userFieldInputError } from '../actions/userAction';
+import { resetUserFields, fetchUserLogs, userLogout, updateUser, updateUserField, deleteUserFieldError, userFieldInputError, updatePasswordConfirmation } from '../actions/userAction';
 import Footer from './Footer.jsx';
 import Navbar from './Navbar.jsx';
 import TimelineContent from './TimelineContent.jsx';
@@ -31,7 +31,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { dashboardContent, changeDashboardContentFunc, loggedIn, userType, events, logs, userLogoutFunc, userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, closeInfoTabFunc, closeModalFunc, updateUserFieldFunc,props, updateUserFunc } = this.props;
+    const { dashboardContent, changeDashboardContentFunc, loggedIn, userType, events, logs, userLogoutFunc, userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, closeInfoTabFunc, closeModalFunc, updateUserFieldFunc,props, updateUserFunc, passwordConfirmed } = this.props;
     return (
       <Route render={() => (
         loggedIn ? (
@@ -47,7 +47,7 @@ class Dashboard extends React.Component {
                   
                   <HowContent show={ dashboardContent === 'how' ? true : false } />
                   
-                  <ProfileContent show={ dashboardContent === 'profile' ? true : false } userFieldError={userFieldError} infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} modalContent={modalContent} showModal={showModal} updateUserFieldFunc={updateUserFieldFunc} closeInfoTabFunc={closeInfoTabFunc} closeModalFunc={closeModalFunc} updateUserFunc={updateUserFunc}/>
+                  <ProfileContent show={ dashboardContent === 'profile' ? true : false } userFieldError={userFieldError} infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} modalContent={modalContent} showModal={showModal} updateUserFieldFunc={updateUserFieldFunc} closeInfoTabFunc={closeInfoTabFunc} closeModalFunc={closeModalFunc} updateUserFunc={updateUserFunc} passwordConfirmed={passwordConfirmed} />
                   
                   <SecurityContent show={ dashboardContent === 'security' ? true : false } updateUserFieldFunc={updateUserFieldFunc} />
                 </div>
@@ -72,6 +72,7 @@ const mapStateToProps = (state) => {
   const userType = state.user.accountUser.userType;
   return {
     userFieldError: state.user.error.fieldError,
+    passwordConfirmed: state.user.passwordConfirmed,
     infoTabMsg: state.app.infoTabMsg,
     showInfoTab: state.app.showInfoTab,
     modalContent: state.app.modalContent,
@@ -149,6 +150,28 @@ const mapDispatchToProps = (dispatch, state) => {
           }
           break;
         }
+        case 'oldUserPassword': {
+          if (value.length > 0) {
+            dispatch(deleteUserFieldError(field));
+          }
+          break;
+        }
+
+        case 'newUserPassword': {
+          if (value.length > 0 && value.length < 6) {
+            const msg = 'new password should have at least 6 characters';
+            dispatch(userFieldInputError(field, msg));
+          } else {
+            dispatch(deleteUserFieldError(field));
+          }
+          break;
+        }
+
+        case 'confirmUserPassword': {
+          dispatch(updatePasswordConfirmation());
+          break;
+        }
+
       }
     },
 
@@ -156,8 +179,11 @@ const mapDispatchToProps = (dispatch, state) => {
       dispatch(closeModal());
     },
 
-    updateUserFunc: (inputFieldSet) => {
-      dispatch(updateUser(inputFieldSet));
+    updateUserFunc: (inputFieldSet, type) => {
+      dispatch(updateUser(inputFieldSet, type));
+      if (type === 'password') {
+        dispatch(updatePasswordConfirmation());
+      }
     },
 
     unmountDashboardFunc: () => {

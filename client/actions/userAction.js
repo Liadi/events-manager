@@ -165,7 +165,13 @@ module.exports = {
 
   updatePasswordConfirmation() {
     return function(dispatch, getState) {
-      const { userPassword, userConfirmPassword } = getState().user.user;
+      let { userPassword, userConfirmPassword } = getState().user.user;
+      if (!userPassword) {
+        userPassword = getState().user.user.newUserPassword;
+      }
+      if (!userConfirmPassword) {
+        userConfirmPassword = getState().user.user.confirmUserPassword;
+      }
       if (userConfirmPassword !== userPassword){
         dispatch ({
           type: 'PASSWORD_CONFIRMATION',
@@ -188,6 +194,15 @@ module.exports = {
             }
           });
         }
+        if (getState().user.error.fieldError['newUserPassword'] === 'new password confirmation failed') {
+          dispatch({
+            type: 'DELETE_USER_FIELD_ERROR',
+            payload: {
+              field: 'newUserPassword',
+            }
+          });
+        }
+
       }
     }
   },
@@ -202,31 +217,83 @@ module.exports = {
     } 
   },
 
-  updateUser(inputFieldSetArg) {
-      return function(dispatch, getState) {
-        let nothingToChange = true;
+  updateUser(inputFieldSetArg, type) {
+    return function(dispatch, getState) {
+      let [userField, userFieldError] = [{}, {}];
+      if (type === 'others') {
+        userField = {
+          userFirstName: getState().user.user.userFirstName,
+          userLastName: getState().user.user.userLastName,
+          userEmail: getState().user.user.userEmail,
+          userPhoneNumber: getState().user.user.userPhoneNumber,
+        }
+        userFieldError = {
+          userFirstName: getState().user.error.fieldError.userFirstName,
+          userLastName: getState().user.error.fieldError.userLastName,
+          userEmail: getState().user.error.fieldError.userEmail,
+          userPhoneNumber: getState().user.error.fieldError.userPhoneNumber,
+        }
+      } else {
+        if (!getState().user.user.oldUserPassword){
+          dispatch({
+            type: 'USER_FIELD_ERROR',
+            payload: {
+              field: 'oldUserPassword',
+              msg: 'password required',
+            }
+          });
+        }
+        if (!getState().user.user.newUserPassword){
+          dispatch({
+            type: 'USER_FIELD_ERROR',
+            payload: {
+              field: 'newUserPassword',
+              msg: 'new password required',
+            }
+          });
+        } else if (!getState().user.passwordConfirmed && !getState().user.error.fieldError.newUserPassword) {
+          dispatch({
+            type: 'USER_FIELD_ERROR',
+            payload: {
+              field: 'newUserPassword',
+              msg: 'new password confirmation failed',
+            }
+          });
+        }
+        userField = {
+          oldUserPassword: getState().user.user.oldUserPassword,
+          newUserPassword: getState().user.user.newUserPassword,
+        }
+        userFieldError = {
+          oldUserPassword: getState().user.error.fieldError.oldUserPassword,
+          newUserPassword: getState().user.error.fieldError.newUserPassword,
+        }
+      }
+      let nothingToChange = true;
       for (let item of inputFieldSetArg) {
         if (item.value !== "") {
           nothingToChange = false;
         };
       }
       if (nothingToChange) {
-        dispatch ({
-          type: 'OPEN_INFO_TAB',
-          payload: {
-            msg: ['pls, fill 1 or more fields'],
-          }
-        });
-        return;
+        if (type === 'others') {
+          dispatch ({
+            type: 'OPEN_INFO_TAB',
+            payload: {
+              msg: ['pls, fill 1 or more fields'],
+            }
+          });
+          return;
+        }      
       }
-      if (Object.keys(getState().user.error.fieldError).length > 0) {
-        let temp = getState().user.error.fieldError;
-        let msg = [];
-        for (let field in temp) {
-          if (temp.hasOwnProperty(field)) {
-            msg.push(temp[field]);
-          }
+      let temp = userFieldError;
+      let msg = [];
+      for (let field in temp) {
+        if (temp.hasOwnProperty(field)) {
+          temp[field]?msg.push(temp[field]):null;
         }
+      }
+      if (msg.length > 0){
         dispatch ({
           type: 'OPEN_INFO_TAB',
           payload: {
@@ -234,17 +301,12 @@ module.exports = {
           }
         });
       } else {
-        // dispatch({
-        //   type: 'UPDATE_USER',
-        //   payload: axios.put('api/v1/users', getState().user.user),
-        // })
-        console.log('data => ', getState().user.user);
         dispatch({
           type: 'UPDATE_USER',
           payload: axios({
             method: 'put',
             url: 'api/v1/users',
-            data: getState().user.user,
+            data: userField,
             headers: {
               'token': getState().user.userToken,
             }

@@ -1,16 +1,40 @@
 import React from 'react';
 import InfoTab from './InfoTab.jsx';
 import ModalView from './ModalView.jsx';
-const inputFieldSet = new Set();
+const updateSet = new Set();
+const changeSet = new Set();
 
 const ProfileContent = (props) => {
   if (props.show) {
-    const { userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, closeModalFunc, closeInfoTabFunc, updateUserFieldFunc, updateUserFunc } = props;
+    const { userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, closeModalFunc, closeInfoTabFunc, updateUserFieldFunc, updateUserFunc, passwordConfirmed } = props;
     return (
       <div id="profileContent" className="tab-content">
         <InfoTab className='infoTab' infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} closeInfoTabFunc={closeInfoTabFunc}/>
         <h4>
           Profile
+        </h4>
+        <div>
+          <div className="row profile-div">
+            <div className="col-sm-5 profile-field">First Name</div>
+            <div className="col-sm-7">Value</div>
+          </div>
+          <div className="row profile-div">
+            <div className="col-sm-5 profile-field">Last Name</div>
+            <div className="col-sm-7">Value</div>
+          </div>
+          <div className="row profile-div">
+            <div className="col-sm-5 profile-field">Email Address</div>
+            <div className="col-sm-7">Value</div>
+          </div>
+          <div className="row profile-div">
+            <div className="col-sm-5 profile-field">Telephone</div>
+            <div className="col-sm-7">Value</div>
+          </div>
+
+        </div>
+        <div className="dropdown-divider"></div>
+        <h4>
+          Edit
         </h4>
         <form>
           <div className="form-group">
@@ -22,7 +46,7 @@ const ProfileContent = (props) => {
               }
               onChange={ e => {
                 updateUserFieldFunc('userFirstName', e.target.value);
-                inputFieldSet.add(e.target);
+                updateSet.add(e.target);
               }}
             />
           </div>
@@ -36,7 +60,7 @@ const ProfileContent = (props) => {
               }
               onChange={ e => {
                 updateUserFieldFunc('userLastName', e.target.value);
-                inputFieldSet.add(e.target);
+                updateSet.add(e.target);
               }}
             />
           </div>
@@ -50,7 +74,7 @@ const ProfileContent = (props) => {
               }
               onChange={ e => {
                 updateUserFieldFunc('userEmail', e.target.value);
-                inputFieldSet.add(e.target);
+                updateSet.add(e.target);
               }}
             />
           </div>
@@ -64,17 +88,70 @@ const ProfileContent = (props) => {
               }
               onChange={ e => {
                 updateUserFieldFunc('userPhoneNumber', e.target.value);
-                inputFieldSet.add(e.target);
+                updateSet.add(e.target);
               }} 
             />
           </div>
             
           <button type="button" className="btn" onClick={ e => {
             e.preventDefault();
-            updateUserFunc(inputFieldSet);
+            updateUserFunc(updateSet, 'others');
           }}>
             Update
           </button>
+        </form>
+        <div className="dropdown-divider"></div>
+        <h4>
+          Change Password
+        </h4>
+        <form>
+          <div className="form-group">
+            <label htmlFor="inputOldPassword">Password</label>
+            <input type="password"
+              name="inputOldPassword" 
+              className={
+                (userFieldError['oldUserPassword'] === undefined) ? "form-control" : "form-control field-error"
+              }
+              onChange={ e => {
+                updateUserFieldFunc('oldUserPassword', e.target.value);
+                changeSet.add(e.target);
+              }}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="inputNewPassword">New Password</label>
+            <input type="password"
+              name="inputNewPassword" 
+              className={
+                (userFieldError['newUserPassword'] === undefined) ? "form-control" : "form-control field-error"
+              }
+              onChange={ e => {
+                updateUserFieldFunc('newUserPassword', e.target.value);
+                changeSet.add(e.target);
+              }}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="inputConfirmPassword">Confirm Password</label>
+            <input type="password"
+              name="inputConfirmPassword" 
+              className={
+                passwordConfirmed ? "form-control" : "form-control field-error"
+              }
+              onChange={ e => {
+                updateUserFieldFunc('confirmUserPassword', e.target.value);
+                changeSet.add(e.target);
+              }}
+            />
+          </div>
+          <button type="button" className="btn" onClick={ e => {
+            e.preventDefault();
+            updateUserFunc(changeSet, 'password');
+          }}>
+            Change
+          </button> 
         </form>
         <ModalView closeModalFunc={closeModalFunc} modalContent={modalContent} showModal={showModal}/>
       </div>
