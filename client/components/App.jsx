@@ -4,6 +4,7 @@ import Landing from './Landing.jsx';
 import SignUp from './SignUp.jsx';
 import Login from './Login.jsx';
 import Dashboard from './Dashboard.jsx';
+import CreateCenter from './CreateCenter.jsx';
 
 const App = () => {
 	return (
@@ -12,6 +13,7 @@ const App = () => {
       <Route path='/signup' component={SignUp}/>
       <Route path='/login' component={Login}/>
       <Route path='/dashboard' component={Dashboard}/>
+      <Route path='/create-center' component={CreateCenter}/>
     </Switch>
 	)
 }

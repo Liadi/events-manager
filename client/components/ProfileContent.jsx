@@ -6,7 +6,7 @@ const changeSet = new Set();
 
 const ProfileContent = (props) => {
   if (props.show) {
-    const { userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, closeModalFunc, closeInfoTabFunc, updateUserFieldFunc, updateUserFunc, passwordConfirmed } = props;
+    const { userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, closeModalFunc, closeInfoTabFunc, updateUserFieldFunc, updateUserFunc, passwordConfirmed, user } = props;
     return (
       <div id="profileContent" className="tab-content">
         <InfoTab className='infoTab' infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} closeInfoTabFunc={closeInfoTabFunc}/>
@@ -15,20 +15,20 @@ const ProfileContent = (props) => {
         </h4>
         <div>
           <div className="row profile-div">
-            <div className="col-sm-5 profile-field">First Name</div>
-            <div className="col-sm-7">Value</div>
+            <div className="col-sm-5 profile-field"><h5>First Name</h5></div>
+            <div className="col-sm-7 profile-value">{user.userFirstName}</div>
           </div>
           <div className="row profile-div">
-            <div className="col-sm-5 profile-field">Last Name</div>
-            <div className="col-sm-7">Value</div>
+            <div className="col-sm-5 profile-field"><h5>Last Name</h5></div>
+            <div className="col-sm-7 profile-value">{user.userLastName}</div>
           </div>
           <div className="row profile-div">
-            <div className="col-sm-5 profile-field">Email Address</div>
-            <div className="col-sm-7">Value</div>
+            <div className="col-sm-5 profile-field"><h5>Email</h5></div>
+            <div className="col-sm-7 profile-value">{user.userEmail}</div>
           </div>
           <div className="row profile-div">
-            <div className="col-sm-5 profile-field">Telephone</div>
-            <div className="col-sm-7">Value</div>
+            <div className="col-sm-5 profile-field"><h5>Telephone</h5></div>
+            <div className="col-sm-7 profile-value">{user.userPhoneNumber}</div>
           </div>
 
         </div>

@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 
 import Footer from './Footer.jsx';
 
-const AddCenterLink = (props) => {
+const CreateCenterLink = (props) => {
   if (props.userType === 'admin') {
     return (
       <li className="nav-item navbar-item mx-auto">
-        <Link className="nav-link" to='/add-center'>Add Center</Link>
+        <Link className="nav-link" to='/create-center'>Create Center</Link>
       </li>
     );
   }
@@ -38,7 +38,7 @@ const Navbar = (props) => {
           <li className="nav-item navbar-item mx-auto">
             <Link className="nav-link" to='/centers'>Centers</Link>
           </li>
-          <AddCenterLink userType={props.userType}/>
+          <CreateCenterLink userType={props.userType}/>
           <EventsLink userType={props.userType}/>
           <li className="nav-item navbar-item mx-auto dropdown">
             <Link className="nav-link" to="/dashboard" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
