@@ -14,5 +14,18 @@ module.exports = {
     return {
       type: 'CLOSE_MODAL',
     }
-  }
+  },
+  resetAppState() {
+    return {
+      type: 'RESET_APP_STATE',
+    }
+  },
+  changeDashboardContent(newContent) {
+    return {
+      type: 'CHANGE_DASHBOARD_CONTENT',
+      payload: {
+        newContent,
+      }
+    }
+  },
 }

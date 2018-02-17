@@ -21,6 +21,12 @@ module.exports = {
     }
   },
 
+  resetCenterFields() {
+    return {
+      type: 'RESET_CENTER_FIELDS',
+    }
+  },
+
   updateCenterField(field, value) {
     return {
       type: 'UPDATE_CENTER_FIELD',

@@ -5,10 +5,23 @@ export default function reducer(
     infoTabMsg: [],
     showModal: false,
     modalContent: null,
+    dashboardContent: null,
+    records: {},
   },
   action) {
 
 	switch (action.type) {
+    // NOTE: reset app doesn't reset dashboard content
+    case 'RESET_APP_STATE': {
+      return {
+        ...state,
+        advancedSearch: false,
+        showInfoTab: false,
+        infoTabMsg: [],
+        showModal: false,
+        modalContent: null,
+      }
+    }
 		case 'TOGGLE_ADVANCED_SEARCH': {
       return {
         ...state,
@@ -42,6 +55,12 @@ export default function reducer(
         ...state,
         showModal: false,
         modalContent: null,
+      }
+    }
+    case 'CHANGE_DASHBOARD_CONTENT': {
+      return {
+        ...state,
+        dashboardContent: action.payload.newContent,
       }
     }
 	}

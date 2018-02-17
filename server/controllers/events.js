@@ -1,8 +1,8 @@
-import { error } from 'util';
+// import { error } from 'util';
+import db from './../models';
+import { log } from './util';
 
-// import Event from './../models';
-const Event = require('./../models').Event;
-const Center = require('./../models').Center;
+const { Center, Event } = db;
 
 module.exports = {
   createEvent(req, res) {
@@ -35,11 +35,29 @@ module.exports = {
         centerId: req.centerId,
         userId: req.userId,
       }).then((event) => {
-        return res.status(201).json({
+        res.status(201).json({
           message: 'event created',
           event,
           status: true,
         });
+
+        const logData = {
+          entityName: event.eventName,
+          entity: 'Event',
+          entityId: event.id,
+          userId: req.userId,
+          action: 'POST',
+          before: JSON.stringify({}),
+          after: JSON.stringify({
+            eventName: event.eventName,
+            eventTime: event.eventTime,
+            centerId: event.centerId,
+            userId: event.userId,
+          }),
+        };
+
+        log(logData);
+
       }).catch((error) => {
         const err = error.errors[0].message;
         return res.status(400).json({
@@ -84,17 +102,43 @@ module.exports = {
           status: false,
         });
       }
+      const oldEvent = {...event.dataValues};
       event.update({
         eventName: req.eventName || event.eventName,
         eventAmountPaid: req.eventAmountPaid || event.eventAmountPaid,
         eventTime: req.eventTime || event.eventTime,
         centerId: req.centerId || event.centerId,
       }).then((event) => {
-        return res.status(200).json({
+        res.status(200).json({
           message: 'event updated',
           event,
           status: true,
         });
+
+
+        const logData = {
+          entityName: oldEvent.eventName,
+          entity: 'Event',
+          entityId: event.id,
+          userId: req.userId,
+          action: 'UPDATE',
+          before: JSON.stringify({
+            eventName: oldEvent.eventName,
+            eventTime: oldEvent.eventTime,
+            centerId: oldEvent.centerId,
+            userId: oldEvent.userId,
+          }),
+          after: JSON.stringify({
+            eventName: event.eventName,
+            eventTime: event.eventTime,
+            centerId: event.centerId,
+            userId: event.userId,
+          }),
+        };
+
+        log(logData);
+
+
       }).catch((error) => {
         const err = error.errors[0].message;
         return res.status(400).json({
@@ -179,15 +223,44 @@ module.exports = {
           status: false,
         });
       }
+      const oldEvent = {...event.dataValues};
       event.destroy();
-      return res.status(200).json({
+      res.status(200).json({
         message: 'event deleted',
         status: true,
       });
+
+
+      const logData = {
+        entityName: oldEvent.eventName,
+        entity: 'Event',
+        entityId: oldEvent.id,
+        userId: req.userId,
+        action: 'DELETE',
+        before: JSON.stringify({
+          eventName: oldEvent.eventName,
+          eventTime: oldEvent.eventTime,
+          centerId: oldEvent.centerId,
+          userId: oldEvent.userId,
+        }),
+        after: JSON.stringify({}),
+      };
+
+      log(logData);
+
     });
   },
 
   getAllEvents(req, res) {
+    const tempParams = req.query;
+    const finalParams = {};
+
+    for (let field in tempParams) {
+      if (tempParams.hasOwnProperty(field) && tempParams[field] !== undefined && tempParams[field] !== '') {
+        finalParams[field] = tempParams[field];
+      }
+    }
+
     if (req.userType === 'admin') {
       Event.findAll({
         include: [{
@@ -243,18 +316,106 @@ module.exports = {
         'userId',
         ],
       }).then((events) => {
-        if (events.length > 0){
-          return res.status(200).json({
-            message: 'all events found',
-            status: true,
-            events,
-          });
-        }
-        return res.status(200).json({
-          message: 'no events',
-          status: true
-        })
+        return findEvents(events, finalParams, res);
+      }).catch((error) => {
+        console.log('error => ', error);
+        return res.status(400).json({
+          message: 'invalid query',
+          status: false,
+        });
       });
     }
   },
 };
+
+
+const searchEvents = ((events, finalParams) => {
+  const retEvents = [];
+  for(let i in events) {
+    const event = events[i];
+    let foundIndex = 0;
+    for (let key in finalParams) {
+      switch(key) {
+        case 'eventName': {
+          foundIndex = event[key].search(finalParams[key])
+          break;
+        }
+
+        case 'eventStatus': {
+          if (event[key] !== finalParams[key]){
+            foundIndex = -1;
+          }
+          break;
+        }
+
+        case 'eventAmountPaid': {
+          if (parseInt(event[key]) < parseInt(finalParams[key])){
+            foundIndex = -1;
+          }
+          break;
+        }
+
+        case 'eventTime': {
+          const timeParam = JSON.parse(finalParams[key]);
+          const [low, mainTime, high] = [ new Date(timeParam['low']), new Date(event[key]) , new Date(timeParam['high']) ]; 
+          console.log('time parameters => ', 'low =', low, ' event\'s =', mainTime, ' high =', high);
+          if (low >= mainTime || mainTime > high){
+            foundIndex = -1;
+          }
+          break;
+        }
+
+        case 'centerId':{
+          if (parseInt(event[key]) !== parseInt(finalParams[key])){
+            foundIndex = -1;
+          }
+          break;
+        }
+      }
+      if (foundIndex === -1) {
+        break;
+      }
+    }
+    if (foundIndex !== -1) {
+      event['searchIndex'] = foundIndex;
+      retEvents.push(event);
+    }
+  }
+  return retEvents;
+});
+
+const findEvents = (( events, finalParams, res ) => {
+  let retEvents = searchEvents(events, finalParams);
+
+  if (finalParams['sort']) {
+    const tempSortObj = JSON.parse(finalParams['sort'])
+    retEvents.sort((a, b) => {
+      if (tempSortObj['order'] === 'decreasing'){
+        return b[tempSortObj['item']] - a[tempSortObj['item']];
+      }
+      return a[tempSortObj['item']] - b[tempSortObj['item']];
+    });
+  }
+  const n = retEvents.length;
+  const [limit, page] = [parseInt(finalParams['limit']), parseInt(finalParams['page'])];
+  if ( limit && limit > 0) {
+    if (page && page > 0) {
+      retEvents = retEvents.slice((page - 1) * limit, page * limit);
+    } else {
+      retEvents = retEvents.slice(0, limit);
+    }
+  }
+
+  if (retEvents.length > 0){
+    return res.status(200).json({
+      message: 'events found',
+      status: true,
+      events: retEvents,
+      n,
+    });
+  }
+  return res.status(404).json({
+    message: 'events not found',
+    status: false,
+  })
+});

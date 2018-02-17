@@ -1,13 +1,14 @@
 export default function reducer(
   state={
     user: {},
+    logs: [],
     accountUser: {},
     userToken: null,
     passwordConfirmed: true,
     fetching: false,
     fetched: false,
     error: {
-      fieldError: new Map(),
+      fieldError: {},
       serverError: null,
     },
   }, action) {
@@ -15,8 +16,8 @@ export default function reducer(
 	switch (action.type) {
     case 'USER_FIELD_ERROR': {
       let temp = state.error.fieldError;
-      temp = new Map([...temp]);
-      temp.set(action.payload.field, action.payload.msg);
+      temp = {...temp};
+      temp[action.payload.field] =  action.payload.msg;
       return {
         ...state,
         error: Object.assign({}, state.error, {fieldError: temp}),
@@ -37,20 +38,31 @@ export default function reducer(
 
     case 'DELETE_USER_FIELD_ERROR': {
       let temp = state.error.fieldError;
-      temp = new Map([...temp]);
+      temp = {...temp};
 
-      temp.delete(action.payload.field);
+      delete temp[action.payload.field];
       return {
         ...state,
         error: Object.assign({}, state.error, {fieldError: temp}),
       }
     }
 
-    case 'CLEAR_USER': {
+    // case 'CLEAR_USER': {
+    //   return {
+    //     ...state,
+    //     user: {},
+    //     error: Object.assign({}, state.error, {fieldError: new Map()}), 
+    //   }
+    // }
+
+    case 'RESET_USER_FIELDS': {
       return {
         ...state,
         user: {},
-        error: Object.assign({}, state.error, {fieldError: new Map()}), 
+        error: {
+          fieldError: {},
+          serverError: null,
+        }
       }
     }
 
@@ -115,6 +127,14 @@ export default function reducer(
       }
     }
 
+    case 'USER_LOGOUT': {
+      return {
+        ...state,
+        accountUser: {},
+        userToken: null,
+      }
+    }
+
     case 'CREATE_USER_PENDING' : {
       return {
         ...state,
@@ -139,21 +159,26 @@ export default function reducer(
     case 'UPDATE_USER_PENDING' : {
       return {
         ...state,
-        user: action.payload,
+        fetching: true,
+        fetched: false,
       }
     }
 
     case 'UPDATE_USER_REJECTED' : {
       return {
         ...state,
-        user: action.payload,
+        fetching: false,
+        fetched: false,
+        error: Object.assign({}, state.error, {serverError: action.payload.message}),
       }
     }
 
     case 'UPDATE_USER_FULFILLED' : {
       return {
         ...state,
-        user: action.payload,
+        fetching: false,
+        fetched: true,
+        accountUser: action.payload.data.user,
       }
     }
 
@@ -181,6 +206,33 @@ export default function reducer(
         user: {
           id: action.payload,
         },
+      }
+    }
+
+    case 'FETCH_LOGS_PENDING': {
+      return {
+        ...state,
+        fetching: true,
+        fetched: false,
+      }
+    }
+
+    case 'FETCH_LOGS_REJECTED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: false,
+        error: Object.assign({}, state.error, {serverError: action.payload.message}),
+      }
+    }
+
+    case 'FETCH_LOGS_FULFILLED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        error: Object.assign({}, state.error, {serverError: null}),
+        logs: action.payload.data.logs,
       }
     }
 

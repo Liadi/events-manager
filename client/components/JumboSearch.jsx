@@ -6,39 +6,47 @@ import { connect } from 'react-redux';
 import { toggleAdvancedSearch } from '../actions/appAction';
 import { updateCenterField, fetchCenters, fieldInputError } from '../actions/centerAction';
 
-let JumboSearch = ({ showAdvanced, fetching, fetched, centers, center, toggleAdvancedSearchFunc, updateCenterFieldFunc, fetchSearchedCenterFunc }) => {
-  return (
-  	<form className="search-form">
-      <div className="row">
-        <div className="input-group space-top">
-          <input type="text" className="form-control form-control-lg search-widget" placeholder="Search for a center" 
-          onChange={ e => {
-            updateCenterFieldFunc('centerName', e.target.value.trim());
-          }}/>
-          <span className="input-group-btn">
-            <button type="submit" className="btn btn-lg search-widget" onClick={ e => {
+class JumboSearch extends React.Component {
+  constructor(props) {
+    super(props);
+    this.props = props;
+  }
+
+  render () {
+    const { showAdvanced, fetching, fetched, centers, center, toggleAdvancedSearchFunc, updateCenterFieldFunc, fetchSearchedCenterFunc } = this.props;
+    return (
+      <form className="search-form">
+        <div className="row">
+          <div className="input-group space-top">
+            <input type="text" className="form-control form-control-lg search-widget" placeholder="Search for a center" 
+            onChange={ e => {
+              updateCenterFieldFunc('centerName', e.target.value.trim());
+            }}/>
+            <span className="input-group-btn">
+              <button type="submit" className="btn btn-lg search-widget" onClick={ e => {
+                e.preventDefault();
+                fetchSearchedCenterFunc();
+              }}>
+                Search
+              </button>
+            </span>
+            <div id= 'searchCenterResult'></div>
+          </div>
+          <div className="space-top">
+            <button type="button" className="search-toggle" onClick={ e => {
               e.preventDefault();
-              fetchSearchedCenterFunc();
-            }}>
-              Search
+              toggleAdvancedSearchFunc();
+            }}
+            >
+            Advanced Search
             </button>
-          </span>
-          <div id= 'searchCenterResult'></div>
+          </div>
         </div>
-        <div className="space-top">
-          <button type="button" className="btn btn-link btn-lg search-toggle" onClick={ e => {
-            e.preventDefault();
-            toggleAdvancedSearchFunc();
-          }}
-          >
-          Advanced Search
-          </button>
-        </div>
-      </div>
-      <AdvancedSearch showAdvanced={showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} center={center}/>
-      <SearchedCenters fetching={fetching} fetched={fetched} centers={centers}/>
-    </form>
-  )
+        <AdvancedSearch showAdvanced={showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} center={center}/>
+        <SearchedCenters fetching={fetching} fetched={fetched} centers={centers}/>
+      </form>
+    )
+  }
 }
 
 const mapStateToProps = (state) => {
@@ -71,9 +79,7 @@ const mapDispatchToProps = (dispatch, state) => {
   }
 }
 
-JumboSearch = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(JumboSearch)
-
-export default JumboSearch;
+)(JumboSearch);

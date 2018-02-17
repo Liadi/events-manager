@@ -17,6 +17,18 @@
   overflow: auto;
 }
 
+.profile-field {
+  border-right: 5px solid $primary-color;
+}
+
+.profile-value {
+  padding-left: 50px;
+}
+
+.profile-div {
+  padding-bottom: 40px;
+}
+
 .nav-item {
   margin-left: 20px;
 }

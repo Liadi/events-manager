@@ -1,4 +1,5 @@
 import db from './../models';
+import { log } from './util';
 
 const { Center, Event, Image } = db;
 
@@ -17,11 +18,35 @@ module.exports = {
       centerStatus: req.centerStatus,
       centerAmenities: req.centerAmenities,
     }).then((center) => {
-      return res.status(201).json({
+      res.status(201).json({
         message: 'center created',
         center,
         status: true,
       });
+      const logData = {
+        entityName: center.centerName,
+        entity: 'Center',
+        entityId: center.id,
+        userId: req.userId,
+        action: 'POST',
+        before: JSON.stringify({}),
+        after: JSON.stringify({
+          centerName: center.centerName,
+          centerAddress: center.centerAddress,
+          centerState: center.centerState,
+          centerCity: center.centerCity,
+          centerCountry: center.centerCountry,
+          centerDescription: center.centerDescription,
+          centerMantra: center.centerMantra,
+          centerCapacity: center.centerCapacity,
+          centerRate: center.centerRate,
+          centerStatus: center.centerStatus,
+          centerAmenities: center.centerAmenities,
+        }),
+      };
+
+      log(logData);
+
     }).catch((error) => {
       const err = error.errors[0].message;
       return res.status(400).json({
@@ -45,6 +70,7 @@ module.exports = {
           status: false,
         });
       }
+      const oldCenter = {...center.dataValues};
       center.update({
         centerName: req.centerName || center.centerName,
         centerAddress: req.centerAddress || center.centerAddress,
@@ -58,11 +84,48 @@ module.exports = {
         centerStatus: req.centerStatus || center.centerStatus,
         centerAmenities: req.centerAmenities || center.centerAmenities,
       }).then((center) => {
-        return res.status(200).json({
+        res.status(200).json({
           message: 'center updated',
           center,
           status: true,
         });
+
+        const logData = {
+          entityName: oldCenter.centerName,
+          entity: 'Center',
+          entityId: center.id,
+          userId: req.userId,
+          action: 'UPDATE',
+          before: JSON.stringify({
+            centerName: oldCenter.centerName,
+            centerAddress: oldCenter.centerAddress,
+            centerState: oldCenter.centerState,
+            centerCity: oldCenter.centerCity,
+            centerCountry: oldCenter.centerCountry,
+            centerDescription: oldCenter.centerDescription,
+            centerMantra: oldCenter.centerMantra,
+            centerCapacity: oldCenter.centerCapacity,
+            centerRate: oldCenter.centerRate,
+            centerStatus: oldCenter.centerStatus,
+            centerAmenities: oldCenter.centerAmenities,
+          }),
+          after: JSON.stringify({
+            centerName: center.centerName,
+            centerAddress: center.centerAddress,
+            centerState: center.centerState,
+            centerCity: center.centerCity,
+            centerCountry: center.centerCountry,
+            centerDescription: center.centerDescription,
+            centerMantra: center.centerMantra,
+            centerCapacity: center.centerCapacity,
+            centerRate: center.centerRate,
+            centerStatus: center.centerStatus,
+            centerAmenities: center.centerAmenities,
+          }),
+        }
+
+        log(logData);
+
       }).catch((error) => {
         const err = error.errors[0].message;
         return res.status(400).json({
@@ -137,11 +200,38 @@ module.exports = {
           status: false,
         });
       }
+      const oldCenter = {...center.dataValues};
       center.destroy();
-      return res.status(200).json({
+      res.status(200).json({
         message: 'center deleted',
         status: true,
       });
+
+      const logData = {
+        entityName: oldCenter.centerName,
+        entity: 'Center',
+        entityId: oldCenter.id,
+        userId: req.userId,
+        action: 'DELETE',
+        before: JSON.stringify({
+          centerName: oldCenter.centerName,
+          centerAddress: oldCenter.centerAddress,
+          centerState: oldCenter.centerState,
+          centerCity: oldCenter.centerCity,
+          centerCountry: oldCenter.centerCountry,
+          centerDescription: oldCenter.centerDescription,
+          centerMantra: oldCenter.centerMantra,
+          centerCapacity: oldCenter.centerCapacity,
+          centerRate: oldCenter.centerRate,
+          centerStatus: oldCenter.centerStatus,
+          centerAmenities: oldCenter.centerAmenities,
+        }),
+        after: JSON.stringify({}),
+      }
+
+      log(logData);
+
+
     });
   },
 
@@ -151,14 +241,15 @@ module.exports = {
 
     for (let field in tempParams) {
       if (tempParams.hasOwnProperty(field) && tempParams[field] !== undefined && tempParams[field] !== '') {
-        finalParams[field] = tempParams[field].toLowerCase();
+        finalParams[field] = tempParams[field];
       }
     }
     if (req.userType){
       Center.findAll().then((centers) => {
-        return findCenter(centers, finalParams, res);
+        return findCenters(centers, finalParams, res);
       })
       .catch((error) => {
+        console.log('error => ', error);
         return res.status(400).json({
           message: 'invalid query',
           status: false,
@@ -168,8 +259,7 @@ module.exports = {
       Center.findAll({
         attributes: { exclude: ['centerStatus'] },
       }).then((centers) => {
-        const ret = findCenter(centers, finalParams, res);
-        return ret;
+        return findCenters(centers, finalParams, res);
       })
       .catch((error) => {
         return res.status(400).json({
@@ -185,6 +275,7 @@ const searchCenters = ((centers, finalParams) => {
   const retCenters = [];
   for(let i in centers) {
     const center = centers[i];
+    console.log('in loop, id is => ', center.id);
     let foundIndex = 0;
     for (let key in finalParams) {
       switch(key) {
@@ -247,13 +338,33 @@ const searchCenters = ((centers, finalParams) => {
   return retCenters;
 });
 
-const findCenter = ((centers, finalParams, res ) => {
-  const retCenters = searchCenters(centers, finalParams)
+const findCenters = ((centers, finalParams, res ) => {
+  let retCenters = searchCenters(centers, finalParams)
+  if (finalParams['sort']) {
+    const tempSortObj = JSON.parse(finalParams['sort']);
+    retCenters.sort((a, b) => {
+      if (tempSortObj['order'] === 'decreasing'){
+        return b[tempSortObj['item']] - a[tempSortObj['item']];
+      }
+      return a[tempSortObj['item']] - b[tempSortObj['item']];
+    });
+  }
+  const n = retCenters.length;
+  const [limit, page] = [parseInt(finalParams['limit']), parseInt(finalParams['page'])];
+  if ( limit && limit > 0) {
+    if (page && page > 0) {
+      retCenters = retCenters.slice((page - 1) * limit, page * limit);
+    } else {
+      retCenters = retCenters.slice(0, limit);
+    }
+  }
+
   if (retCenters.length > 0){
     return res.status(200).json({
       message: 'centers found',
       status: true,
       centers: retCenters,
+      n,
     });
   }
   return res.status(404).json({

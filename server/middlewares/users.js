@@ -47,19 +47,19 @@ module.exports = {
   },
 
   validateUserFields(req, res, next) {
-    if (!req.userPassword) {
+    if (!req.userId && !req.userPassword) {
       return res.status(400).json({
         message: 'password required',
         status: false,
       });
     }
-    if (!(req.userPassword.length >= 6)) {
+    if (!req.userId && req.userPassword && req.userPassword.length < 6) {
       return res.status(400).json({
         message: 'password should have at least 6 characters',
         status: false,
       });
     }
-    if (!req.userEmail) {
+    if (!req.userId && !req.userEmail) {
       return res.status(400).json({
         message: 'email required',
         status: false,
