@@ -6,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         len: {
-          args: [0, 50],
-          msg: 'invalid input, center name should not be more than 50 characters',
+          args: [0, 30],
+          msg: 'invalid input, center name should not be more than 30 characters',
         },
       },
     },
@@ -28,8 +28,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         len: {
-          args: [0, 50],
-          msg: 'invalid input, center country should not be more than 50 characters',
+          args: [0, 30],
+          msg: 'invalid input, center country should not be more than 30 characters',
         },
       },
     },
@@ -39,8 +39,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         len: {
-          args: [0, 50],
-          msg: 'invalid input, center state should not be more than 50 characters',
+          args: [0, 30],
+          msg: 'invalid input, center state should not be more than 30 characters',
         },
       },
     },
@@ -49,22 +49,28 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       validate: {
         len: {
-          args: [0, 50],
-          msg: 'invalid input, center city should not be more than 50 characters',
+          args: [0, 30],
+          msg: 'invalid input, center city should not be more than 30 characters',
         },
       },
     },
 
     centerDescription: {
       type: DataTypes.TEXT,
+      validate: {
+        len: {
+          args: [0, 50],
+          msg: 'invalid input, center description should not be more than 50 characters',
+        },
+      },
     },
 
     centerMantra: {
       type: DataTypes.STRING,
       validate: {
         len: {
-          args: [0, 100],
-          msg: 'invalid input, center mantra should not be more than 100 characters',
+          args: [0, 30],
+          msg: 'invalid input, center mantra should not be more than 30 characters',
         },
       },
     },

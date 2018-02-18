@@ -22,6 +22,17 @@ export default function reducer(
       }
     }
 
+    case 'DELETE_CENTER_FIELD_ERROR': {
+      let temp = state.error.fieldError;
+      temp = {...temp};
+
+      delete temp[action.payload.field];
+      return {
+        ...state,
+        error: Object.assign({}, state.error, {fieldError: temp}),
+      }
+    }
+
     case 'UPDATE_CENTER_FIELD': {
       let temp = state.center;
       temp = {...temp};
