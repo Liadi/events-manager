@@ -277,10 +277,10 @@ describe('api', () => {
     });
 
     it('returns center name too long', (done) => {
-      data.centerName = 'NiceNiceNiceNiceNiceNiceNiceNiceNiceNiceNiceLongerThan 50';
+      data.centerName = 'NiceNiceNiceNiceNiceNiceNiceNiceNiceNiceNiceLongerThan 30';
       request.post('/api/v1/centers').send(data).end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('invalid input, center name should not be more than 50 characters');
+        expect(res.body.message).to.equal('invalid input, center name should not be more than 30 characters');
         expect(res.body.status).to.equal(false);
         done();
       });
@@ -320,7 +320,7 @@ describe('api', () => {
       data.centerCountry = 'NigeriaNigeriaNigeriaNigeriaNigeriaNigeriaNigeriaNigeria';
       request.post('/api/v1/centers').send(data).end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('invalid input, center country should not be more than 50 characters');
+        expect(res.body.message).to.equal('invalid input, center country should not be more than 30 characters');
         expect(res.body.status).to.equal(false);
         done();
       });
@@ -340,7 +340,7 @@ describe('api', () => {
       data.centerState = 'LagosLagosLagosLagosLagosLagosLagosLagosLagosLagosLagos';
       request.post('/api/v1/centers').send(data).end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('invalid input, center state should not be more than 50 characters');
+        expect(res.body.message).to.equal('invalid input, center state should not be more than 30 characters');
         expect(res.body.status).to.equal(false);
         done();
       });
@@ -350,7 +350,7 @@ describe('api', () => {
       data.centerCity = 'LagosLagosLagosLagosLagosLagosLagosLagosLagosLagosLagos';
       request.post('/api/v1/centers').send(data).end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('invalid input, center city should not be more than 50 characters');
+        expect(res.body.message).to.equal('invalid input, center city should not be more than 30 characters');
         expect(res.body.status).to.equal(false);
         done();
       });
@@ -360,7 +360,7 @@ describe('api', () => {
       data.centerMantra = 'just do it!just do it!just do it!just do it!just do it!just do it!just do it!just do it!just do it!just do it!';
       request.post('/api/v1/centers').send(data).end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('invalid input, center mantra should not be more than 100 characters');
+        expect(res.body.message).to.equal('invalid input, center mantra should not be more than 50 characters');
         expect(res.body.status).to.equal(false);
         done();
       });
@@ -739,7 +739,7 @@ describe('api', () => {
       data.centerName = 'NewNameNewNameNewNameNewNameNewNameNewNameNewNameNewNameNewNameNewName'; 
       request.put(`/api/v1/centers/${centerId}`).send(data).end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('invalid input, center name should not be more than 50 characters');
+        expect(res.body.message).to.equal('invalid input, center name should not be more than 30 characters');
         expect(res.body.status).to.equal(false);
         expect(res.body).to.not.have.property('center');
         done();

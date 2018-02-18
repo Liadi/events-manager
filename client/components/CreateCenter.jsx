@@ -197,12 +197,12 @@ class CreateCenter extends React.Component {
 
                   <div className="form-group">
                     <label htmlFor="inputCenterDescription"><h6>Short Description</h6></label>
-                    <input type="text" id="inputCenterDescription" placeholder="maximum of 50 characters" className={
+                    <input type="text" id="inputCenterDescription" placeholder="maximum of 120 characters" className={
                       (centerFieldError['centerDescription'] === undefined) ? "form-control" : "form-control field-error"
                     }
                     onChange={ e => {
                       inputFieldSet.add(e.target);
-                      if (e.target.value.length <= 50) {
+                      if (e.target.value.length <= 120) {
                         updateCenterFieldFunc('centerDescription', e.target.value);
                       } else {
                         e.target.value = center.centerDescription || "";
@@ -212,12 +212,12 @@ class CreateCenter extends React.Component {
 
                   <div className="form-group">
                     <label htmlFor="inputCenterMantra"><h6>Mantra</h6></label>
-                    <input type="text" id="inputCenterMantra" placeholder="maximum of 30 characters" className={
+                    <input type="text" id="inputCenterMantra" placeholder="maximum of 50 characters" className={
                       (centerFieldError['centerMantra'] === undefined) ? "form-control" : "form-control field-error"
                     }
                     onChange={ e => {
                       inputFieldSet.add(e.target);
-                      if (e.target.value.length <= 30) {
+                      if (e.target.value.length <= 50) {
                         updateCenterFieldFunc('centerMantra', e.target.value);
                       } else {
                         e.target.value = center.centerMantra || "";

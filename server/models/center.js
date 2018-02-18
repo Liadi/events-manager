@@ -59,8 +59,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       validate: {
         len: {
-          args: [0, 50],
-          msg: 'invalid input, center description should not be more than 50 characters',
+          args: [0, 120],
+          msg: 'invalid input, center description should not be more than 120 characters',
         },
       },
     },
@@ -69,8 +69,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       validate: {
         len: {
-          args: [0, 30],
-          msg: 'invalid input, center mantra should not be more than 30 characters',
+          args: [0, 50],
+          msg: 'invalid input, center mantra should not be more than 50 characters',
         },
       },
     },
