@@ -48,6 +48,7 @@ module.exports = {
       log(logData);
 
     }).catch((error) => {
+      console.log('logger => ', error);
       const err = error.errors[0].message;
       return res.status(400).json({
         message: err,

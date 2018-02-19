@@ -7,6 +7,7 @@ import { updateCenterField, deleteCenterFieldError, centerFieldInputError, reset
 import Footer from './Footer.jsx';
 import Navbar from './Navbar.jsx';
 import NotFound from './NotFound.jsx';
+import InfoTab from './InfoTab.jsx';
 import '../style/create-center.scss';
 import { validateUser } from '../util';
 
@@ -14,10 +15,14 @@ const inputFieldSet = new Set();
 
 const AmenitiesList = (props) => {
   const {center} = props;
-  if (center['centerAmenities'] && center['centerAmenities'].length > 0) {
+  let tempArray = [];
+  if (center['centerAmenities']) {
+    tempArray = JSON.parse(center['centerAmenities']);
+  }
+  if ( tempArray && tempArray.length > 0) {
     return(
       <div className='outputBox'>
-        {center.centerAmenities.map((msg, index) => 
+        {tempArray.map((msg, index) => 
           <div key={index} className='container'>
             <p className="mx-auto col-10">{msg}</p>
           </div>
@@ -44,12 +49,13 @@ class CreateCenter extends React.Component {
   }
 
   render() {
-    const { userType, userLogoutFunc, loggedIn, centerFieldError, closeInfoTabFunc, closeModalFunc, updateCenterFieldFunc, center, resetFunc, createCenterFunc } = this.props;
+    const { userType, userLogoutFunc, loggedIn, centerFieldError, closeInfoTabFunc, closeModalFunc, updateCenterFieldFunc, center, resetFunc, createCenterFunc, showInfoTab, infoTabMsg } = this.props;
     return (
       <Route render={() => (
         (loggedIn && userType === 'admin')? (
           <div>
             <Navbar userType={userType} userLogoutFunc={userLogoutFunc} />
+            <InfoTab className='infoTab' infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} closeInfoTabFunc={closeInfoTabFunc}/>
             <main className="container mx-auto">
               <h3>Create Center</h3>
               <div className="container mx-auto" id="main-div">
@@ -184,10 +190,11 @@ class CreateCenter extends React.Component {
                         let tempPlaceHolder = this.amenitiesInputElement.value
                         this.amenitiesInputElement.value = "";
                         if(!center['centerAmenities']) {
-                          updateCenterFieldFunc('centerAmenities', [tempPlaceHolder]);
+                          updateCenterFieldFunc('centerAmenities', JSON.stringify([tempPlaceHolder]));
                         } else {
-                          let tempArray = center['centerAmenities'];
-                          updateCenterFieldFunc('centerAmenities', center['centerAmenities'].concat(tempPlaceHolder));
+                          let tempArray = JSON.parse(center['centerAmenities']);
+                          console.log('logger ', tempPlaceHolder, center['centerAmenities']);
+                          updateCenterFieldFunc('centerAmenities', JSON.stringify(JSON.parse(center['centerAmenities']).concat(tempPlaceHolder)));
                         }
                       }
 
@@ -258,6 +265,8 @@ const mapStateToProps = (state) => {
   return {
     centerFieldError: state.center.error.fieldError,
     center: state.center.center,
+    infoTabMsg: state.app.infoTabMsg,
+    showInfoTab: state.app.showInfoTab,
   	userType,
     loggedIn,
   }
@@ -350,6 +359,7 @@ const mapDispatchToProps = (dispatch, state) => {
       dispatch(resetAppState());
     },
     createCenterFunc: (inputFieldSetArg) => {
+      console.log('0000000');
       dispatch(createCenter(inputFieldSetArg));
     },
   }

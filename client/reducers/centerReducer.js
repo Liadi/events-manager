@@ -12,7 +12,7 @@ export default function reducer(
   action) {
 
 	switch (action.type) {
-    case 'FIELD_ERROR': {
+    case 'CENTER_FIELD_ERROR': {
       let temp = state.error.fieldError;
       temp = {...temp};
       temp[action.payload.field] = action.payload.msg;
@@ -64,7 +64,7 @@ export default function reducer(
       }
     }
 
-    case 'FETCH_CENTER_PENDING' : {
+    case 'FETCH_CENTER_PENDING': {
 			return {
         ...state,
         fetching: true,
@@ -72,15 +72,7 @@ export default function reducer(
       }
 		}
 
-    case 'FETCH_CENTERS_PENDING' : {
-      return {
-        ...state,
-        fetching: true,
-        fetched: false,
-      }
-    }
-
-    case 'FETCH_CENTERS_REJECTED' : {
+    case 'FETCH_CENTER_REJECTED': {
       return {
         ...state,
         fetching: false,
@@ -89,7 +81,34 @@ export default function reducer(
       }
     }
 
-    case 'FETCH_CENTERS_FULFILLED' : {
+    case 'FETCH_CENTER_FULFILLED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        centers: state.centers.concat(action.payload.data.center),
+        error: Object.assign({}, state.error, {serverError: null}),
+      }
+    }
+
+    case 'FETCH_CENTERS_PENDING': {
+      return {
+        ...state,
+        fetching: true,
+        fetched: false,
+      }
+    }
+
+    case 'FETCH_CENTERS_REJECTED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: false,
+        error: Object.assign({}, state.error, {serverError: action.payload.message}),
+      }
+    }
+
+    case 'FETCH_CENTERS_FULFILLED': {
       return {
         ...state,
         fetching: false,
@@ -99,32 +118,76 @@ export default function reducer(
       }
     }
 
-    case 'ADD_CENTER' : {
+    case 'CREATE_CENTER_PENDING': {
       return {
         ...state,
-        center: action.payload,
+        fetching: true,
+        fetched: false,
       }
     }
 
-    case 'UPDATE_CENTER' : {
+    case 'CREATE_CENTER_REJECTED': {
       return {
         ...state,
-        center: action.payload,
+        fetching: false,
+        fetched: false,
+        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message}),
       }
     }
 
-    case 'DELETE_CENTER' : {
+    case 'CREATE_CENTER_FULFILLED': {
       return {
         ...state,
-        center: {
-          id: action.payload,
+        fetching: false,
+        fetched: true,
+        centers: state.centers.concat(action.payload.data.center),
+        error: Object.assign({}, state.error, {serverError: null}),
+      }
+    }
+
+    case 'UPDATE_CENTER_PENDING': {
+      return {
+        ...state,
+        fetching: true,
+        fetched: false,
+      }
+    }
+    case 'UPDATE_CENTER_REJECTED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: false,
+        error: Object.assign({}, state.error, {serverError: action.payload.message}),
+      }
+    }
+
+    case 'UPDATE_CENTER_FULFILLED': {
+      // find center in present array. If center exists update else push
+      const centersArray = state.centers.slice(0, state.centers.length);
+      let found = false;
+      const centerId = action.payload.response.data.center.id;
+      for (let i in centersArray) {
+        if (centersArray[i].id === centerId) {
+          found = true;
+          centersArray[i] = action.payload.response.data.center
+          break;
         }
       }
+      if (!found) {
+        centersArray.push(action.payload.response.data.center);
+      }
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        centers: centersArray,
+        error: Object.assign({}, state.error, {serverError: null}),
+      }
+
     }
 
-    //`default: {
-    
-    // }
+    default: {
+      return state;
+    }
 	}
-  return state
 }

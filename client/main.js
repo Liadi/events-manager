@@ -5,9 +5,6 @@ import { Provider } from 'react-redux';
 import store from './store';
 import { saveState } from './localStorage';
 
-import { BrowserRouter } from 'react-router-dom';
-
-
 store.subscribe(() => {
   const {accountUser, userToken} = store.getState().user;
   saveState({
@@ -29,8 +26,6 @@ store.subscribe(() => {
 
 ReactDOM.render((
   <Provider store={store}>
-    <BrowserRouter>
       <App/>
-    </BrowserRouter>
   </Provider>
 ), document.getElementById('app'));

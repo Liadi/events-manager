@@ -19,14 +19,14 @@ const InfoTab = (props) => {
 	} else if (props.infoTabMsg.length > 0) {
 		return(
 		  <div className='outputBox'>
+        <button onClick={props.closeInfoTabFunc}>
+          <i className="fa fa-times"></i>
+        </button>
         {props.infoTabMsg.map((msg, index) => 
           <div key={index} className='container'>
             <p className="mx-auto col-9">{msg}</p>
           </div>
         )}
-        <button onClick={props.closeInfoTabFunc}>
-    		  <i className="fa fa-times"></i>
-        </button>
       </div>
 		);
 	}

@@ -6,7 +6,6 @@ import InfoTab from './InfoTab.jsx';
 import { closeInfoTab, resetAppState } from '../actions/appAction';
 import { updateUserField, deleteUserFieldError, userLogin, resetUserFields } from '../actions/userAction';
 import { validateUser } from '../util';
-
 const inputFieldSet = new Set();
 
 class Login extends React.Component {
@@ -18,8 +17,8 @@ class Login extends React.Component {
   componentWillUnmount() {
     this.props.unmountFunc();
   }
-
   render() {
+    console.log('Happy')
     const { infoTabMsg, showInfoTab, closeInfoTabFunc, userFieldError, updateUserFieldFunc, userLoginFunc, loggedIn } = this.props;
     return (
       <Route render={props => (
