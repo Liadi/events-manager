@@ -5,6 +5,19 @@ module.exports = {
     }
   },
 
+  toggleCenterUpdateForm() {
+    console.log('action fired');
+    return {
+      type: 'TOGGLE_CENTER_UPDATE_FORM',
+    }
+  },
+
+  toggleSlatedEvents() {
+    return {
+      type: 'TOGGLE_SLATED_EVENTS',
+    }
+  },
+
   closeInfoTab() {
     return {
       type: 'CLOSE_INFO_TAB',

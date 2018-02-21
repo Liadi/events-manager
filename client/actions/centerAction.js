@@ -168,7 +168,14 @@ module.exports = {
     }
   },
 
-  resetCenterFields() {
+  resetCenterFields(inputFieldSetArg) {
+    for (let item of inputFieldSetArg){
+      if (item.type === 'checkbox'){
+        item.checked = false;
+      } else {
+        item.value = "";
+      }
+    }
     return {
       type: 'RESET_CENTER_FIELDS',
     }
@@ -194,48 +201,74 @@ module.exports = {
   },
 
   updateCenter(inputFieldSetArg, centerId) {
-    const fieldError = getState().center.error.fieldError;
-    if (Object.keys(fieldError).length > 0) {
-      let msg = [];
+    return function(dispatch, getState) {
+      const fieldError = getState().center.error.fieldError;
+      const fieldInput = getState().center.center;
+      let fieldsEmpty = true;
+      let ErrorMsg = [];
       for (let field in fieldError) {
-        if (fieldError.hasOwnProperty(field)) {
-          msg.push(fieldError[field]);
+        if (fieldError.hasOwnProperty(field) && fieldError[field] !== '') {
+          ErrorMsg.push(fieldError[field]);
         }
       }
-      dispatch ({
-        type: 'OPEN_INFO_TAB',
-        payload: {
-          msg,
-        }
-      });
-    } else {
-      dispatch({
-        type: 'UPDATE_CENTER',
-        payload: axios({
-          method: 'put',
-          url: `/api/v1/centers/${centerId}`,
-          data: getState().center.center,
-          headers: {
-            'token': getState().user.userToken,
-          }
-        }),
-      }).then((response) => {
-        dispatch({
-          type: 'RESET_CENTER_FIELDS',
-        })
-        dispatch({
-          type: 'RESET_APP_STATE',
-        })
-        for (let item of inputFieldSetArg) item.value = "";
-      }).catch((error) => {
+
+      if (ErrorMsg.length > 0) {
         dispatch ({
           type: 'OPEN_INFO_TAB',
           payload: {
-            msg: [getState().center.error.serverError],
+            ErrorMsg,
+          }
+        });      
+      }
+      for (let field in fieldInput) {
+        if (fieldInput.hasOwnProperty(field) && fieldInput[field] !== '') {
+          fieldsEmpty = false;
+          break;
+        }
+      }
+      // Object.keys(fieldError).length
+      if ( fieldsEmpty ) {
+        let msg = ['fill one or more fields'];
+        dispatch ({
+          type: 'OPEN_INFO_TAB',
+          payload: {
+            msg,
           }
         });
-      })
+      } else {
+        dispatch({
+          type: 'UPDATE_CENTER',
+          payload: axios({
+            method: 'put',
+            url: `/api/v1/centers/${centerId}`,
+            data: getState().center.center,
+            headers: {
+              'token': getState().user.userToken,
+            }
+          }),
+        }).then((response) => {
+          dispatch({
+            type: 'RESET_CENTER_FIELDS',
+          })
+          dispatch({
+            type: 'RESET_APP_STATE',
+          })
+          for (let item of inputFieldSetArg){
+            if (item.type === 'checkbox'){
+              item.checked = false;
+            } else {
+              item.value = "";
+            }
+          }
+        }).catch((error) => {
+          dispatch ({
+            type: 'OPEN_INFO_TAB',
+            payload: {
+              msg: [getState().center.error.serverError],
+            }
+          });
+        })
+      }
     }
   }
-
 }

@@ -4,11 +4,12 @@ import { Route } from 'react-router-dom';
 import Footer from './Footer.jsx';
 import Navbar from './Navbar.jsx';
 import NotFound from './NotFound.jsx';
+import InfoTab from './InfoTab.jsx';
 import '../style/center-events.scss';
 import { validateUser, validateEmail } from '../util';
 import { userLogout } from '../actions/userAction';
-import { closeModal, closeInfoTab, resetAppState } from '../actions/appAction';
-import { fetchCenter, resetCenterFields, updateCenterField, updateCenter } from '../actions/centerAction';
+import { closeModal, closeInfoTab, resetAppState, toggleSlatedEvents, toggleCenterUpdateForm } from '../actions/appAction';
+import { fetchCenter, resetCenterFields, updateCenterField, updateCenter, centerFieldInputError, deleteCenterFieldError } from '../actions/centerAction';
 
 const inputFieldSet = new Set();
 
@@ -20,7 +21,7 @@ const AmenitiesList = (props) => {
   }
   if ( tempArray && tempArray.length > 0) {
     return(
-      <div>
+      <div className='outputBox'>
         {tempArray.map((entry, index) =>
           <p className="card-text" key={index}>{entry}</p>
         )}
@@ -46,7 +47,7 @@ class SingleCenter extends React.Component {
   }
 
   render() {
-    const { center, centersArray, userType, loggedIn, centerFieldError, closeInfoTabFunc, closeModalFunc, userLogoutFunc, fetchCurrentCenterFunc, centerUpdateFormState } = this.props;
+    const { center, centersArray, userType, loggedIn, centerFieldError, centerUpdateForm, slatedEvents, closeModalFunc, userLogoutFunc, updateCenterFieldFunc, updateCenterFunc, fetchCurrentCenterFunc, toggleCenterUpdateFormFunc, toggleSlatedEventsFunc, infoTabMsg, showInfoTab, closeInfoTabFunc, resetFunc } = this.props;
     let currentCenter;
     if (loggedIn) {
       for (let i in centersArray){
@@ -64,19 +65,36 @@ class SingleCenter extends React.Component {
           <div>
             <Navbar userType={userType} userLogoutFunc={userLogoutFunc} />
             	<main className="container">
-                <label className="custom-control custom-checkbox">
-                  <input type="checkbox" className="custom-control-input" id="slatedEventsToggle"/>
+                <label className="custom-control custom-checkbox d-block">
+                  <input type="checkbox" className="custom-control-input" id="slatedEventsToggle" onChange={ e => {
+                    toggleSlatedEventsFunc();
+                  }}/>
                   <span className="custom-control-indicator"></span>
-                  <span className="custom-control-description">Show slated events</span>
-                  <span className="custom-control-description">Hide slated events</span>
+                  { slatedEvents?
+                    (
+                      <span className="custom-control-description">Hide slated events</span>
+                    ):(
+                      <span className="custom-control-description">Show slated events</span>
+                    )
+                  }
                 </label>
 
-                <label className="custom-control custom-checkbox">
-                  <input type="checkbox" className="custom-control-input" id="updateFormToggle"/>
-                  <span className="custom-control-indicator"></span>
-                  <span className="custom-control-description">Update Center</span>
-                  <span className="custom-control-description">Close Update Form</span>
-                </label>
+                { userType === 'admin'?
+                  (<label className="custom-control custom-checkbox d-block">
+                    <input type="checkbox" className="custom-control-input" id="updateFormToggle" onChange={ e => {
+                      toggleCenterUpdateFormFunc();
+                      inputFieldSet.add(e.target);
+                    }}/>
+                    <span className="custom-control-indicator"></span>
+                    { centerUpdateForm?
+                      (
+                        <span className="custom-control-description">Close Update Form</span>
+                      ):
+                      (
+                        <span className="custom-control-description">Update Center</span>
+                      )
+                    }
+                  </label>): (null)}
 
                 <div className="card" id="card-div">
                   <div className="card-center d-flex flex-wrap flex-row-reverse justify-content-center" id="center-descrip">
@@ -124,9 +142,42 @@ class SingleCenter extends React.Component {
                     </div>
                   </div>
                 </div>
+                {
+                  slatedEvents?
+                  (
+                    <div>
+                      {
+                        (currentCenter.events.length > 0) ?
+                        (
+                          <table className="table table-striped" id="eventTable">
+                            <thead>
+                              <tr>
+                                  <th scope="col">#</th>
+                                  <th scope="col">Event Date</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {currentCenter.events.map((event, index) =>
+                                <tr key={event.id}>
+                                  <th scope="row">{parseInt(index, 10) + 1}</th>
+                                  <td>{new Date(event.eventTime).toDateString()}</td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                        ):(
+                          <h4>No Events</h4>
+                        )
+                      }
+                    </div>
+                  )
+                  :
+                  (null)
+                }
 
-                <div>
-                  {centerUpdateFormState ? (
+                {centerUpdateForm ? (
+                  <div>
+                    <InfoTab className='infoTab' infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} closeInfoTabFunc={closeInfoTabFunc}/>
                     <form>
                       <div className="form-group">
                         <label htmlFor="inputCenterName"><h6>Name</h6></label>
@@ -297,15 +348,15 @@ class SingleCenter extends React.Component {
                       <div className="d-flex  justify-content-end grp form-group">
                         <button type="button" className="btn btn-warning grp-btn" onClick={ e => {
                           e.preventDefault();
-                          updateCenterFunc(parseInt(center.id, 10));
+                          updateCenterFunc(parseInt(currentCenter.id, 10));
                         }}>Update</button>
                         <button type="reset" className="btn btn-danger grp-btn" onClick={ e => {
                           resetFunc();
                         }}>Clear</button>
                       </div>
                     </form>
-                  ) : (null)}
-                </div>
+                  </div>
+                ) : (null)}
               </main>
             <Footer />
           </div>
@@ -325,7 +376,10 @@ const mapStateToProps = (state) => {
     center: state.center.center,
     centersArray: state.center.centers,
     centerFieldError: state.center.error.fieldError,
-    centerUpdateFormState: state.app.centerUpdateFormState,
+    centerUpdateForm: state.app.centerUpdateForm,
+    slatedEvents: state.app.slatedEvents,
+    infoTabMsg: state.app.infoTabMsg,
+    showInfoTab: state.app.showInfoTab,
     userType,
     loggedIn,
   }
@@ -385,9 +439,17 @@ const mapDispatchToProps = (dispatch, state) => {
 
     resetFunc: () => {
       if (inputFieldSet.size > 0) {
-        dispatch(resetCenterFields());
+        dispatch(resetCenterFields(inputFieldSet));
       }
       dispatch(resetAppState());
+    },
+
+    toggleSlatedEventsFunc: () => {
+      dispatch(toggleSlatedEvents());
+    },
+
+    toggleCenterUpdateFormFunc: () => {
+      dispatch(toggleCenterUpdateForm());
     },
   }
 }

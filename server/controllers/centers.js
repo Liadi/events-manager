@@ -149,7 +149,7 @@ module.exports = {
       include: [{
         model: Event,
         as: 'events',
-        attributes: ['eventTime'],
+        attributes: ['id', 'eventTime'],
       }],
     }).then((center) => {
       if (!center) {

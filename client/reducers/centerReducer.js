@@ -157,7 +157,7 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: false,
-        error: Object.assign({}, state.error, {serverError: action.payload.message}),
+        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message}),
       }
     }
 
@@ -165,16 +165,16 @@ export default function reducer(
       // find center in present array. If center exists update else push
       const centersArray = state.centers.slice(0, state.centers.length);
       let found = false;
-      const centerId = action.payload.response.data.center.id;
+      const centerId = action.payload.data.center.id;
       for (let i in centersArray) {
         if (centersArray[i].id === centerId) {
           found = true;
-          centersArray[i] = action.payload.response.data.center
+          centersArray[i] = action.payload.data.center
           break;
         }
       }
       if (!found) {
-        centersArray.push(action.payload.response.data.center);
+        centersArray.push(action.payload.data.center);
       }
       return {
         ...state,
