@@ -16,7 +16,6 @@ const AdvancedSearch = (props) => {
           <input type="text" className= "form-control form-control-sm" id="searchCountry" placeholder="Nigeria" disabled onChange={ e => {
             updateCenterFieldFunc('centerCountry', e.target.value.trim());
           }}/>
-
         </div>
         <div className="form-group col-md-2">
           <label htmlFor="searchState" className="form-label-sm">State</label>

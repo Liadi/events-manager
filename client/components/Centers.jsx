@@ -3,7 +3,7 @@ import React from 'react';
 const Centers = () => {
   return (
     <h3>
-      Centers
+      All Centers
     </h3>
   );
 }

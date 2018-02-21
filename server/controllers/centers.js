@@ -48,6 +48,7 @@ module.exports = {
       log(logData);
 
     }).catch((error) => {
+      console.log('logger => ', error);
       const err = error.errors[0].message;
       return res.status(400).json({
         message: err,
@@ -148,7 +149,7 @@ module.exports = {
       include: [{
         model: Event,
         as: 'events',
-        attributes: ['eventTime'],
+        attributes: ['id', 'eventTime'],
       }],
     }).then((center) => {
       if (!center) {
@@ -167,6 +168,7 @@ module.exports = {
       return res.status(200).json({
         message: 'center found',
         center: {
+          id: center.id,
           centerName: center.centerName,
           centerAddress: center.centerAddress,
           centerCountry: center.centerCountry,
@@ -174,6 +176,9 @@ module.exports = {
           centerCity: center.centerCity,
           centerCapacity: center.centerCapacity,
           centerDescription: center.centerDescription,
+          centerMantra: center.centerMantra,
+          centerAmenities: center.centerAmenities,
+          
         },
         status: true,
       });

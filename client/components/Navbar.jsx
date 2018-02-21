@@ -41,9 +41,9 @@ const Navbar = (props) => {
           <CreateCenterLink userType={props.userType}/>
           <EventsLink userType={props.userType}/>
           <li className="nav-item navbar-item mx-auto dropdown">
-            <Link className="nav-link" to="/dashboard" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div className="nav-link" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i className="fa fa-user fa-1x mx-auto" aria-hidden="true"></i>
-            </Link>
+            </div>
             <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
               <Link className="dropdown-item" to="events">My Events</Link>
               <Link className="dropdown-item" to="create-event">Create Event</Link>

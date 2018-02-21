@@ -12,7 +12,7 @@ const SearchedCenters = (props) => {
     );
   } else if (props.fetched) {
     return(
-      <div className='searchOutputBox'>
+      <div className='outputBox'>
         {props.centers.map((center) => 
           <div key={center.id} className='container'>
             <h3 className="mx-auto col-9">{center.centerName}</h3>

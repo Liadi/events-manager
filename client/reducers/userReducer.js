@@ -74,12 +74,12 @@ export default function reducer(
     }
 
 		case 'USER_SIGNUP_PENDING' : {
-			return {
+      return {
         ...state,
         fetching: true,
         fetched: false,
       }
-		}
+    }
 
     case 'USER_SIGNUP_REJECTED' : {
       return {
