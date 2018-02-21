@@ -14,6 +14,7 @@ module.exports = {
 
   fetchCenter(id) {
     return function(dispatch, getState) {
+      console.log('fetching');
       dispatch({
         type: 'FETCH_CENTER',
         payload: axios({
@@ -168,12 +169,14 @@ module.exports = {
     }
   },
 
-  resetCenterFields(inputFieldSetArg) {
-    for (let item of inputFieldSetArg){
-      if (item.type === 'checkbox'){
-        item.checked = false;
-      } else {
-        item.value = "";
+  resetCenterFields(inputFieldSetArg=null) {
+    if (inputFieldSetArg) {
+      for (let item of inputFieldSetArg){
+        if (item.type === 'checkbox'){
+          item.checked = false;
+        } else {
+          item.value = "";
+        }
       }
     }
     return {

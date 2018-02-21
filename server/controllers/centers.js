@@ -168,6 +168,7 @@ module.exports = {
       return res.status(200).json({
         message: 'center found',
         center: {
+          id: center.id,
           centerName: center.centerName,
           centerAddress: center.centerAddress,
           centerCountry: center.centerCountry,
@@ -175,6 +176,9 @@ module.exports = {
           centerCity: center.centerCity,
           centerCapacity: center.centerCapacity,
           centerDescription: center.centerDescription,
+          centerMantra: center.centerMantra,
+          centerAmenities: center.centerAmenities,
+          
         },
         status: true,
       });
