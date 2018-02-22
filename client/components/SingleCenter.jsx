@@ -391,7 +391,6 @@ class SingleCenter extends React.Component {
         ) : (
           <NotFound />
         )
-
       )}/>
     )
   }
