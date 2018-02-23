@@ -2,19 +2,31 @@ import axios from 'axios';
 import history from '../history';
 
 module.exports = {
-  fetchCenters() {
+  fetchAllCenters(tempParams = {}) {
     return function(dispatch, getState) {
-      const {center} = getState().center;
+      const centerParams = {
+        ...getState().center.center,
+        limit: getState().center.limit,
+        sort: JSON.stringify(getState().center.sort),
+        page: getState().center.page,
+        ...tempParams,
+      }
       dispatch({
         type: 'FETCH_CENTERS',
-        payload: axios.get('api/v1/centers', {params: center,})
+        payload: axios({
+          method: 'get',
+          url: 'api/v1/centers',
+          params: centerParams,
+          headers: {
+            'token': getState().user.userToken,
+          }
+        }),
       });
     }
 	},
 
   fetchCenter(id) {
     return function(dispatch, getState) {
-      console.log('fetching');
       dispatch({
         type: 'FETCH_CENTER',
         payload: axios({
@@ -105,7 +117,6 @@ module.exports = {
       }
 
       Promise.all(promiseFieldError).then(() =>{
-        console.log('set of promises or not => ', promiseFieldError);
         if (Object.keys(getState().center.error.fieldError).length > 0) {
           let temp = getState().center.error.fieldError;
           let msg = [];
@@ -133,7 +144,6 @@ module.exports = {
               }
             }),
           }).then( response => {
-            console.log(response, history);
             dispatch({
               type: 'RESET_CENTER_FIELDS',
             })
@@ -143,9 +153,7 @@ module.exports = {
             for (let item of inputFieldSetArg) item.value = "";
             history.push(`/centers/${response.value.data.center.id}`);
           }).catch(err =>{
-            console.log('checking 3', err);
             let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
-            console.log('checking 4');
             dispatch({
               type: 'OPEN_INFO_TAB',
               payload: {
@@ -272,6 +280,17 @@ module.exports = {
           });
         })
       }
+    }
+  },
+
+  changeCenterPage(page) {
+    return function(dispatch, getState){
+      dispatch({
+        type: 'CHANGE_CENTER_PAGE',
+        payload: {
+          page,
+        }
+      })
     }
   }
 }

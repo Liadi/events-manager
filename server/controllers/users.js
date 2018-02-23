@@ -157,10 +157,8 @@ module.exports = {
       const oldUser = {...user.dataValues};
       let nothingToChange = true;
       const tempFields = [req.userFirstName, req.userLastName, req.userEmail, req.userPassword, req.userPhoneNumber];
-      console.log('tempFields ', tempFields, req.userLastName);
       for (let i in tempFields) {
-        console.log('@ i => ', tempFields[i], (tempFields[i] || false));
-        if (tempFields[i]) {
+         if (tempFields[i]) {
           nothingToChange = false;
           break;
         }

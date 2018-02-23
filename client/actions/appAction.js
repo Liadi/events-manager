@@ -6,7 +6,6 @@ module.exports = {
   },
 
   toggleCenterUpdateForm() {
-    console.log('action fired');
     return {
       type: 'TOGGLE_CENTER_UPDATE_FORM',
     }

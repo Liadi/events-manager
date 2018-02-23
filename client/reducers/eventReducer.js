@@ -8,6 +8,10 @@ export default function reducer(
       fieldError: {},
       serverError: null,
     },
+    limit: 10,
+    sort: {
+      item: 'eventTime', order: 'INC'
+    },
   },
   action) {
 

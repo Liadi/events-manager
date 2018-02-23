@@ -318,7 +318,6 @@ module.exports = {
       }).then((events) => {
         return findEvents(events, finalParams, res);
       }).catch((error) => {
-        console.log('error => ', error);
         return res.status(400).json({
           message: 'invalid query',
           status: false,
@@ -358,7 +357,6 @@ const searchEvents = ((events, finalParams) => {
         case 'eventTime': {
           const timeParam = JSON.parse(finalParams[key]);
           const [low, mainTime, high] = [ new Date(timeParam['low']), new Date(event[key]) , new Date(timeParam['high']) ]; 
-          console.log('time parameters => ', 'low =', low, ' event\'s =', mainTime, ' high =', high);
           if (low >= mainTime || mainTime > high){
             foundIndex = -1;
           }

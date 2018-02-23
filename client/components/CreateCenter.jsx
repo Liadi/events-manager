@@ -193,7 +193,6 @@ class CreateCenter extends React.Component {
                           updateCenterFieldFunc('centerAmenities', JSON.stringify([tempPlaceHolder]));
                         } else {
                           let tempArray = JSON.parse(center['centerAmenities']);
-                          console.log('logger ', tempPlaceHolder, center['centerAmenities']);
                           updateCenterFieldFunc('centerAmenities', JSON.stringify(JSON.parse(center['centerAmenities']).concat(tempPlaceHolder)));
                         }
                       }
@@ -359,7 +358,6 @@ const mapDispatchToProps = (dispatch, state) => {
       dispatch(resetAppState());
     },
     createCenterFunc: (inputFieldSetArg) => {
-      console.log('0000000');
       dispatch(createCenter(inputFieldSetArg));
     },
   }

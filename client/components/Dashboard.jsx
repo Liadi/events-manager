@@ -100,7 +100,7 @@ const mapDispatchToProps = (dispatch, state) => {
           });
           const tempParams = {
             limit: 7,
-            sort: JSON.stringify({item: 'eventTime', order: 'increasing'}),
+            sort: JSON.stringify({item: 'eventTime', order: 'INC'}),
             eventTime: timeFrame,
           }
           dispatch(fetchEvents(tempParams));
@@ -109,7 +109,7 @@ const mapDispatchToProps = (dispatch, state) => {
         case 'recent': {
           const tempParams = {
             limit: 7,
-            sort: JSON.stringify({item: 'createdAt', order: 'decreasing'}),
+            sort: JSON.stringify({item: 'createdAt', order: 'DEC'}),
           }
           dispatch(fetchUserLogs(tempParams));
           break;

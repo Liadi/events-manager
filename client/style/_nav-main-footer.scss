@@ -1,3 +1,21 @@
+.btn-delete {
+  background-color: tomato;
+  color: white;
+}
+
+.btn-add {
+  background-color: green;
+  color: white;
+}
+
+.btn-delete:hover {
+  color: white;
+}
+
+.btn-add:hover {
+  color: white;
+}
+
 .btn-warning {
   color: white;
 }
@@ -38,8 +56,21 @@
   border-style: solid;
 }
 
+#page-control {
+  margin-top: 30px;
+  margin-bottom: 20px; 
+  border: solid black;
+  border-width: 1px 0px;
+  padding: 5px 5px;
+}
+
+#currentPage {
+  border-color: orange;
+  border-style: solid;
+}
+
 main {
-  min-height: calc(100vh - 116px);
+  min-height: calc(100vh - 125.5px);
 }
 
 footer {
@@ -59,9 +90,9 @@ footer {
 }
 
 @media screen and (min-width: 800px) {
-  main {
-    min-height: calc(100vh - 118px);
-  }        
+  /* main {
+    min-height: calc(100vh - 125.5px);
+  }  */      
 }
 
 

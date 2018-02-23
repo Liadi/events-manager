@@ -8,6 +8,13 @@ export default function reducer(
       fieldError: {},
       serverError: null,
     },
+    page: 1,
+    limit: 10,
+    totalElement: 0,
+    sort: {
+      item: undefined,
+      order: 'DESC',
+    },
   },
   action) {
 
@@ -115,6 +122,7 @@ export default function reducer(
         fetched: true,
         error: Object.assign({}, state.error, {serverError: null}),
         centers: action.payload.data.centers,
+        totalElement: action.payload.data.totalElement,
       }
     }
 
@@ -184,6 +192,30 @@ export default function reducer(
         error: Object.assign({}, state.error, {serverError: null}),
       }
 
+    }
+
+    case 'CHANGE_CENTER_PAGE': {
+      return {
+        ...state,
+        page: action.payload.page,
+      }
+    }
+
+    case 'UPDATE_CENTER_LIMIT': {
+      return {
+        ...state,
+        limit: action.payload.limit,
+      }
+    }
+
+    case 'UPDATE_CENTER_SORT': {
+      return {
+        ...state,
+        sort: {
+          item: action.payload.item || state.store.item,
+          order: action.payload.order || state.store.order,
+        },
+      }
     }
 
     default: {

@@ -18,7 +18,6 @@ class Login extends React.Component {
     this.props.unmountFunc();
   }
   render() {
-    console.log('Happy')
     const { infoTabMsg, showInfoTab, closeInfoTabFunc, userFieldError, updateUserFieldFunc, userLoginFunc, loggedIn } = this.props;
     return (
       <Route render={props => (

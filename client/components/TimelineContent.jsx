@@ -12,7 +12,6 @@ class TimelineContent extends React.Component {
 
   render() {
     const { show, events } = this.props;
-    console.log('patapata => ', events);
     if (show) {
       return (
         <div id="timelineContent" className="tab-content">

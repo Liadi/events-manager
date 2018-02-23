@@ -48,7 +48,6 @@ module.exports = {
       log(logData);
 
     }).catch((error) => {
-      console.log('logger => ', error);
       const err = error.errors[0].message;
       return res.status(400).json({
         message: err,
@@ -254,7 +253,6 @@ module.exports = {
         return findCenters(centers, finalParams, res);
       })
       .catch((error) => {
-        console.log('error => ', error);
         return res.status(400).json({
           message: 'invalid query',
           status: false,
@@ -280,7 +278,6 @@ const searchCenters = ((centers, finalParams) => {
   const retCenters = [];
   for(let i in centers) {
     const center = centers[i];
-    console.log('in loop, id is => ', center.id);
     let foundIndex = 0;
     for (let key in finalParams) {
       switch(key) {
@@ -348,13 +345,13 @@ const findCenters = ((centers, finalParams, res ) => {
   if (finalParams['sort']) {
     const tempSortObj = JSON.parse(finalParams['sort']);
     retCenters.sort((a, b) => {
-      if (tempSortObj['order'] === 'decreasing'){
-        return b[tempSortObj['item']] - a[tempSortObj['item']];
+      if (tempSortObj['order'] === 'INC'){
+        return a[tempSortObj['item']] - b[tempSortObj['item']];
       }
-      return a[tempSortObj['item']] - b[tempSortObj['item']];
+      return b[tempSortObj['item']] - a[tempSortObj['item']];
     });
   }
-  const n = retCenters.length;
+  const totalElement = retCenters.length;
   const [limit, page] = [parseInt(finalParams['limit']), parseInt(finalParams['page'])];
   if ( limit && limit > 0) {
     if (page && page > 0) {
@@ -369,7 +366,7 @@ const findCenters = ((centers, finalParams, res ) => {
       message: 'centers found',
       status: true,
       centers: retCenters,
-      n,
+      totalElement,
     });
   }
   return res.status(404).json({

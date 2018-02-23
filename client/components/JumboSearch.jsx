@@ -4,7 +4,7 @@ import SearchedCenters from './SearchedCenters.jsx';
 import '../style/index.scss';
 import { connect } from 'react-redux';
 import { toggleAdvancedSearch } from '../actions/appAction';
-import { updateCenterField, fetchCenters, fieldInputError } from '../actions/centerAction';
+import { updateCenterField, fetchAllCenters, fieldInputError } from '../actions/centerAction';
 
 class JumboSearch extends React.Component {
   constructor(props) {
@@ -74,7 +74,7 @@ const mapDispatchToProps = (dispatch, state) => {
     },
 
     fetchSearchedCenterFunc: () => {
-      dispatch(fetchCenters());
+      dispatch(fetchAllCenters());
     },
   }
 }
