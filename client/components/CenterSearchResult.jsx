@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SearchedCenters = (props) => {
+const CenterSearchResult = (props) => {
   if (props.fetching) {
     return (
       <div className='container'>
@@ -24,4 +24,4 @@ const SearchedCenters = (props) => {
   return null;
 }
 
-export default SearchedCenters;
+export default CenterSearchResult;

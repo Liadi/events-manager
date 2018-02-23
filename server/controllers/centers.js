@@ -282,7 +282,7 @@ const searchCenters = ((centers, finalParams) => {
     for (let key in finalParams) {
       switch(key) {
         case 'centerName':{
-          foundIndex = center[key].search(finalParams[key])
+          foundIndex = (center[key].toLowerCase()).search(finalParams[key].toLowerCase())
           break;
         }
 
@@ -315,14 +315,14 @@ const searchCenters = ((centers, finalParams) => {
         }
 
         case 'centerPriceLower':{
-          if (parseInt(center[key]) < parseInt(finalParams[key])){
+          if (parseInt(center['centerRate']) < parseInt(finalParams[key])){
             foundIndex = -1;
           }
           break;
         }
 
         case 'centerPriceUpper':{
-          if (parseInt(center[key]) > parseInt(finalParams[key])){
+          if (parseInt(center['centerRate']) > parseInt(finalParams[key])){
             foundIndex = -1;
           }
           break;

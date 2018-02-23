@@ -67,7 +67,6 @@ const AdvancedSearch = (props) => {
           </div>
         </div>    
       </div>  
-      <button id="reset-btn" className="btn" type="reset">Reset</button>
     </div>
   )
 }

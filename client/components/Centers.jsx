@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { resetAppState } from '../actions/appAction';
 import { userLogout } from '../actions/userAction';
 import { updateCenterField, deleteCenterFieldError, centerFieldInputError, resetCenterFields, changeCenterPage, fetchAllCenters } from '../actions/centerAction';
+import CenterSearch from './CenterSearch.jsx';
 import Footer from './Footer.jsx';
 import Navbar from './Navbar.jsx';
 import NotFound from './NotFound.jsx';
@@ -35,6 +36,8 @@ class Centers extends React.Component {
           <div>
             <Navbar userType={userType} userLogoutFunc={userLogoutFunc} />
             <main className="container">
+              <h3>Event Centers</h3>
+              <CenterSearch panel={false} jumbo={false}/>
               { (allCenters.length > 0)?
                 (
                   allCenters.map((center) => 
@@ -70,7 +73,6 @@ class Centers extends React.Component {
             <Footer />
           </div>
         ) : <NotFound />
-
       )}/>
     )
   }

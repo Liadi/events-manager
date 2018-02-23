@@ -12,7 +12,7 @@ export default function reducer(
     limit: 10,
     totalElement: 0,
     sort: {
-      item: undefined,
+      item: 'centerRate',
       order: 'DESC',
     },
   },
@@ -112,6 +112,7 @@ export default function reducer(
         fetching: false,
         fetched: false,
         error: Object.assign({}, state.error, {serverError: action.payload.message}),
+        centers: [],
       }
     }
 
@@ -212,8 +213,8 @@ export default function reducer(
       return {
         ...state,
         sort: {
-          item: action.payload.item || state.store.item,
-          order: action.payload.order || state.store.order,
+          item: action.payload.item || state.sort.item,
+          order: action.payload.order || state.sort.order,
         },
       }
     }

@@ -284,13 +284,39 @@ module.exports = {
   },
 
   changeCenterPage(page) {
-    return function(dispatch, getState){
-      dispatch({
-        type: 'CHANGE_CENTER_PAGE',
-        payload: {
-          page,
-        }
-      })
+    return {
+      type: 'CHANGE_CENTER_PAGE',
+      payload: {
+        page,
+      }
     }
-  }
+  },
+
+  updateCenterLimit(limit) {
+    return {
+      type: 'UPDATE_CENTER_LIMIT',
+      payload: {
+        limit,
+      }
+    }
+  },
+
+  updateCenterSortItem(item) {
+    return {
+      type: 'UPDATE_CENTER_SORT',
+      payload: {
+        item,
+      }
+    }
+  },
+
+  updateCenterSortOrder(order) {
+    return {
+      type: 'UPDATE_CENTER_SORT',
+      payload: {
+        order,
+      }
+    }
+  },
+
 }

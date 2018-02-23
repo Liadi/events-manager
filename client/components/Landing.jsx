@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { resetAppState } from '../actions/appAction';
 import { resetCenterFields } from '../actions/centerAction';
 import Footer from './Footer.jsx';
-import JumboSearch from './JumboSearch.jsx';
+import CenterSearch from './CenterSearch.jsx';
 import '../style/index.scss';
 import '../awesome/scss/font-awesome.scss';
 import { validateUser } from '../util';
@@ -50,7 +50,7 @@ class Landing extends React.Component {
             <main className="container mx-auto">
               <img src="../images/top.png" alt="yap" className="img-fluid"/>
               <div className="container">
-                <JumboSearch />
+                <CenterSearch panel={true} jumbo={true}/>
                 <div id="caro-div" className="carousel slide mx-auto img-thumbnail" data-ride="carousel">
                   <div className="carousel-inner">
                     <div className="carousel-item active">
