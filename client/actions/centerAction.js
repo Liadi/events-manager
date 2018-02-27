@@ -192,6 +192,12 @@ module.exports = {
     }
   },
 
+  resetCenterEntries() {
+    return {
+      type: 'RESET_CENTER_ENTRIES',
+    }
+  },
+
   updateCenterField(field, value) {
     return {
       type: 'UPDATE_CENTER_FIELD',
@@ -227,9 +233,10 @@ module.exports = {
         dispatch ({
           type: 'OPEN_INFO_TAB',
           payload: {
-            ErrorMsg,
+            msg: ErrorMsg,
           }
-        });      
+        });
+        return;     
       }
       for (let field in fieldInput) {
         if (fieldInput.hasOwnProperty(field) && fieldInput[field] !== '') {
@@ -318,5 +325,4 @@ module.exports = {
       }
     }
   },
-
 }

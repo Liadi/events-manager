@@ -67,7 +67,7 @@ const findLogs = ((logs, finalParams, res ) => {
   if (finalParams['sort']) {
     const tempSortObj = JSON.parse(finalParams['sort'])
     retLogs.sort((a, b) => {
-      if (tempSortObj['order'] === 'decreasing'){
+      if (tempSortObj['order'] === 'DESC'){
         return b[tempSortObj['item']] - a[tempSortObj['item']];
       }
       return a[tempSortObj['item']] - b[tempSortObj['item']];

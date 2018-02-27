@@ -2,13 +2,13 @@ export default function reducer(
   state = {
     advancedSearch: false,
     centerUpdateForm: false,
+    eventForm: false,
     slatedEvents: false,
     showInfoTab: false,
     infoTabMsg: [],
     showModal: false,
     modalContent: null,
     dashboardContent: null,
-    records: {},
   },
   action) {
 
@@ -16,19 +16,27 @@ export default function reducer(
     // NOTE: reset app doesn't reset dashboard content
     case 'RESET_APP_STATE': {
       return {
-        ...state,
-        centerUpdateForm: false,
         advancedSearch: false,
+        centerUpdateForm: false,
+        eventForm: false,
+        slatedEvents: false,
         showInfoTab: false,
         infoTabMsg: [],
         showModal: false,
         modalContent: null,
+        dashboardContent: null,
       }
     }
 		case 'TOGGLE_ADVANCED_SEARCH': {
       return {
         ...state,
         advancedSearch: !state.advancedSearch,
+      }
+    }
+    case 'TOGGLE_EVENT_FORM': {
+      return {
+        ...state,
+        eventForm: !state.eventForm,
       }
     }
     case 'TOGGLE_CENTER_UPDATE_FORM': {

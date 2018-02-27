@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { resetAppState } from '../actions/appAction';
-import { resetCenterFields } from '../actions/centerAction';
+import { resetCenterFields, resetCenterEntries } from '../actions/centerAction';
 import Footer from './Footer.jsx';
 import CenterSearch from './CenterSearch.jsx';
 import '../style/index.scss';
@@ -106,6 +106,7 @@ const mapDispatchToProps = (dispatch, state) => {
     unmountFunc: () => {
       dispatch(resetCenterFields());
       dispatch(resetAppState());
+      dispatch(resetCenterEntries());
     },
   }
 }

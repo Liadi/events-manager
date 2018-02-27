@@ -24,6 +24,7 @@ module.exports = {
       req.eventStatus = (req.body.eventStatus && req.body.eventStatus.trim().toLowerCase()) || null;
       req.eventAmountPaid = (req.body.eventAmountPaid && req.body.eventAmountPaid.trim()) || null;
       req.eventTime = (req.body.eventTime && req.body.eventTime.trim()) || null;
+      req.eventDescription = (req.body.eventDescription && req.body.eventDescription.trim()) || null;
 
       // center fields
       req.centerName = (req.body.centerName && req.body.centerName.trim()) || null;

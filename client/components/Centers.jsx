@@ -3,7 +3,7 @@ import { Redirect, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { resetAppState } from '../actions/appAction';
 import { userLogout } from '../actions/userAction';
-import { updateCenterField, deleteCenterFieldError, centerFieldInputError, resetCenterFields, changeCenterPage, fetchAllCenters } from '../actions/centerAction';
+import { updateCenterField, deleteCenterFieldError, centerFieldInputError, resetCenterFields, changeCenterPage, fetchAllCenters, resetCenterEntries } from '../actions/centerAction';
 import CenterSearch from './CenterSearch.jsx';
 import Footer from './Footer.jsx';
 import Navbar from './Navbar.jsx';
@@ -22,6 +22,7 @@ class Centers extends React.Component {
   }
 
   componentWillUnmount() {
+    this.props.resetCenterEntriesFunc();
   }
 
   componentWillMount() {
@@ -127,6 +128,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch(resetCenterFields());
       }
       dispatch(resetAppState());
+    },
+
+    resetCenterEntriesFunc: () => {
+      dispatch(resetCenterEntries());
     },
   }
 }

@@ -44,20 +44,10 @@ export default function reducer(
       let temp = state.center;
       temp = {...temp};
       temp[action.payload.field] = action.payload.value;
-      
-      let errTemp = state.error.fieldError;
-      errTemp = {...errTemp};
-      errTemp[action.payload.field] = action.payload.msg;
-      
-
-      const ret = {
+      return {
         ...state,
         center: {...temp},
-        error: Object.assign({}, state.error, {fieldError: errTemp}),
       }
-      delete ret.error.fieldError[action.payload.field];
-
-      return ret
     }
 
     case 'RESET_CENTER_FIELDS': {
@@ -68,6 +58,21 @@ export default function reducer(
           fieldError: {},
           serverError: null,
         }
+      }
+    }
+
+    case 'RESET_CENTER_ENTRIES': {
+      return {
+        ...state,
+        centers: [],
+        page: 1,
+        limit: 10,
+        totalElement: 0,
+        sort: {
+          item: 'centerRate',
+          order: 'DESC',
+        },
+        error: Object.assign({}, state.error, {serverError: null}),
       }
     }
 
@@ -149,7 +154,7 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: true,
-        centers: state.centers.concat(action.payload.data.center),
+        centers: [action.payload.data.center],
         error: Object.assign({}, state.error, {serverError: null}),
       }
     }
@@ -161,6 +166,7 @@ export default function reducer(
         fetched: false,
       }
     }
+
     case 'UPDATE_CENTER_REJECTED': {
       return {
         ...state,
@@ -192,7 +198,6 @@ export default function reducer(
         centers: centersArray,
         error: Object.assign({}, state.error, {serverError: null}),
       }
-
     }
 
     case 'CHANGE_CENTER_PAGE': {

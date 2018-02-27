@@ -17,6 +17,12 @@ module.exports = {
     }
   },
 
+  toggleEventForm() {
+    return {
+      type: 'TOGGLE_EVENT_FORM',
+    }
+  },
+
   closeInfoTab() {
     return {
       type: 'CLOSE_INFO_TAB',

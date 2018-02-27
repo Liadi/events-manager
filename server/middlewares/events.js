@@ -98,7 +98,7 @@ function validTime(time, req, res) {
   const eventDate = new Date (year, month - 1, date);
 
   // too far in future (2 years)
-  if ((eventDate - today)/1000/60/60/24/365.4 > 2) {
+  if ((eventDate - today)/1000/60/60/24/365 > 2) {
     res.status(400).json({
       message: 'cannot book an event 2 years before eventTime',
       status: false,

@@ -12,6 +12,10 @@ module.exports = {
       allowNull: false,
     },
 
+    eventDescription: {
+      type: Sequelize.TEXT,
+    },
+
     eventStatus: {
       type: Sequelize.ENUM('upcoming', 'successful', 'cancelled'),
       defaultValue: 'upcoming',

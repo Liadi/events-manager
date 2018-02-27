@@ -8,6 +8,8 @@ import Dashboard from './Dashboard.jsx';
 import CreateCenter from './CreateCenter.jsx';
 import Centers from './Centers.jsx';
 import SingleCenter from './SingleCenter.jsx';
+import Events from './Events.jsx';
+import SingleEvent from './SingleEvent.jsx';
 import NotFound from './NotFound.jsx';
 import history from '../history';
 
@@ -22,6 +24,8 @@ const App = () => {
         <Route exact path='/create-center' component={CreateCenter}/>
         <Route exact path='/centers' component={Centers}/>
         <Route exact path='/centers/:id' component={SingleCenter}/>
+        <Route exact path='/events' component={Events}/>
+        <Route exact path='/events/:id' component={SingleEvent}/>
         <Route path="*" component={NotFound}/>
       </Switch>
     </Router>

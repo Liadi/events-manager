@@ -34,6 +34,7 @@ module.exports = {
         eventTime: req.eventTime,
         centerId: req.centerId,
         userId: req.userId,
+        eventDescription: req.eventDescription,
       }).then((event) => {
         res.status(201).json({
           message: 'event created',
@@ -53,6 +54,7 @@ module.exports = {
             eventTime: event.eventTime,
             centerId: event.centerId,
             userId: event.userId,
+            eventDescription: event.eventDescription,
           }),
         };
 
@@ -75,78 +77,99 @@ module.exports = {
         status: false,
       });
     }
-    Event.findOne({
-      where: {id: req.eventId, userId: req.userId},
-      include: [{
-        model: Center,
-        as: 'center',
+
+    Center.findOne({
+      where:{id: req.centerId},
+      include:[{
+        model: Event,
+        as: 'events',
+        attributes: ['eventTime', 'id'],
+      }],
+    }).then((center) => {
+      // check for time clash with another event
+      if (req.eventTime) {
+        for (let i in center.events) {
+          if (center.events[i].id !== req.eventId && center.events[i].eventTime.getTime() === req.eventTime.getTime()) {
+            return res.status(404).json({
+              message: 'date taken',
+              status: false,
+            });
+          }
+        }
+      }
+      Event.findOne({
+        where: {id: req.eventId, userId: req.userId},
+        include: [{
+          model: Center,
+          as: 'center',
+          attributes: [
+          'id',
+          'centerName',
+          'centerAddress',
+          ],
+        }],
         attributes: [
         'id',
-        'centerName',
-        'centerAddress',
+        'eventName',
+        'eventStatus',
+        'eventTime',
+        'eventAmountPaid',
+        'centerId',
+        'userId',
         ],
-      }],
-      attributes: [
-      'id',
-      'eventName',
-      'eventStatus',
-      'eventTime',
-      'eventAmountPaid',
-      'centerId',
-      'userId',
-      ],
-    }).then((event) => {
-      if (!event) {
-        return res.status(404).json({
-          message: 'event does not exist',
-          status: false,
-        });
-      }
-      const oldEvent = {...event.dataValues};
-      event.update({
-        eventName: req.eventName || event.eventName,
-        eventAmountPaid: req.eventAmountPaid || event.eventAmountPaid,
-        eventTime: req.eventTime || event.eventTime,
-        centerId: req.centerId || event.centerId,
       }).then((event) => {
-        res.status(200).json({
-          message: 'event updated',
-          event,
-          status: true,
-        });
+        if (!event) {
+          return res.status(404).json({
+            message: 'event does not exist',
+            status: false,
+          });
+        }
+        const oldEvent = {...event.dataValues};
+        event.update({
+          eventName: req.eventName || event.eventName,
+          eventAmountPaid: req.eventAmountPaid || event.eventAmountPaid,
+          eventTime: req.eventTime || event.eventTime,
+          centerId: req.centerId || event.centerId,
+        }).then((event) => {
+          res.status(200).json({
+            message: 'event updated',
+            event,
+            status: true,
+          });
 
 
-        const logData = {
-          entityName: oldEvent.eventName,
-          entity: 'Event',
-          entityId: event.id,
-          userId: req.userId,
-          action: 'UPDATE',
-          before: JSON.stringify({
-            eventName: oldEvent.eventName,
-            eventTime: oldEvent.eventTime,
-            centerId: oldEvent.centerId,
-            userId: oldEvent.userId,
-          }),
-          after: JSON.stringify({
-            eventName: event.eventName,
-            eventTime: event.eventTime,
-            centerId: event.centerId,
-            userId: event.userId,
-          }),
-        };
+          const logData = {
+            entityName: oldEvent.eventName,
+            entity: 'Event',
+            entityId: event.id,
+            userId: req.userId,
+            action: 'UPDATE',
+            before: JSON.stringify({
+              eventName: oldEvent.eventName,
+              eventTime: oldEvent.eventTime,
+              centerId: oldEvent.centerId,
+              userId: oldEvent.userId,
+            }),
+            after: JSON.stringify({
+              eventName: event.eventName,
+              eventTime: event.eventTime,
+              centerId: event.centerId,
+              userId: event.userId,
+            }),
+          };
 
-        log(logData);
+          log(logData);
 
 
-      }).catch((error) => {
-        const err = error.errors[0].message;
-        return res.status(400).json({
-          message: err,
-          status: false,
+        }).catch((error) => {
+          const err = error.errors[0].message;
+          return res.status(400).json({
+            message: err,
+            status: false,
+          });
         });
       });
-    });
+    })
   },
 
   getEvent(req, res) {
@@ -170,6 +193,7 @@ module.exports = {
       attributes: [
       'id',
       'eventName',
+      'eventDescription',
       'eventStatus',
       'eventTime',
       'eventAmountPaid',
@@ -210,6 +234,7 @@ module.exports = {
       attributes: [
       'id',
       'eventName',
+      'eventDescription',
       'eventStatus',
       'eventTime',
       'eventAmountPaid',
@@ -239,6 +264,7 @@ module.exports = {
         action: 'DELETE',
         before: JSON.stringify({
           eventName: oldEvent.eventName,
+          eventDescription: oldEvent.eventDescription,
           eventTime: oldEvent.eventTime,
           centerId: oldEvent.centerId,
           userId: oldEvent.userId,
@@ -275,6 +301,7 @@ module.exports = {
         attributes: [
         'id',
         'eventName',
+        'eventDescription',
         'eventStatus',
         'eventTime',
         'eventAmountPaid',
@@ -309,6 +336,7 @@ module.exports = {
         attributes: [
         'id',
         'eventName',
+        'eventDescription',
         'eventStatus',
         'eventTime',
         'eventAmountPaid',

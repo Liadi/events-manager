@@ -62,7 +62,8 @@ export default function reducer(
         error: {
           fieldError: {},
           serverError: null,
-        }
+        },
+        logs: [],
       }
     }
 
