@@ -15,6 +15,7 @@ module.exports = {
         page: getState().event.page,
         ...tempParams,
       }
+      console.log('params => ', eventParams);
       dispatch({
         type: 'FETCH_EVENTS',
         payload: axios({
@@ -226,6 +227,15 @@ module.exports = {
       type: 'DELETE_EVENT_FIELD_ERROR',
       payload: {
         field,
+      }
+    }
+  },
+
+  changeEventPage(page) {
+    return {
+      type: 'CHANGE_EVENT_PAGE',
+      payload: {
+        page,
       }
     }
   },

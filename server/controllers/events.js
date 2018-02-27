@@ -305,17 +305,12 @@ module.exports = {
         'userId',
         ],
       }).then((events) => {
-        if (events.length > 0){
-          return res.status(200).json({
-            message: 'all events found',
-            status: true,
-            events,
-          });
-        }
-        return res.status(200).json({
-          message: 'no events',
-          status: true
-        })
+        return findEvents(events, finalParams, res);
+      }).catch((error) => {
+        return res.status(400).json({
+          message: 'invalid query',
+          status: false,
+        });
       });
     } else {
       Event.findAll({
@@ -379,10 +374,15 @@ const searchEvents = ((events, finalParams) => {
         }
 
         case 'eventTime': {
-          const timeParam = JSON.parse(finalParams[key]);
-          const [low, mainTime, high] = [ new Date(timeParam['low']), new Date(event[key]) , new Date(timeParam['high']) ]; 
-          if (low >= mainTime || mainTime > high){
-            foundIndex = -1;
+          try {
+            const timeParam = JSON.parse(finalParams[key]);
+            const [low, mainTime, high] = [ new Date(timeParam['low']), new Date(event[key]) , new Date(timeParam['high']) ]; 
+            if (low >= mainTime || mainTime > high){
+              foundIndex = -1;
+            }
+          } catch (e) {
+            // swallow error
+            console.log('swallowed error => ', e);
           }
           break;
         }
@@ -408,7 +408,6 @@ const searchEvents = ((events, finalParams) => {
 
 const findEvents = (( events, finalParams, res ) => {
   let retEvents = searchEvents(events, finalParams);
-
   if (finalParams['sort']) {
     const tempSortObj = JSON.parse(finalParams['sort'])
     retEvents.sort((a, b) => {
@@ -418,7 +417,7 @@ const findEvents = (( events, finalParams, res ) => {
       return a[tempSortObj['item']] - b[tempSortObj['item']];
     });
   }
-  const n = retEvents.length;
+  const totalElement = retEvents.length;
   const [limit, page] = [parseInt(finalParams['limit']), parseInt(finalParams['page'])];
   if ( limit && limit > 0) {
     if (page && page > 0) {
@@ -433,7 +432,7 @@ const findEvents = (( events, finalParams, res ) => {
       message: 'events found',
       status: true,
       events: retEvents,
-      n,
+      totalElement,
     });
   }
   return res.status(404).json({

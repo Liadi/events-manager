@@ -4,28 +4,6 @@ import { Link } from 'react-router-dom';
 
 import Footer from './Footer.jsx';
 
-const CreateCenterLink = (props) => {
-  if (props.userType === 'admin') {
-    return (
-      <li className="nav-item navbar-item mx-auto">
-        <Link className="nav-link" to='/create-center'>Create Center</Link>
-      </li>
-    );
-  }
-  return null;
-}
-
-const EventsLink = (props) => {
-  if (props.userType === 'admin') {
-    return (
-      <li className="nav-item navbar-item mx-auto">
-        <Link className="nav-link" to='/events'>Events</Link>
-      </li>
-    );
-  }
-  return null;
-} 
-
 const Navbar = (props) => {
   return (
   	<nav className="navbar navbar-expand-lg navbar-light bg-light p-big" >
@@ -38,14 +16,32 @@ const Navbar = (props) => {
           <li className="nav-item navbar-item mx-auto">
             <Link className="nav-link" to='/centers'>Centers</Link>
           </li>
-          <CreateCenterLink userType={props.userType}/>
-          <EventsLink userType={props.userType}/>
+          { props.userType === 'admin' ?
+            (
+              <ul className="navbar-nav">
+                <li className="nav-item navbar-item mx-auto">
+                  <Link className="nav-link" to='/create-center'>Create Center</Link>
+                </li>
+                <li className="nav-item navbar-item mx-auto">
+                  <Link className="nav-link" to='/events'>Events</Link>
+                </li>
+              </ul>
+            ):(
+              null
+            )
+          }
           <li className="nav-item navbar-item mx-auto dropdown">
             <div className="nav-link" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i className="fa fa-user fa-1x mx-auto" aria-hidden="true"></i>
             </div>
             <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-              <Link className="dropdown-item" to="events">My Events</Link>
+              { props.userType === 'regular'?
+                (
+                  <Link className="dropdown-item" to="events">My Events</Link>
+                ):(
+                  <Link className="dropdown-item" to="add-admin">Add Admin</Link>
+                )
+              }
               <Link className="dropdown-item" to="create-event">Create Event</Link>
               <div className="dropdown-divider"></div>
               <button className="dropdown-item" 

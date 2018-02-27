@@ -14,6 +14,8 @@ export default function reducer(
       fieldError: {},
       serverError: null,
     },
+    page: 1,
+    totalElement: 0,
     limit: 10,
     sort: {
       item: 'eventTime', order: 'INC'
@@ -113,6 +115,7 @@ export default function reducer(
         fetched: true,
         error: Object.assign({}, state.error, {serverError: null}),
         events: action.payload.data.events,
+        totalElement: action.payload.data.totalElement,
       }
     }
 
@@ -205,6 +208,12 @@ export default function reducer(
       }
     }
 
+    case 'CHANGE_EVENT_PAGE': {
+      return {
+        ...state,
+        page: action.payload.page,
+      }
+    }
 
     default: {
       return state;

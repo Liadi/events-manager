@@ -1167,7 +1167,7 @@ describe('api', () => {
     it('returns events', (done) => {
       request.get('/api/v1/events').send(data).end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.message).to.equal('all events found');
+        expect(res.body.message).to.equal('events found');
         expect(res.body.status).to.equal(true);
         expect(res.body).to.have.property('events');
         done();

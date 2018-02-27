@@ -69,7 +69,7 @@ class Centers extends React.Component {
                  <h3>No center found</h3>
                 )
               }
-              <PageControl page={page} limit={limit} changeCenterPageFunc={changeCenterPageFunc} totalElement={totalElement} />
+              <PageControl page={page} limit={limit} changePageFunc={changeCenterPageFunc} totalElement={totalElement} />
             </main>
             <Footer />
           </div>
