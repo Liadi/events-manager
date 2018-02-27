@@ -78,51 +78,51 @@ module.exports = {
       });
     }
 
-    Center.findOne({
-      where:{id: req.centerId},
-      include:[{
-        model: Event,
-        as: 'events',
-        attributes: ['eventTime', 'id'],
-      }],
-    }).then((center) => {
-      // check for time clash with another event
-      if (req.eventTime) {
-        for (let i in center.events) {
-          if (center.events[i].id !== req.eventId && center.events[i].eventTime.getTime() === req.eventTime.getTime()) {
-            return res.status(404).json({
-              message: 'date taken',
-              status: false,
-            });
-          }
-        }
-      }
-      Event.findOne({
-        where: {id: req.eventId, userId: req.userId},
-        include: [{
-          model: Center,
-          as: 'center',
-          attributes: [
-          'id',
-          'centerName',
-          'centerAddress',
-          ],
-        }],
+    Event.findOne({
+      where: {id: req.eventId, userId: req.userId},
+      include: [{
+        model: Center,
+        as: 'center',
         attributes: [
         'id',
-        'eventName',
-        'eventStatus',
-        'eventTime',
-        'eventAmountPaid',
-        'centerId',
-        'userId',
+        'centerName',
+        'centerAddress',
         ],
-      }).then((event) => {
-        if (!event) {
-          return res.status(404).json({
-            message: 'event does not exist',
-            status: false,
-          });
+      }],
+      attributes: [
+      'id',
+      'eventName',
+      'eventStatus',
+      'eventTime',
+      'eventAmountPaid',
+      'centerId',
+      'userId',
+      ],
+    }).then((event) => {
+      if (!event) {
+        return res.status(404).json({
+          message: 'event does not exist',
+          status: false,
+        });
+      }
+      Center.findOne({
+        where:{id: event.center.id},
+        include:[{
+          model: Event,
+          as: 'events',
+          attributes: ['eventTime', 'id'],
+        }],
+      }).then((center) => {
+        // check for time clash with another event
+        if (req.eventTime) {
+          for (let i in center.events) {
+            if (center.events[i].id !== req.eventId && center.events[i].eventTime.getTime() === req.eventTime.getTime()) {
+              return res.status(404).json({
+                message: 'date taken',
+                status: false,
+              });
+            }
+          }
         }
         const oldEvent = {...event.dataValues};
         event.update({
@@ -136,7 +136,6 @@ module.exports = {
             event,
             status: true,
           });
-
 
           const logData = {
             entityName: oldEvent.eventName,
@@ -157,10 +156,7 @@ module.exports = {
               userId: event.userId,
             }),
           };
-
           log(logData);
-
-
         }).catch((error) => {
           const err = error.errors[0].message;
           return res.status(400).json({
@@ -168,8 +164,8 @@ module.exports = {
             status: false,
           });
         });
-      });
-    })
+      })
+    });
   },
 
   getEvent(req, res) {
