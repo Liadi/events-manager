@@ -138,7 +138,7 @@ module.exports = {
     }
   },
 
-  updateEvent(inputFieldSetArg, eventId, centerId) {
+  updateEvent(inputFieldSetArg, eventId) {
     return function(dispatch, getState) {
       const temp = getState().event.event.eventTime;
       let tempDate = temp.year.toString()
@@ -154,7 +154,7 @@ module.exports = {
         tempDate += '-' + temp.date.toString()
       }
       
-      const eventData =  Object.assign({centerId}, getState().event.event, {eventTime: tempDate})
+      const eventData =  Object.assign({}, getState().event.event, {eventTime: tempDate})
       console.log('eventData => ', eventData);
       dispatch({
         type: 'UPDATE_EVENT',

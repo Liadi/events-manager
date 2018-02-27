@@ -100,7 +100,7 @@ class EventForm extends React.Component {
             ):(
               <button className="btn btn-warning grp-btn" onClick={ e => {
                 e.preventDefault();
-                this.props.updateEventFunc(this.inputFieldSet.add(this.props.eventUpdateToggleInput), this.props.eventId, this.props.centerId.toString());
+                this.props.updateEventFunc(this.inputFieldSet.add(this.props.eventUpdateToggleInput), this.props.eventId);
               }}>Update</button>
             )}
             <button type="reset" className="btn btn-danger grp-btn">Clear</button>
