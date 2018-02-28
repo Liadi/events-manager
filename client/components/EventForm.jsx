@@ -20,13 +20,13 @@ class EventForm extends React.Component {
 
   componentWillMount() {
     if (this.props.type === 'create') {
-      [this.yearOptions, this.monthOptions, this.dateOptions] = getTimeOptions(this.props.setEventTimeFunc, this.props.event, true);
+      [this.yearOptions, this.monthOptions, this.dateOptions] = getTimeOptions(this.props.setEventTimeFunc, this.props.event.eventTime, this.props.type, true);
     } else if (this.props.type === 'update')
-      [this.yearOptions, this.monthOptions, this.dateOptions] = getTimeOptions(this.props.setEventTimeFunc, this.props.event, true, this.props.currentEventTime);
+      [this.yearOptions, this.monthOptions, this.dateOptions] = getTimeOptions(this.props.setEventTimeFunc, this.props.event, this.props.type, true, this.props.currentEventTime);
     }
 
   componentWillReceiveProps(nextProps) {
-    [this.yearOptions, this.monthOptions, this.dateOptions] = getTimeOptions(this.props.setEventTimeFunc, nextProps.event);
+    [this.yearOptions, this.monthOptions, this.dateOptions] = getTimeOptions(this.props.setEventTimeFunc, nextProps.event.eventTime, this.props.type);
   }
 
   render() {

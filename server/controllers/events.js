@@ -292,6 +292,7 @@ module.exports = {
             'id',
             'centerName',
             'centerAddress',
+            'centerRate',
           ],
         }],
         attributes: [
@@ -307,6 +308,7 @@ module.exports = {
       }).then((events) => {
         return findEvents(events, finalParams, res);
       }).catch((error) => {
+        console.log('error => ', error);
         return res.status(400).json({
           message: 'invalid query',
           status: false,
@@ -322,6 +324,7 @@ module.exports = {
             'id',
             'centerName',
             'centerAddress',
+            'centerRate',
           ],
         }],
         attributes: [
@@ -353,45 +356,46 @@ const searchEvents = ((events, finalParams) => {
     const event = events[i];
     let foundIndex = 0;
     for (let key in finalParams) {
-      switch(key) {
-        case 'eventName': {
-          foundIndex = event[key].search(finalParams[key])
-          break;
-        }
-
-        case 'eventStatus': {
-          if (event[key] !== finalParams[key]){
-            foundIndex = -1;
+      if (finalParams[key]) {
+        switch(key) {
+          case 'eventName': {
+            foundIndex = event[key].toLowerCase().search(finalParams[key].toLowerCase())
+            break;
           }
-          break;
-        }
 
-        case 'eventAmountPaid': {
-          if (parseInt(event[key]) < parseInt(finalParams[key])){
-            foundIndex = -1;
+          case 'centerName': {
+            foundIndex = event.center[key].toLowerCase().search(finalParams[key].toLowerCase())
+            break;
           }
-          break;
-        }
 
-        case 'eventTime': {
-          try {
-            const timeParam = JSON.parse(finalParams[key]);
-            const [low, mainTime, high] = [ new Date(timeParam['low']), new Date(event[key]) , new Date(timeParam['high']) ]; 
-            if (low >= mainTime || mainTime > high){
+          case 'eventStatus': {
+            if (event[key] !== finalParams[key]){
               foundIndex = -1;
             }
-          } catch (e) {
-            // swallow error
-            console.log('swallowed error => ', e);
+            break;
           }
-          break;
-        }
 
-        case 'centerId':{
-          if (parseInt(event[key]) !== parseInt(finalParams[key])){
-            foundIndex = -1;
+          case 'eventAmountPaidLower': {
+            if (parseInt(event.eventAmountPaid) < parseInt(finalParams[key])) {
+              foundIndex = -1;
+            }
+            break;
           }
-          break;
+
+          case 'eventAmountPaidUpper': {
+            if (parseInt(event.eventAmountPaid) > parseInt(finalParams[key])) {
+              foundIndex = -1;
+            }
+            break;
+          }
+
+          case 'eventTime': {
+            console.log('eventTime => ', finalParams[key]);
+            if (event[key].getTime() > finalParams[key].getTime()) {
+              foundIndex = -1;
+            }
+            break;
+          }
         }
       }
       if (foundIndex === -1) {
@@ -411,7 +415,7 @@ const findEvents = (( events, finalParams, res ) => {
   if (finalParams['sort']) {
     const tempSortObj = JSON.parse(finalParams['sort'])
     retEvents.sort((a, b) => {
-      if (tempSortObj['order'] === 'decreasing'){
+      if (tempSortObj['order'] === 'DESC'){
         return b[tempSortObj['item']] - a[tempSortObj['item']];
       }
       return a[tempSortObj['item']] - b[tempSortObj['item']];

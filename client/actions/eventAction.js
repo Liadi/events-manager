@@ -7,15 +7,36 @@ module.exports = {
   */
   fetchEvents(tempParams = {}) {
     return function(dispatch, getState) {  
-      // axios.get('api/v1/events', {params: eventParams}, {config}),
-      const eventParams = {
-        ...getState().event.event,
+      let eventParams;
+      const temp = getState().event.event.eventTime;
+      if (temp.year && temp.month && temp.date) { 
+        let tempDate = temp.year.toString()
+        
+        if (temp.month.toString().length === 1) {
+          tempDate += '-0' + temp.month.toString()
+        } else {
+          tempDate += '-' + temp.month.toString()
+        }
+        if (temp.date.toString().length === 1) {
+          tempDate += '-0' + temp.date.toString()
+        } else {
+          tempDate += '-' + temp.date.toString()
+        } 
+        eventParams = Object.assign({}, getState().event.event, {eventTime: tempDate})
+      } else {
+        eventParams = Object.assign({}, getState().event.event, {eventTime: undefined});
+      }
+
+      eventParams = {
+        ...eventParams,
         limit: getState().event.limit,
         sort: JSON.stringify(getState().event.sort),
         page: getState().event.page,
         ...tempParams,
       }
-      console.log('params => ', eventParams);
+
+      console.log('eventParams => ', eventParams);
+
       dispatch({
         type: 'FETCH_EVENTS',
         payload: axios({
@@ -57,6 +78,18 @@ module.exports = {
     }
     return {
       type: 'RESET_EVENT_FIELDS',
+    }
+  },
+
+  resetEventEntries() {
+    return {
+      type: 'RESET_EVENT_ENTRIES',
+    }
+  },
+
+  resetEventAdvancedFields() {
+    return {
+      type: 'RESET_EVENT_ADVANCED_FIELDS',
     }
   },
 
@@ -156,7 +189,6 @@ module.exports = {
       }
       
       const eventData =  Object.assign({}, getState().event.event, {eventTime: tempDate})
-      console.log('eventData => ', eventData);
       dispatch({
         type: 'UPDATE_EVENT',
         payload: axios({
@@ -236,6 +268,33 @@ module.exports = {
       type: 'CHANGE_EVENT_PAGE',
       payload: {
         page,
+      }
+    }
+  },
+
+  updateEventLimit(limit) {
+    return {
+      type: 'UPDATE_EVENT_LIMIT',
+      payload: {
+        limit,
+      }
+    }
+  },
+
+  updateEventSortItem(item) {
+    return {
+      type: 'UPDATE_EVENT_SORT',
+      payload: {
+        item,
+      }
+    }
+  },
+
+  updateEventSortOrder(order) {
+    return {
+      type: 'UPDATE_EVENT_SORT',
+      payload: {
+        order,
       }
     }
   },

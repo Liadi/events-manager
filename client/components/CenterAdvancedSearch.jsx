@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../style/index.scss';
 
-const AdvancedSearch = (props) => {
+const CenterAdvancedSearch = (props) => {
   const updateCenterFieldFunc = props.updateCenterFieldFunc;
   const center = props.center;
   if (!props.showAdvanced){
@@ -71,4 +71,4 @@ const AdvancedSearch = (props) => {
   )
 }
 
-export default AdvancedSearch;
+export default CenterAdvancedSearch;

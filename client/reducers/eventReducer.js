@@ -5,7 +5,9 @@ export default function reducer(
         year: undefined,
         month: undefined,
         date: undefined,
-      }
+      },
+      eventAmountPaidLower: 0,
+      eventAmountPaidUpper: 100,
     },
     events: [],
     fetching: false,
@@ -18,7 +20,8 @@ export default function reducer(
     totalElement: 0,
     limit: 10,
     sort: {
-      item: 'eventTime', order: 'INC'
+      item: 'eventTime',
+      order: 'INC',
     },
   },
   action) {
@@ -105,6 +108,8 @@ export default function reducer(
         fetching: false,
         fetched: false,
         error: Object.assign({}, state.error, {serverError: action.payload.message}),
+        events: [],
+        totalElement: 0,
       }
     }
 
@@ -149,7 +154,6 @@ export default function reducer(
     case 'SET_EVENT_TIME': {
       const tempTime = {...state.event.eventTime};
       tempTime[action.payload.field] = action.payload.value;
-      
       return {
         ...state,
         event: {
@@ -187,6 +191,42 @@ export default function reducer(
       }
     }
 
+    case 'RESET_EVENT_ENTRIES': {
+      return {
+        ...state,
+        events: [],
+        page: 1,
+        limit: 10,
+        totalElement: 0,
+        sort: {
+          item: 'eventTime',
+          order: 'INC',
+        },
+        error: Object.assign({}, state.error, {serverError: null}),
+      }
+    }
+
+    case 'RESET_EVENT_ADVANCED_FIELDS': {
+      
+      const tempEvent = {
+        eventTime: {
+          year: undefined,
+          month: undefined,
+          date: undefined,
+        },
+        eventAmountPaidLower: 0,
+        eventAmountPaidUpper: 100,
+      }
+      if (state.event.eventName)  {
+        tempEvent.eventName = state.event.eventName;
+      }
+
+      return {
+        ...state,
+        event: tempEvent,
+      }
+    }
+
     case 'EVENT_FIELD_ERROR': {
       let temp = state.error.fieldError;
       temp = {...temp};
@@ -212,6 +252,23 @@ export default function reducer(
       return {
         ...state,
         page: action.payload.page,
+      }
+    }
+
+    case 'UPDATE_EVENT_LIMIT': {
+      return {
+        ...state,
+        limit: action.payload.limit,
+      }
+    }
+
+    case 'UPDATE_EVENT_SORT': {
+      return {
+        ...state,
+        sort: {
+          item: action.payload.item || state.sort.item,
+          order: action.payload.order || state.sort.order,
+        },
       }
     }
 

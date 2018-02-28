@@ -36,6 +36,7 @@ class Events extends React.Component {
         (loggedIn)? (
           <div>
             <Navbar userType={userType} userLogoutFunc={userLogoutFunc} />
+            <EventSearch />
             <main className="container">
               { userType === 'admin'? 
                 (
@@ -50,7 +51,7 @@ class Events extends React.Component {
                   allEvents.map((event) => 
                     <div className="card mx-auto card-center" key={event.id}>
                       <div className="card-body">
-                        <span className="badge badge-pill badge-warning">{event.eventStatus}</span>
+                        <span className={`badge badge-pill ${event.eventStatus==='upcoming'?('badge-warning'):(null)} ${event.eventStatus==='successful'?('badge-secondary'):(null)} ${event.eventStatus==='cancelled'?('badge-danger'):(null)}`}>{event.eventStatus}</span>
                         <h4 className="card-title">{event.eventName}</h4>
                         <h6 className="card-subtitle mb-2">{event.center.centerName}</h6>
                         <h6 className="card-subtitle mb-2 text-muted">{event.center.centerAddress}</h6>
@@ -116,6 +117,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     fetchAllEventsFunc: () => {
+      dispatch(changeEventPage(1));
       dispatch(fetchEvents());
     },
 
@@ -139,7 +141,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(resetAppState());
     },
 
-    resetCenterEntriesFunc: () => {
+    resetEventEntriesFunc: () => {
       dispatch(resetEventEntries());
     },
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import AdvancedSearch from './AdvancedSearch.jsx';
+import CenterAdvancedSearch from './CenterAdvancedSearch.jsx';
 import CenterSearchResult from './CenterSearchResult.jsx';
 import '../style/index.scss';
 import { connect } from 'react-redux';
@@ -107,7 +107,7 @@ class CenterSearch extends React.Component {
             </button>
           </div>
         </div>
-        <AdvancedSearch showAdvanced={showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} center={center}/>
+        <CenterAdvancedSearch showAdvanced={showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} center={center}/>
         {panel?(
             <CenterSearchResult fetching={fetching} fetched={fetched} centers={centers}/>
           ):(

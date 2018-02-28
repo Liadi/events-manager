@@ -17,26 +17,30 @@ module.exports = {
     return re.test(email);
   },
 
-  getTimeOptions(setEventTimeFunc, event, init = false, initVal = undefined) {
+  getTimeOptions(setEventTimeFunc, eventTime, type='create', init=false, initVal = undefined ) {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const lowerTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 4);
+    
+    let lowerTime;
+    if (type = 'search') {
+      lowerTime = new Date(2018, 1, 1); // 2018-02-01T08:00:00.000Z(Thu Feb 01 2018) No earlier event
+    } else {
+      lowerTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 4);
+    }
     const future = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (365 * 2));
-
     if (init) {
       if (initVal) {
-        let tempInitVal = new Date(initVal);
-        setEventTimeFunc('year', tempInitVal.getFullYear());
-        setEventTimeFunc('month', tempInitVal.getMonth() + 1);
-        setEventTimeFunc('date', tempInitVal.getDate());
+        setEventTimeFunc('year', initVal.getFullYear(), type);
+        setEventTimeFunc('month', initVal.getMonth() + 1, type);
+        setEventTimeFunc('date', initVal.getDate(), type);
       } else {
-        setEventTimeFunc('year', lowerTime.getFullYear());
-        setEventTimeFunc('month', lowerTime.getMonth() + 1);
-        setEventTimeFunc('date', lowerTime.getDate());
+        setEventTimeFunc('year', future.getFullYear(), type);
+        setEventTimeFunc('month', future.getMonth() + 1, type);
+        setEventTimeFunc('date', future.getDate(), type);
       }
     }
 
-    let [year, month, date] = [ event.eventTime.year, event.eventTime.month, event.eventTime.date ];
+    let [year, month, date] = [ eventTime.year, eventTime.month, eventTime.date ];
     const [yearOptions, monthOptions, dateOptions] = [[], [], []];
     for (let i = lowerTime.getFullYear(); i <= future.getFullYear(); i++) {
       yearOptions.push(i);
@@ -52,8 +56,8 @@ module.exports = {
       monthOptions.push(i);
     }
     if (month < monthOptions[0] || month > monthOptions[monthOptions.length - 1]) {
-      setEventTimeFunc('month', monthOptions[0])
-      month = event.eventTime.month
+      setEventTimeFunc('month', monthOptions[0], type);
+      month = eventTime.month
     }
 
     for (let i = 1; i <= 31; i++) {
@@ -76,10 +80,9 @@ module.exports = {
       }
     }
     if (date < dateOptions[0] || date > dateOptions[dateOptions.length - 1]) {
-      setEventTimeFunc('date', dateOptions[0]);
-      date = event.eventTime.date;
+      setEventTimeFunc('date', dateOptions[0], type);
+      date = eventTime.date;
     }
-
     return [yearOptions, monthOptions, dateOptions];
   }
 }

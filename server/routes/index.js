@@ -32,7 +32,7 @@ router.post('/events/', cleanData, userMiddlewares.validateToken, eventMiddlewar
 router.put('/events/:eventId', cleanData, userMiddlewares.validateToken, eventMiddlewares.validateEventFields, eventControllers.modifyEvent);
 router.get('/events/:eventId', cleanData, userMiddlewares.validateToken, eventControllers.getEvent);
 router.delete('/events/:eventId', cleanData, userMiddlewares.validateToken, eventControllers.deleteEvent);
-router.get('/events/', cleanData, userMiddlewares.validateToken, eventControllers.getAllEvents);
+router.get('/events/', cleanData, userMiddlewares.validateToken, eventMiddlewares.validateEventFields, eventControllers.getAllEvents);
 
 // log
 router.get('/logs/', cleanData, userMiddlewares.validateToken, logControllers.getAllLogs);

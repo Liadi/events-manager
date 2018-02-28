@@ -1,10 +1,10 @@
 import React from 'react';
-import AdvancedSearch from './AdvancedSearch.jsx';
+import EventAdvancedSearch from './EventAdvancedSearch.jsx';
 import CenterSearchResult from './CenterSearchResult.jsx';
 import '../style/index.scss';
 import { connect } from 'react-redux';
 import { toggleAdvancedSearch } from '../actions/appAction';
-import { updateCenterField, fetchAllCenters, fieldInputError, updateCenterSortOrder, updateCenterSortItem, updateCenterLimit } from '../actions/centerAction';
+import { updateEventField, fetchEvents, updateEventSortOrder, updateEventSortItem, updateEventLimit, setEventTime, changeEventPage, resetEventAdvancedFields } from '../actions/eventAction';
 
 class EventSearch extends React.Component {
   constructor(props) {
@@ -13,22 +13,21 @@ class EventSearch extends React.Component {
   }
 
   render () {
-    const { showAdvanced, fetching, fetched, centers, center, panel, jumbo, toggleAdvancedSearchFunc, updateCenterFieldFunc, fetchSearchedCenterFunc, updateCenterSortOrderFunc, updateCenterSortItemFunc, updateCenterLimitFunc } = this.props;
+    const { event, orderValue, showAdvanced, updateEventFieldFunc, setEventTimeFunc, updateEventSortItemFunc, updateEventLimitFunc, updateEventSortOrderFunc, toggleAdvancedSearchFunc, fetchSearchedEventFunc, resetEventAdvancedFieldsFunc } = this.props;
     return (
       <form className="search-form">
         <div>
           <div className="input-group space-top">
-            <input type="text" className={jumbo?("form-control form-control-lg search-widget"):("form-control form-control-sm")} placeholder="Search for a center" 
+            <input type="text" className="form-control form-control-sm" placeholder="Search for event" 
             onChange={ e => {
-              updateCenterFieldFunc('centerName', e.target.value.trim());
+              updateEventFieldFunc('eventName', e.target.value.trim());
             }}/>
             <span className="input-group-btn">
-              <button type="submit" className={jumbo?("btn btn-lg search-widget"):("btn")} onClick={ e => {
+              <button type="submit" className="btn" onClick={ e => {
                 e.preventDefault();
-                fetchSearchedCenterFunc();
+                fetchSearchedEventFunc();
               }}>
-                {jumbo?("Search"):(<i className="fa fa-search fa-1x mx-auto" aria-hidden="true"></i>)
-                }
+                <i className="fa fa-search fa-1x mx-auto" aria-hidden="true"></i>
               </button>
             </span>
           </div>
@@ -37,7 +36,7 @@ class EventSearch extends React.Component {
             <div className="form-group">
               <label htmlFor="pageSize">Page size</label>
               <select className="form-control" id="pageSize" defaultValue='10' onChange={ e => {
-                updateCenterLimitFunc(parseInt(e.target.value, 10));
+                updateEventLimitFunc(parseInt(e.target.value, 10));
               }}>
                 <option>5</option>
                 <option>10</option>
@@ -53,46 +52,22 @@ class EventSearch extends React.Component {
               </select>
             </div>
 
-            <div>
-              <div className="form-group">
-                <label htmlFor="sortItem">sort by</label>
-                <select className="form-control" id="sortItem" defaultValue='Price' onChange={ e => {
-                  switch (e.target.value) {
-                    case 'Price': {
-                      updateCenterSortItemFunc('centerRate');
-                      break;
-                    }
-                    case 'Capacity': {
-                      updateCenterSortItemFunc('centerCapacity');
-                      break;
-                    }
-                    default: {
-                      updateCenterSortItemFunc(undefined);
-                    }
-                  }
-                }}>
-                  <option>Price</option>
-                  <option>Capacity</option>
-                </select>
+            <div className="form-group">
+              <div className="form-check">
+                <input className="form-check-input" type="radio" name="order" id="orderAscending" value="INC" checked={orderValue==='INC'?(true):(false)} onChange={ e => {
+                  updateEventSortOrderFunc(e.target.value);
+                }}/>
+                <label className="form-check-label" htmlFor="orderAscending">
+                  earliest to latest
+                </label>
               </div>
-
-              <div className="form-group">
-                <div className="form-check">
-                  <input className="form-check-input" type="radio" name="order" id="orderAscending" value="INC" onChange={ e => {
-                    updateCenterSortOrderFunc(e.target.value);
-                  }}/>
-                  <label className="form-check-label" htmlFor="orderAscending">
-                    low to high
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input className="form-check-input" type="radio" name="order" id="orderDescending" value="DESC" onChange={ e => {
-                    updateCenterSortOrderFunc(e.target.value);
-                  }}/>
-                  <label className="form-check-label" htmlFor="orderDescending">
-                    high to low
-                  </label>
-                </div>
+              <div className="form-check">
+                <input className="form-check-input" type="radio" name="order" id="orderDescending" value="DESC" checked={orderValue==='DESC'?(true):(false)} onChange={ e => {
+                  updateEventSortOrderFunc(e.target.value);
+                }}/>
+                <label className="form-check-label" htmlFor="orderDescending">
+                  latest to earliest
+                </label>
               </div>
             </div>
           </div>
@@ -100,6 +75,9 @@ class EventSearch extends React.Component {
           <div className="space-top">
             <button type="button" className="search-toggle" onClick={ e => {
               e.preventDefault();
+              if (showAdvanced) {
+               resetEventAdvancedFieldsFunc();
+              }
               toggleAdvancedSearchFunc();
             }}
             >
@@ -107,13 +85,14 @@ class EventSearch extends React.Component {
             </button>
           </div>
         </div>
-        <AdvancedSearch showAdvanced={showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} center={center}/>
-        {panel?(
-            <CenterSearchResult fetching={fetching} fetched={fetched} centers={centers}/>
+        { showAdvanced ? 
+          (
+            <EventAdvancedSearch event={event} showAdvanced={showAdvanced} updateEventFieldFunc={updateEventFieldFunc} setEventTimeFunc={setEventTimeFunc} />
           ):(
-            null
+            null      
           )
         }
+        
         <button id="reset-btn" className="btn" type="reset">Reset</button>
       </form>
     )
@@ -123,12 +102,10 @@ class EventSearch extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     showAdvanced: state.app.advancedSearch,
-    fetching: state.center.fetching,
-    fetched: state.center.fetched,
-    centers: state.center.centers,
-    center: state.center.center,
-    panel: ownProps.panel,
-    jumbo: ownProps.jumbo,
+    fetching: state.event.fetching,
+    fetched: state.event.fetched,
+    event: state.event.event,
+    orderValue: state.event.sort.order,
   }
 }
 
@@ -136,33 +113,42 @@ const mapDispatchToProps = (dispatch) => {
   return {
     toggleAdvancedSearchFunc: () => {
       dispatch(toggleAdvancedSearch());
-      const advancedSearchFields = ['centerCountry', 'centerState', 'centerCity', 'centerCapacity', 'centerPriceLoewer', 'centerPriceUpper'];
-      advancedSearchFields.forEach((field)=> {
-        dispatch(updateCenterField(field, ""));
-      })
     },
 
-    updateCenterFieldFunc: (field, value) => {
-      dispatch(updateCenterField(field, value));
+    updateEventFieldFunc: (field, value) => {
+      dispatch(updateEventField(field, value));
     },
 
-    updateCenterSortOrderFunc: (order) => {
-      dispatch(updateCenterSortOrder(order));
-      dispatch(fetchAllCenters());
+    updateEventSortOrderFunc: (order) => {
+      dispatch(updateEventSortOrder(order));
+      dispatch(changeEventPage(1));
+      dispatch(fetchEvents());
     }, 
-    updateCenterSortItemFunc: (item) => {
-      dispatch(updateCenterSortItem(item));
-      dispatch(fetchAllCenters());
+
+    updateEventSortItemFunc: (item) => {
+      dispatch(updateEventSortItem(item));
+      dispatch(changeEventPage(1));
+      dispatch(fetchEvents());
     },
 
-    updateCenterLimitFunc: (limit) => {
-      dispatch(updateCenterLimit(limit));
-      dispatch(fetchAllCenters());
+    updateEventLimitFunc: (limit) => {
+      dispatch(updateEventLimit(limit));
+      dispatch(changeEventPage(1));
+      dispatch(fetchEvents());
     },
 
-    fetchSearchedCenterFunc: () => {
-      dispatch(fetchAllCenters());
+    setEventTimeFunc: (field, value, type) => {
+      dispatch(setEventTime(field, value, type));
     },
+
+    fetchSearchedEventFunc: () => {
+      dispatch(changeEventPage(1));
+      dispatch(fetchEvents());
+    },
+
+    resetEventAdvancedFieldsFunc: () => {
+      dispatch(resetEventAdvancedFields());
+    }
   }
 }
 
