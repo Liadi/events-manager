@@ -100,6 +100,32 @@ export default function reducer(
       }
     }
 
+    case 'CREATE_ADMIN_USER_PENDING' : {
+      return {
+        ...state,
+        fetching: true,
+        fetched: false,
+      }
+    }
+
+    case 'CREATE_ADMIN_USER_REJECTED' : {
+      return {
+        ...state,
+        fetching: false,
+        fetched: false,
+        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message}),
+      }
+    }
+
+    case 'CREATE_ADMIN_USER_FULFILLED' : {
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        error: Object.assign({}, state.error, {serverError: null}),
+      }
+    }
+
     case 'USER_SIGNIN_PENDING' : {
       return {
         ...state,

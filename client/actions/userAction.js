@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 module.exports = {
-  userSignUp(inputFieldSetArg) {
+  createUser(inputFieldSetArg, admin=false) {
     return function(dispatch, getState) {
       const fieldError = getState().user.error.fieldError;
       if (!getState().user.user.userFirstName) {
@@ -57,29 +57,62 @@ module.exports = {
           }
         });
       } else {
-        dispatch({
-          type: 'USER_SIGNUP',
-          payload: axios.post('api/v1/users/signup', getState().user.user),
-        }).then(res => {
+        if (admin) {
           dispatch({
-            type: 'OPEN_MODAL',
-            payload: {
-              htmlContent: '<div><h4>Signup Successful</h4><Link to="/login">Log in</Link> to you account<div>',
-            },
+            type: 'CREATE_ADMIN_USER',
+            payload: axios({
+              method: 'post',
+              url: 'api/v1/users/admin',
+              data: getState().user.user,
+              headers: {
+                'token': getState().user.userToken,
+              }
+            }),
+          }).then(res => {
+            dispatch({
+              type: 'OPEN_MODAL',
+              payload: {
+                htmlContent: '<h4>Admin user successful created</h4>',
+              },
+            });
+            dispatch({
+              type: 'RESET_USER_FIELDS',
+            });
+            for (let item of inputFieldSetArg) item.value = "";
+          }).catch(err =>{
+            let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
+            dispatch({
+              type: 'OPEN_INFO_TAB',
+              payload: {
+                msg
+              },
+            });
           });
+        } else {
           dispatch({
-            type: 'RESET_USER_FIELDS',
+            type: 'USER_SIGNUP',
+            payload: axios.post('api/v1/users/signup', getState().user.user),
+          }).then(res => {
+            dispatch({
+              type: 'OPEN_MODAL',
+              payload: {
+                htmlContent: '<div><h4>Signup Successful</h4>You can Log in with your details<div>',
+              },
+            });
+            dispatch({
+              type: 'RESET_USER_FIELDS',
+            });
+            for (let item of inputFieldSetArg) item.value = "";
+          }).catch(err =>{
+            let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
+            dispatch({
+              type: 'OPEN_INFO_TAB',
+              payload: {
+                msg
+              },
+            });
           });
-          for (let item of inputFieldSetArg) item.value = "";
-        }).catch(err =>{
-          let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
-          dispatch({
-            type: 'OPEN_INFO_TAB',
-            payload: {
-              msg
-            },
-          });
-        });
+        }
       }
     }
 	},

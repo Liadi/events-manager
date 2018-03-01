@@ -39,7 +39,7 @@ const Navbar = (props) => {
                 (
                   <Link className="dropdown-item" to="events">My Events</Link>
                 ):(
-                  <Link className="dropdown-item" to="add-admin">Add Admin</Link>
+                  <Link className="dropdown-item" to="create-admin">Add Admin</Link>
                 )
               }
               <Link className="dropdown-item" to="create-event">Create Event</Link>

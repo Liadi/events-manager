@@ -11,7 +11,7 @@ const secret = process.env.SECRET_KEY;
 module.exports = {
   createUser(req, res) {
     req.userPassword = bcryptjs.hashSync(req.userPassword, 8);
-
+    
     if (req.userType && (req.userType === 'admin')) {
       req.newUserType = 'admin';
     }

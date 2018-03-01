@@ -3,9 +3,11 @@ import '../style/signup.scss';
 import { Link, Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import InfoTab from './InfoTab.jsx';
+import NotFound from './NotFound.jsx';
 import ModalView from './ModalView.jsx';
+import Navbar from './Navbar.jsx';
 import { closeInfoTab, closeModal, resetAppState } from '../actions/appAction';
-import { updateUserField, resetUserFields, deleteUserFieldError, updatePasswordConfirmation, fetchUser, userFieldInputError, userSignUp } from '../actions/userAction';
+import { updateUserField, resetUserFields, deleteUserFieldError, updatePasswordConfirmation, fetchUser, userFieldInputError, createUser, userLogout } from '../actions/userAction';
 import { validateUser, validateEmail } from '../util';
 
 const inputFieldSet = new Set();
@@ -21,20 +23,39 @@ class SignUp extends React.Component {
   }
 
   render() {
-    const { passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabMsg, showInfoTab, closeInfoTabFunc, userSignUpFunc, closeModalFunc, modalContent, showModal, loggedIn } = this.props;
+    const { passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabMsg, showInfoTab, closeInfoTabFunc, createUserFunc, closeModalFunc, modalContent, showModal, loggedIn, createAdmin, userType, userLogoutFunc } = this.props;
+
+    if(userType !== 'admin' && loggedIn) {
+      return(
+        <NotFound />
+      )
+    }
+
     return (
       <Route render={props => (
-        loggedIn ? (
+        (loggedIn && !createAdmin)? (
           <Redirect to={{
             pathname: '/dashboard'
           }}/>
         ) : (
           <div>
-            <nav className="navbar navbar-light bg-light">
-              <Link className="navbar-brand mx-auto" to='/'>
-                <h2>EM</h2>
-              </Link>
-            </nav>
+            {!createAdmin?(
+              <nav className="navbar navbar-light bg-light">
+                <Link className="navbar-brand mx-auto" to='/'>
+                  <h2>EM</h2>
+                </Link>
+              </nav>
+            ):(
+              <Navbar userType={userType} userLogoutFunc={userLogoutFunc} />
+            )}
+            {createAdmin?(
+              <div className='container'>
+                <h3>Create Admin</h3>
+                <small>***Note: created admin will have all admin privileges</small>
+              </div>
+            ):(
+              null
+            )}
             <InfoTab className='infoTab' infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} closeInfoTabFunc={closeInfoTabFunc}/>
             <main>
               <div className="card board box mx-auto">
@@ -105,11 +126,23 @@ class SignUp extends React.Component {
                   <div className="form-group">
                     <button type="button" className="btn" onClick={ e => {
                       e.preventDefault();
-                      userSignUpFunc(inputFieldSet);
+                      createUserFunc(inputFieldSet);
                     }}>
-                      Sign up
+                      {createAdmin?
+                        (
+                          'Create'
+                        ):(
+                          'Sign up'
+                        )
+                      }
                     </button>
-                    <p>Already have an account? <Link to="/login">Login</Link></p>
+                    {!createAdmin?
+                      (
+                        <p>Already have an account? <Link to="/login">Login</Link></p>
+                      ):(
+                        null
+                      )
+                    }
                   </div>
                 </form>
               </div>
@@ -124,8 +157,9 @@ class SignUp extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   const loggedIn = validateUser(state.user.userToken, state.user.accountUser.userId);
+   const userType = state.user.accountUser.userType;
   return {
     userFieldError: state.user.error.fieldError,
     passwordConfirmed: state.user.passwordConfirmed,
@@ -133,11 +167,13 @@ const mapStateToProps = (state) => {
     showInfoTab: state.app.showInfoTab,
     modalContent: state.app.modalContent,
     showModal: state.app.showModal,
+    createAdmin: ownProps.createAdmin,
     loggedIn,
+    userType,
   }
 }
 
-const mapDispatchToProps = (dispatch, state) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     closeInfoTabFunc: () => {
       dispatch(closeInfoTab());
@@ -205,9 +241,9 @@ const mapDispatchToProps = (dispatch, state) => {
         }
       }
     },
-    userSignUpFunc: (inputFieldSetArg) => {
+    createUserFunc: (inputFieldSetArg) => {
       dispatch(updatePasswordConfirmation());
-      dispatch(userSignUp(inputFieldSetArg));
+      dispatch(createUser(inputFieldSetArg, ownProps.createAdmin));
     },
     closeModalFunc: () => {
       dispatch(closeModal());
@@ -215,6 +251,9 @@ const mapDispatchToProps = (dispatch, state) => {
     unmountFunc: () => {
       dispatch(resetUserFields());
       dispatch(resetAppState());
+    },
+    userLogoutFunc: () => {
+      dispatch(userLogout());
     },
   }
 }
