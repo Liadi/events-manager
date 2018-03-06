@@ -1,9 +1,10 @@
 import React from 'react';
 import { Redirect, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { resetAppState } from '../actions/appAction';
+import { resetAppState, closeModal, openModal } from '../actions/appAction';
 import { userLogout } from '../actions/userAction';
-import { updateCenterField, deleteCenterFieldError, centerFieldInputError, resetCenterFields, changeCenterPage, fetchAllCenters, resetCenterEntries } from '../actions/centerAction';
+import { updateCenterField, deleteCenterFieldError, centerFieldInputError, resetCenterFields, changeCenterPage, fetchAllCenters, resetCenterEntries, deleteCenter } from '../actions/centerAction';
+import ModalView from './ModalView.jsx';
 import CenterSearch from './CenterSearch.jsx';
 import Footer from './Footer.jsx';
 import Navbar from './Navbar.jsx';
@@ -30,7 +31,7 @@ class Centers extends React.Component {
   }
 
   render() {
-    const { userType, userLogoutFunc, loggedIn, centerFieldError, updateCenterFieldFunc, allCenters, resetFunc, page, limit, changeCenterPageFunc, totalElement } = this.props;
+    const { userType, userLogoutFunc, loggedIn, centerFieldError, updateCenterFieldFunc, allCenters, resetFunc, page, limit, changeCenterPageFunc, totalElement, initiateDeleteCenterFunc, closeModalFunc, modalContent, showModal, modalViewMode, modalCallbackFunc } = this.props;
     return (
       <Route render={() => (
         (loggedIn)? (
@@ -51,7 +52,7 @@ class Centers extends React.Component {
                         <p className="card-text">{center.centerDescription}</p>
                         <div className="d-flex justify-content-end">
                           <div className="d-flex flex-wrap justify-content-center grp">
-                            <Link  to="./create-event" className="btn btn-add grp-btn">
+                            <Link to="./create-event" className="btn btn-add grp-btn">
                               Add Event
                             </Link>
                             <Link className="btn btn-primary grp-btn" to={`/centers/${center.id}`}>
@@ -59,6 +60,8 @@ class Centers extends React.Component {
                             </Link>
                             <input type='button' className="btn btn-delete grp-btn" value='Delete' onClick={ e => {
                               e.preventDefault();
+                              this.modalCallbackTypeFunc = 'delete'
+                              initiateDeleteCenterFunc(center.id);
                             }}/>
                           </div>
                         </div>
@@ -71,6 +74,7 @@ class Centers extends React.Component {
               }
               <PageControl page={page} limit={limit} changePageFunc={changeCenterPageFunc} totalElement={totalElement} />
             </main>
+            <ModalView mode={modalViewMode} callback={modalCallbackFunc} closeModalFunc={closeModalFunc} modalContent={modalContent} showModal={showModal}/>
             <Footer />
           </div>
         ) : <NotFound />
@@ -87,6 +91,10 @@ const mapStateToProps = (state) => {
     center: state.center.center,
     infoTabMsg: state.app.infoTabMsg,
     showInfoTab: state.app.showInfoTab,
+    modalContent: state.app.modalContent,
+    modalViewMode: state.app.modalMode,
+    modalCallbackFunc: state.app.modalCallBack,
+    showModal: state.app.showModal,
     allCenters: state.center.centers,
     totalElement: state.center.totalElement,
     limit: state.center.limit,
@@ -117,6 +125,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     changeCenterPageFunc: (page) => {
       dispatch(changeCenterPage(page));
       dispatch(fetchAllCenters());
+    },
+
+    initiateDeleteCenterFunc: (centerId) => {
+      dispatch(openModal('decision', '<p>Confirm center delete</p>', deleteCenter(centerId)));
     },
 
     userLogoutFunc: () => {

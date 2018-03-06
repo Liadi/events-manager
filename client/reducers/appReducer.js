@@ -8,6 +8,8 @@ export default function reducer(
     infoTabMsg: [],
     showModal: false,
     modalContent: null,
+    modalMode: undefined,
+    modalCallBack: undefined,
     dashboardContent: null,
   },
   action) {
@@ -70,6 +72,8 @@ export default function reducer(
       return {
         ...state,
         modalContent: action.payload.htmlContent,
+        modalMode: action.payload.mode,
+        modalCallBack: action.payload.callBack,
         showModal: true,
       }
     }
@@ -77,7 +81,9 @@ export default function reducer(
       return {
         ...state,
         showModal: false,
+        modalCallBack: undefined,
         modalContent: null,
+        modalMode: undefined,
       }
     }
     case 'CHANGE_DASHBOARD_CONTENT': {
