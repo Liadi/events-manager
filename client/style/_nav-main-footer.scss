@@ -37,6 +37,7 @@ textarea {
 .outputBox {
   max-height: 200px;
   overflow: auto;
+  margin: 0px 10px 10px;
 }
 
 .profile-field {
@@ -58,6 +59,16 @@ textarea {
 .field-error {
   border-color: tomato;
   border-style: solid;
+}
+
+.imgFileInput {
+  opacity: 0;
+}
+
+.center-img {
+  width: 100px;
+  height: 100px;
+  margin: 0px 10px 10px;
 }
 
 #page-control {

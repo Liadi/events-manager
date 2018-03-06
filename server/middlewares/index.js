@@ -1,6 +1,7 @@
 import * as centerMiddlewares from './centers';
 import * as eventMiddlewares from './events';
 import * as userMiddlewares from './users';
+import fs from 'fs';
 
 module.exports = { 
   cleanData(req, res, next) {

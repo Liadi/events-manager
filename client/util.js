@@ -22,7 +22,7 @@ module.exports = {
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     
     let lowerTime;
-    if (type = 'search') {
+    if (type === 'search') {
       lowerTime = new Date(2018, 1, 1); // 2018-02-01T08:00:00.000Z(Thu Feb 01 2018) No earlier event
     } else {
       lowerTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 4);
@@ -33,7 +33,11 @@ module.exports = {
         setEventTimeFunc('year', initVal.getFullYear(), type);
         setEventTimeFunc('month', initVal.getMonth() + 1, type);
         setEventTimeFunc('date', initVal.getDate(), type);
-      } else {
+      } else if(type === 'create'){
+        setEventTimeFunc('year', lowerTime.getFullYear(), type);
+        setEventTimeFunc('month', lowerTime.getMonth() + 1, type);
+        setEventTimeFunc('date', lowerTime.getDate(), type);
+      }else {
         setEventTimeFunc('year', future.getFullYear(), type);
         setEventTimeFunc('month', future.getMonth() + 1, type);
         setEventTimeFunc('date', future.getDate(), type);
@@ -84,5 +88,5 @@ module.exports = {
       date = eventTime.date;
     }
     return [yearOptions, monthOptions, dateOptions];
-  }
+  },
 }

@@ -84,11 +84,11 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'invalid input, center capacity should be a positive whole number',
         },
         min: {
-          args: 5,
+          args: [5],
           msg: 'invalid input, center capacity should not be less than five (5)',
         },
         max: {
-          args: 1000000000,
+          args: [1000000000],
           msg: 'invalid input, center capacity should not be more than a billion (1000000000)',
         },
       },
@@ -103,11 +103,11 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'invalid input, center rate should be a positive whole number',
         },
         min: {
-          args: 500,
+          args: [500],
           msg: 'invalid input, center rate should not be less than five hundred naira (#500)',
         },
         max: {
-          args: 1000000000,
+          args: [1000000000],
           msg: 'invalid input, center rate should not be more than 1 billion naira (#1000000000)',
         },
       },

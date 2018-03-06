@@ -40,7 +40,7 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: false,
-        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message}),
+        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message || 'Server error. If this persists contact our technical team'}),
       }
     }
 
@@ -66,30 +66,16 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: false,
-        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message}),
+        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message || 'Server error. If this persists contact our technical team'}),
       }
     }
 
     case 'UPDATE_EVENT_FULFILLED': {
-      // find center in present array. If center exists update else push
-      const eventsArray = state.events.slice(0, state.events.length);
-      let found = false;
-      const eventId = action.payload.data.event.id;
-      for (let i in eventsArray) {
-        if (eventsArray[i].id === eventId) {
-          found = true;
-          eventsArray[i] = action.payload.data.event
-          break;
-        }
-      }
-      if (!found) {
-        eventsArray.push(action.payload.data.event);
-      }
       return {
         ...state,
         fetching: false,
         fetched: true,
-        events: eventsArray,
+        events: [action.payload.data.event],
         error: Object.assign({}, state.error, {serverError: null}),
       }
     }
@@ -107,7 +93,7 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: false,
-        error: Object.assign({}, state.error, {serverError: action.payload.message}),
+        error: Object.assign({}, state.error, {serverError: action.payload.message || 'Server error. If this persists contact our technical team'}),
         events: [],
         totalElement: 0,
       }
@@ -137,7 +123,7 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: false,
-        error: Object.assign({}, state.error, {serverError: action.payload.message}),
+        error: Object.assign({}, state.error, {serverError: action.payload.message || 'Server error. If this persists contact our technical team'}),
       }
     }
 

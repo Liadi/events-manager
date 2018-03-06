@@ -40,7 +40,7 @@ module.exports = {
     }
   },
 
-  createCenter(inputFieldSetArg) {
+  createCenter(centerImageArray, srcArray) {
     return function(dispatch, getState) {
       const promiseFieldError = [];
       const fieldError = getState().center.error.fieldError;
@@ -133,27 +133,35 @@ module.exports = {
             }
           });
         } else {
+          const data = new FormData();
+          let centerData = getState().center.center;
+          for (let i in centerData) {
+            if (centerData[i] && centerData.hasOwnProperty(i)) {
+              data.append(i, centerData[i]);
+            }
+          }
+
+          for (let i in centerImageArray) {
+            data.append('file', centerImageArray[i]);
+          }
           dispatch({
             type: 'CREATE_CENTER',
             payload: axios({
               method: 'post',
               url: 'api/v1/centers',
-              data: getState().center.center,
+              data, 
               headers: {
                 'token': getState().user.userToken,
               }
             }),
           }).then( response => {
-            dispatch({
-              type: 'RESET_CENTER_FIELDS',
-            })
-            dispatch({
-              type: 'RESET_APP_STATE',
-            })
-            for (let item of inputFieldSetArg) item.value = "";
+            for (let i in srcArray) {
+              window.URL.revokeObjectURL(srcArray[i]);
+            }
             history.push(`/centers/${response.value.data.center.id}`);
           }).catch(err =>{
             let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
+
             dispatch({
               type: 'OPEN_INFO_TAB',
               payload: {
@@ -167,6 +175,13 @@ module.exports = {
     }
   },
 
+  deleteCenter(centerId){
+    const func = () => {
+      console.log("WHOOOOOOOP! Center, ", centerId, " just deleted. Although it's a facade ;) ");
+    }
+    return func;
+  },
+
   centerFieldInputError(field, msg) {
     return{
       type: 'CENTER_FIELD_ERROR',
@@ -177,16 +192,7 @@ module.exports = {
     }
   },
 
-  resetCenterFields(inputFieldSetArg=null) {
-    if (inputFieldSetArg) {
-      for (let item of inputFieldSetArg){
-        if (item.type === 'checkbox'){
-          item.checked = false;
-        } else {
-          item.value = "";
-        }
-      }
-    }
+  resetCenterFields() {
     return {
       type: 'RESET_CENTER_FIELDS',
     }
@@ -217,7 +223,7 @@ module.exports = {
     }
   },
 
-  updateCenter(inputFieldSetArg, centerId) {
+  updateCenter(centerId, centerImageArray, srcArray) {
     return function(dispatch, getState) {
       const fieldError = getState().center.error.fieldError;
       const fieldInput = getState().center.center;
@@ -245,7 +251,7 @@ module.exports = {
         }
       }
       // Object.keys(fieldError).length
-      if ( fieldsEmpty ) {
+      if ( fieldsEmpty && centerImageArray.length === 0 ) {
         let msg = ['fill one or more fields'];
         dispatch ({
           type: 'OPEN_INFO_TAB',
@@ -254,30 +260,36 @@ module.exports = {
           }
         });
       } else {
+        const data = new FormData();
+        let centerData = getState().center.center;
+        for (let i in centerData) {
+          if (centerData[i] && centerData.hasOwnProperty(i)) {
+            data.append(i, centerData[i]);
+          }
+        }
+        for (let i in centerImageArray) {
+          data.append('file', centerImageArray[i]);
+        }
         dispatch({
           type: 'UPDATE_CENTER',
           payload: axios({
             method: 'put',
             url: `/api/v1/centers/${centerId}`,
-            data: getState().center.center,
+            data,
             headers: {
               'token': getState().user.userToken,
             }
           }),
         }).then((response) => {
+          for (let i in srcArray) {
+            window.URL.revokeObjectURL(srcArray[i]);
+          }
           dispatch({
             type: 'RESET_CENTER_FIELDS',
           })
           dispatch({
             type: 'RESET_APP_STATE',
           })
-          for (let item of inputFieldSetArg){
-            if (item.type === 'checkbox'){
-              item.checked = false;
-            } else {
-              item.value = "";
-            }
-          }
         }).catch((error) => {
           dispatch ({
             type: 'OPEN_INFO_TAB',
