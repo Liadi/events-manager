@@ -5,13 +5,13 @@ import Footer from './Footer.jsx';
 import Navbar from './Navbar.jsx';
 import NotFound from './NotFound.jsx';
 import EventForm from './EventForm.jsx';
-import CenterUpdateForm  from './CenterUpdateForm.jsx';
+import CenterForm  from './CenterForm.jsx';
 import AmenitiesList from './AmenitiesList.jsx';
 import '../style/center-events.scss';
 import { validateUser } from '../util';
 import { userLogout } from '../actions/userAction';
 import { closeModal, closeInfoTab, resetAppState, toggleSlatedEvents, toggleCenterUpdateForm, toggleEventForm } from '../actions/appAction';
-import { fetchCenter } from '../actions/centerAction';
+import { fetchCenter, resetCenterFields, resetCenterEntries } from '../actions/centerAction';
 
 class SingleCenter extends React.Component {
   constructor(props) {
@@ -205,7 +205,7 @@ class SingleCenter extends React.Component {
 
               {centerUpdateForm ? (
                 <div>
-                  <CenterUpdateForm centerId={currentCenter.id} centerUpdateToggleInput={this.centerUpdateToggleInput} />
+                  <CenterForm type="update" centerId={currentCenter.id} centerUpdateToggleInput={this.centerUpdateToggleInput} />
                 </div>
               ) : (null)}
             </main>
@@ -237,6 +237,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     unmountFunc: () => {
       dispatch(resetAppState());
+      dispatch(resetCenterEntries());
+      dispatch(resetCenterFields());
+      
     },
 
     fetchCurrentCenterFunc: (id) => {

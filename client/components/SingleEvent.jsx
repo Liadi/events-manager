@@ -44,6 +44,7 @@ class SingleEvent extends React.Component {
         currentEvent = eventsArray[i];
       }
     }
+
     return (
       <Route render={() => (
         (currentEvent && (currentEvent.userId ===  this.accountUserId || userType === 'admin')) ? (
@@ -88,7 +89,7 @@ class SingleEvent extends React.Component {
 
               {eventUpdateForm ? (
                 <div>
-                  <EventForm eventId={currentEvent.id} eventUpdateToggleInput={this.eventUpdateToggleInput} type='update' currentEventTime = {currentEvent.eventTime}/>
+                  <EventForm eventId={currentEvent.id} eventUpdateToggleInput={this.eventUpdateToggleInput} type='update' currentEventTime = {new Date(currentEvent.eventTime)}/>
                 </div>
               ) : (null)}
             </main>

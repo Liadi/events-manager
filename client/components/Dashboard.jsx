@@ -27,7 +27,9 @@ class Dashboard extends React.Component {
   }
 
   componentWillMount() {
-    (this.props.userType === 'admin')? this.props.changeDashboardContentFunc('recent'):this.props.changeDashboardContentFunc('timeline');
+    if (this.props.loggedIn) {
+      (this.props.userType === 'admin')? this.props.changeDashboardContentFunc('recent'):this.props.changeDashboardContentFunc('timeline');
+    }
   }
 
   render() {

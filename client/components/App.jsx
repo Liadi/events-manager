@@ -5,7 +5,7 @@ import Landing from './Landing.jsx';
 import SignUp from './SignUp.jsx';
 import Login from './Login.jsx';
 import Dashboard from './Dashboard.jsx';
-import CreateCenter from './CreateCenter.jsx';
+import CenterForm from './CenterForm.jsx';
 import Centers from './Centers.jsx';
 import SingleCenter from './SingleCenter.jsx';
 import Events from './Events.jsx';
@@ -22,7 +22,7 @@ const App = () => {
         <Route exact path='/signup' component={SignUp}/>
         <Route exact path='/login' component={Login}/>
         <Route exact path='/dashboard' component={Dashboard}/>
-        <Route exact path='/create-center' component={CreateCenter}/>
+        <Route exact path='/create-center' component={CenterForm}/>
         <Route exact path='/centers' component={Centers}/>
         <Route exact path='/centers/:id' component={SingleCenter}/>
         <Route exact path='/events' component={Events}/>
