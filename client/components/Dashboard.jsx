@@ -3,14 +3,17 @@ import { Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { closeInfoTab, closeModal, resetAppState, changeDashboardContent } from '../actions/appAction';
 import { fetchEvents } from '../actions/eventAction';
-import { resetUserFields, fetchUserLogs, userLogout, updateUser, updateUserField, deleteUserFieldError, userFieldInputError, updatePasswordConfirmation } from '../actions/userAction';
+import { resetUserFields, userLogout, updateUser, updateUserField, deleteUserFieldError, userFieldInputError, updatePasswordConfirmation } from '../actions/userAction';
+
+import { changeLogPage, fetchUserLogs, resetLogFields, restLogEntries } from '../actions/logAction';
+
 import Footer from './Footer.jsx';
 import Navbar from './Navbar.jsx';
 import TimelineContent from './TimelineContent.jsx';
 import HowContent from './HowContent.jsx';
 import ProfileContent from './ProfileContent.jsx';
 import SecurityContent from './SecurityContent.jsx';
-import RecentContent from './RecentContent.jsx';
+import ActivitiesContent from './ActivitiesContent.jsx';
 import DashboardSideBar from './DashboardSideBar.jsx';
 import '../style/dashboard.scss';
 import { validateUser, validateEmail } from '../util';
@@ -28,12 +31,12 @@ class Dashboard extends React.Component {
 
   componentWillMount() {
     if (this.props.loggedIn) {
-      (this.props.userType === 'admin')? this.props.changeDashboardContentFunc('recent'):this.props.changeDashboardContentFunc('timeline');
+      (this.props.userType === 'admin')?this.props.changeDashboardContentFunc('activities'):this.props.changeDashboardContentFunc('timeline');
     }
   }
 
   render() {
-    const { dashboardContent, changeDashboardContentFunc, loggedIn, userType, events, logs, userLogoutFunc, userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, closeInfoTabFunc, closeModalFunc, updateUserFieldFunc,props, updateUserFunc, passwordConfirmed, user } = this.props;
+    const { dashboardContent, changeDashboardContentFunc, loggedIn, userType, events, logs, userLogoutFunc, userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, closeInfoTabFunc, closeModalFunc, updateUserFieldFunc,props, updateUserFunc, passwordConfirmed, user, logPage, logLimit, logTotalElement, changeLogPageFunc } = this.props;
     return (
       <Route render={() => (
         loggedIn ? (
@@ -41,18 +44,16 @@ class Dashboard extends React.Component {
             <Navbar userType={userType} userLogoutFunc={userLogoutFunc} />
             <main className="container-fluid d-flex">
               <DashboardSideBar changeDashboardContentFunc={changeDashboardContentFunc} userType={userType}/>
-              <div className="mx-auto">
-                <div id="tabContentContainer">
+              <div id="tabContentContainer">
                   <TimelineContent show={ dashboardContent === 'timeline' ? true : false } events={events} />
-                  
-                  <RecentContent show={ dashboardContent === 'recent' ? true : false } logs={logs} />
+
+                  <ActivitiesContent show={ dashboardContent === 'activities' ? true : false } logs={logs} logPage={logPage} logLimit={logLimit} logTotalElement={logTotalElement} changeLogPageFunc={changeLogPageFunc} />
                   
                   <HowContent show={ dashboardContent === 'how' ? true : false } />
                   
                   <ProfileContent show={ dashboardContent === 'profile' ? true : false } userFieldError={userFieldError} infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} modalContent={modalContent} showModal={showModal} updateUserFieldFunc={updateUserFieldFunc} closeInfoTabFunc={closeInfoTabFunc} closeModalFunc={closeModalFunc} updateUserFunc={updateUserFunc} passwordConfirmed={passwordConfirmed} user={user} />
                   
                   <SecurityContent show={ dashboardContent === 'security' ? true : false } updateUserFieldFunc={updateUserFieldFunc} />
-                </div>
               </div>
             </main>
 
@@ -73,6 +74,9 @@ const mapStateToProps = (state) => {
   const loggedIn = validateUser(state.user.userToken, state.user.accountUser.userId);
   const userType = state.user.accountUser.userType;
   return {
+    logPage: state.log.page,
+    logLimit: state.log.limit,
+    logTotalElement: state.log.totalElement,
     userFieldError: state.user.error.fieldError,
     user: state.user.accountUser,
     passwordConfirmed: state.user.passwordConfirmed,
@@ -82,7 +86,7 @@ const mapStateToProps = (state) => {
     showModal: state.app.showModal,
     dashboardContent: state.app.dashboardContent,
     events: state.event.events,
-    logs: state.user.logs,
+    logs: state.log.logs,
     userType,
     loggedIn,
   }
@@ -101,16 +105,16 @@ const mapDispatchToProps = (dispatch, state) => {
             high: farthestFuture,
           });
           const tempParams = {
-            limit: 7,
+            limit: 10,
             sort: JSON.stringify({item: 'eventTime', order: 'INC'}),
             eventTime: timeFrame,
           }
           dispatch(fetchEvents(tempParams));
           break;
         }
-        case 'recent': {
+        case 'activities': {
           const tempParams = {
-            limit: 7,
+            limit: 10,
             sort: JSON.stringify({item: 'createdAt', order: 'DESC'}),
           }
           dispatch(fetchUserLogs(tempParams));
@@ -192,10 +196,17 @@ const mapDispatchToProps = (dispatch, state) => {
     unmountDashboardFunc: () => {
       dispatch(resetUserFields());
       dispatch(resetAppState());
+      dispatch(resetLogFields());
+      dispatch(restLogEntries());
     },
 
     userLogoutFunc: () => {
       dispatch(userLogout());
+    },
+
+    changeLogPageFunc: (page) => {
+      dispatch(changeLogPage(page));
+      dispatch(fetchUserLogs());
     },
   }
 }

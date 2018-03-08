@@ -5,11 +5,12 @@ import Footer from './Footer.jsx';
 import Navbar from './Navbar.jsx';
 import NotFound from './NotFound.jsx';
 import EventForm  from './EventForm.jsx';
+import ModalView from './ModalView.jsx';
 import '../style/center-events.scss';
 import { validateUser } from '../util';
 import { userLogout } from '../actions/userAction';
-import { closeModal, closeInfoTab, resetAppState, toggleEventForm } from '../actions/appAction';
-import { fetchEvent } from '../actions/eventAction';
+import { closeModal, openModal, closeInfoTab, resetAppState, toggleEventForm } from '../actions/appAction';
+import { fetchEvent, deleteEvent } from '../actions/eventAction';
 
 class SingleEvent extends React.Component {
   constructor(props) {
@@ -35,7 +36,7 @@ class SingleEvent extends React.Component {
       return(<NotFound />);
     }
 
-    const { eventsArray, userType, userLogoutFunc, toggleEventUpdateFormFunc, eventUpdateForm } = this.props;
+    const { eventsArray, userType, userLogoutFunc, toggleEventUpdateFormFunc, eventUpdateForm, accountUserId, initiateDeleteEventFunc, modalViewMode, modalCallbackFunc, closeModalFunc, modalContent, showModal } = this.props;
 
     let currentEvent;
 
@@ -47,12 +48,12 @@ class SingleEvent extends React.Component {
 
     return (
       <Route render={() => (
-        (currentEvent && (currentEvent.userId ===  this.accountUserId || userType === 'admin')) ? (
+        (currentEvent && (currentEvent.userId ===  accountUserId || userType === 'admin')) ? (
           <div>
             <Navbar userType={userType} userLogoutFunc={userLogoutFunc} />
 
             <main className="container">
-              { (currentEvent.userId ===  this.accountUserId)?
+              { (currentEvent.userId ===  accountUserId)?
                 (<label className="custom-control custom-checkbox d-block">
                   <input type="checkbox" className="custom-control-input" id="updateFormToggle" onChange={ e => {
                     this.eventUpdateToggleInput = e.target;
@@ -92,7 +93,20 @@ class SingleEvent extends React.Component {
                   <EventForm eventId={currentEvent.id} eventUpdateToggleInput={this.eventUpdateToggleInput} type='update' currentEventTime = {new Date(currentEvent.eventTime)}/>
                 </div>
               ) : (null)}
+
+              { (parseInt(currentEvent.userId, 10) == parseInt(accountUserId, 10) || userType === 'admin') ? 
+                (
+                  <input type='button' className="btn btn-delete grp-btn" value='Delete' onClick={ e => {
+                    e.preventDefault();
+                    initiateDeleteEventFunc(currentEvent.id);
+                  }}/>
+                ):(
+                  null
+                )
+              }
             </main>
+            <ModalView mode={modalViewMode} callback={modalCallbackFunc} closeModalFunc={closeModalFunc} modalContent={modalContent} showModal={showModal}/>
+            
             <Footer />
           </div>
         ) : (
@@ -111,6 +125,10 @@ const mapStateToProps = (state) => {
     eventsArray: state.event.events,
     eventUpdateForm: state.app.eventForm,
     accountUserId,
+    modalContent: state.app.modalContent,
+    modalViewMode: state.app.modalMode,
+    modalCallBack: state.app.modalCallBack,
+    showModal: state.app.showModal,
     userType,
     loggedIn,
   }
@@ -118,6 +136,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    dispatch,
+
     unmountFunc: () => {
       dispatch(resetAppState());
     },
@@ -133,10 +153,33 @@ const mapDispatchToProps = (dispatch) => {
     toggleEventUpdateFormFunc: () => {
       dispatch(toggleEventForm());
     },
+
+    closeModalFunc: () => {
+      dispatch(closeModal());
+    },
+
+    initiateDeleteEventFunc: (eventId) => {
+      dispatch(openModal('decision', `
+      <h4>Are you sure you want to delete this event?</h4>
+      <p>***Terms and conditions apply on refund</p>
+      `, deleteEvent(eventId)));
+    },
+  }
+}
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  return {
+    ...stateProps,
+    ...dispatchProps,
+    ...ownProps,
+    modalCallbackFunc: () => {
+      dispatchProps.dispatch(stateProps.modalCallBack());
+    },
   }
 }
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps,
 )(SingleEvent)

@@ -53,6 +53,7 @@ module.exports = {
   },
 
   changeDashboardContent(newContent) {
+    console.log('----------about to change content');
     return {
       type: 'CHANGE_DASHBOARD_CONTENT',
       payload: {

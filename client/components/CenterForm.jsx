@@ -188,7 +188,7 @@ class CenterForm extends React.Component {
                         e.target.value = e.target.value.slice(0, 50);
                       } 
                     }}/>
-                    <button type='button' onClick={ e => {
+                    <button className='btn' type='button' onClick={ e => {
                       e.preventDefault();
                       if(this.amenitiesInputElement && this.amenitiesInputElement.value) {
                         let tempPlaceHolder = this.amenitiesInputElement.value
@@ -234,7 +234,7 @@ class CenterForm extends React.Component {
                   </div>
 
                   <div className="form-group">
-                    <label className="btn btn-warning" htmlFor="centerImgFile">Click to add image</label>
+                    <label className="btn" htmlFor="centerImgFile">Click to add image</label>
                     <input className="imgFileInput form-control" type="file" name="pic" accept="image/*" id="centerImgFile" onChange={ e => {
                       this.handleFiles(e.target.files);
                     }} />
@@ -254,7 +254,7 @@ class CenterForm extends React.Component {
                     </div>
                   ):(
                     <div className="d-flex  justify-content-end grp form-group">
-                      <button type="button" className="btn btn-warning grp-btn" onClick={ e => {
+                      <button type="button" className="btn grp-btn" onClick={ e => {
                         e.preventDefault();
                         createCenterFunc(this.imgArray, this.srcArray);
                       }}>Create</button>

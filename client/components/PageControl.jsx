@@ -2,6 +2,8 @@ import React from 'react';
 
 const PageControl = (props) => {
   const { page, limit, changePageFunc, totalElement } = props;
+
+  console.log('check => ', props);
   
   let lastPage = Math.min(Math.ceil(totalElement/limit), Math.ceil(page / 5) * 5 + 1);
   let firstPage = Math.max(lastPage - 5, 1);

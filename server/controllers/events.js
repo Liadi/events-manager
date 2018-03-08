@@ -226,7 +226,7 @@ module.exports = {
       });
     }
     Event.findOne({
-      where: {id: req.eventId, userId: req.userId},
+      where: {id: req.eventId},
       attributes: [
       'id',
       'eventName',
@@ -239,6 +239,11 @@ module.exports = {
       ],
     }).then((event) => {
       if (!event) {
+        return res.status(404).json({
+          message: 'event does not exist',
+          status: false,
+        });
+      } else if (event.userId != req.userId && req.userType !== 'admin') {
         return res.status(404).json({
           message: 'event does not exist',
           status: false,

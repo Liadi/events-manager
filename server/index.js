@@ -20,9 +20,9 @@ if (app.get('env') !== 'test'){
 }
 
 app.use(morgan('dev'));
+app.use(express.static('client'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.use('/api/v1/', router);
 
 app.get('*', (req, res) => {

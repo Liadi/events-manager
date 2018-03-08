@@ -159,6 +159,34 @@ export default function reducer(
       }
     }
 
+    case 'DELETE_CENTER_PENDING': {
+      return {
+        ...state,
+        fetching: true,
+        fetched: false,
+      }
+    }
+
+    case 'DELETE_CENTER_REJECTED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: false,
+        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message || 'Server error. If this persists contact our technical team'}),
+      }
+    }
+
+    case 'DELETE_CENTER_FULFILLED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        center: {},
+        centers: [],
+        error: Object.assign({}, state.error, {serverError: null}),
+      }
+    }
+
     case 'UPDATE_CENTER_PENDING': {
       return {
         ...state,

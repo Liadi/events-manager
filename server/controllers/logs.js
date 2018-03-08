@@ -73,7 +73,7 @@ const findLogs = ((logs, finalParams, res ) => {
       return a[tempSortObj['item']] - b[tempSortObj['item']];
     });
   }
-  const n = retLogs.length;
+  const totalElement = retLogs.length;
   const [limit, page] = [parseInt(finalParams['limit']), parseInt(finalParams['page'])];
   if ( limit && limit > 0) {
     if (page && page > 0) {
@@ -88,7 +88,7 @@ const findLogs = ((logs, finalParams, res ) => {
       message: 'logs found',
       status: true,
       logs: retLogs,
-      n,
+      totalElement,
     });
   }
   return res.status(404).json({

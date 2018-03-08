@@ -18,12 +18,12 @@ const DashboardSideBar = (props) => {
       }
 
       {(props.userType === 'admin')? (<div>
-        <button className="tab-btn" onClick={ e => {props.changeDashboardContentFunc('recent')}}>
+        <button className="tab-btn" onClick={ e => {props.changeDashboardContentFunc('activities')}}>
           <span className="mx-auto">
             <span>
               <i className="fa fa-calendar-o fa-2x" aria-hidden="true"></i>
             </span>
-            <h3 className="d-inline">Recent</h3>
+            <h3 className="d-inline">Activities</h3>
           </span>
         </button>
       </div>) : (null)

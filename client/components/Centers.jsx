@@ -27,7 +27,9 @@ class Centers extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchAllCentersFunc();
+    if (this.props.loggedIn) {
+      this.props.fetchAllCentersFunc();
+    }
   }
 
   render() {
@@ -60,7 +62,6 @@ class Centers extends React.Component {
                             </Link>
                             <input type='button' className="btn btn-delete grp-btn" value='Delete' onClick={ e => {
                               e.preventDefault();
-                              this.modalCallbackTypeFunc = 'delete'
                               initiateDeleteCenterFunc(center.id);
                             }}/>
                           </div>
@@ -93,7 +94,7 @@ const mapStateToProps = (state) => {
     showInfoTab: state.app.showInfoTab,
     modalContent: state.app.modalContent,
     modalViewMode: state.app.modalMode,
-    modalCallbackFunc: state.app.modalCallBack,
+    modalCallBack: state.app.modalCallBack,
     showModal: state.app.showModal,
     allCenters: state.center.centers,
     totalElement: state.center.totalElement,
@@ -104,8 +105,21 @@ const mapStateToProps = (state) => {
   }
 }
 
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  return {
+    ...stateProps,
+    ...dispatchProps,
+    ...ownProps,
+    modalCallbackFunc: () => {
+      dispatchProps.dispatch(stateProps.modalCallBack());
+    },
+  }
+}
+
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    dispatch,
+
     closeInfoTabFunc: () => {
       dispatch(closeInfoTab());
     },
@@ -128,7 +142,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     initiateDeleteCenterFunc: (centerId) => {
-      dispatch(openModal('decision', '<p>Confirm center delete</p>', deleteCenter(centerId)));
+      dispatch(openModal('decision', `
+      <h4>Are you sure you want to delete this center?</h4>
+      <p>***Note all events associated with this center will be deleted</p>
+      `, deleteCenter(centerId)));
     },
 
     userLogoutFunc: () => {
@@ -150,5 +167,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps,
 )(Centers)

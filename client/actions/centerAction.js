@@ -177,7 +177,40 @@ module.exports = {
 
   deleteCenter(centerId){
     const func = () => {
-      console.log("WHOOOOOOOP! Center, ", centerId, " just deleted. Although it's a facade ;) ");
+      return function(dispatch, getState) {
+        dispatch({
+          type: 'DELETE_CENTER',
+          payload: axios({
+            method: 'delete',
+            url: `/api/v1/centers/${centerId}`,
+            headers: {
+              'token': getState().user.userToken,
+            }
+          }),
+        }).then((res) => {
+          dispatch({
+            type: 'CHANGE_CENTER_PAGE',
+            payload: {
+              page: 1,
+            }
+          });
+          history.push('/centers');
+          dispatch({
+            type: 'OPEN_MODAL',
+            payload: {
+              htmlContent: '<h4>Center successfully deleted</h4>',
+            },
+          });
+        }).catch((err) => {
+          let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
+          dispatch({
+            type: 'OPEN_INFO_TAB',
+            payload: {
+              msg,
+            },
+          });
+        })
+      };
     }
     return func;
   },

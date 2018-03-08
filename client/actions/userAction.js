@@ -1,4 +1,5 @@
 import axios from 'axios';
+import history from '../history';
 
 module.exports = {
   createUser(inputFieldSetArg, admin=false) {
@@ -172,6 +173,7 @@ module.exports = {
   },
 
   userLogout() {
+    history.push('/');
     return {
       type: 'USER_LOGOUT',
     }
@@ -334,6 +336,7 @@ module.exports = {
           }
         });
       } else {
+        console.log('user fields => ', userField);
         dispatch({
           type: 'UPDATE_USER',
           payload: axios({
@@ -373,20 +376,4 @@ module.exports = {
       type: 'RESET_USER_FIELDS',
     }
   },
-
-  fetchUserLogs(param) {
-    return function(dispatch, getState) {  
-      dispatch({
-        type: 'FETCH_LOGS',
-        payload: axios({
-          method: 'get',
-          url: 'api/v1/logs',
-          params: param,
-          headers: {
-            'token': getState().user.userToken,
-          }
-        }),
-      });
-    }
-  }
 }

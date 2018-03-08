@@ -7,11 +7,12 @@ import NotFound from './NotFound.jsx';
 import EventForm from './EventForm.jsx';
 import CenterForm  from './CenterForm.jsx';
 import AmenitiesList from './AmenitiesList.jsx';
+import ModalView from './ModalView.jsx';
 import '../style/center-events.scss';
 import { validateUser } from '../util';
 import { userLogout } from '../actions/userAction';
-import { closeModal, closeInfoTab, resetAppState, toggleSlatedEvents, toggleCenterUpdateForm, toggleEventForm } from '../actions/appAction';
-import { fetchCenter, resetCenterFields, resetCenterEntries } from '../actions/centerAction';
+import { closeModal, closeInfoTab, resetAppState, toggleSlatedEvents, toggleCenterUpdateForm, toggleEventForm, openModal } from '../actions/appAction';
+import { fetchCenter, resetCenterFields, resetCenterEntries, deleteCenter } from '../actions/centerAction';
 
 class SingleCenter extends React.Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class SingleCenter extends React.Component {
   }
 
   render() {
-    const { centersArray, userType, loggedIn, centerUpdateForm, eventForm, slatedEvents, userLogoutFunc, toggleCenterUpdateFormFunc, toggleEventFormFunc, toggleSlatedEventsFunc } = this.props;
+    const { centersArray, userType, loggedIn, centerUpdateForm, eventForm, slatedEvents, userLogoutFunc, toggleCenterUpdateFormFunc, toggleEventFormFunc, toggleSlatedEventsFunc, modalViewMode, modalCallbackFunc, closeModalFunc, modalContent, showModal, initiateDeleteCenterFunc } = this.props;
 
     let currentCenter;
 
@@ -109,65 +110,60 @@ class SingleCenter extends React.Component {
               }
               
               
-              <div className="card" id="card-div">
-                <div className="card-center d-flex flex-wrap flex-row-reverse justify-content-center" id="center-descrip">
-                  <div id="centerImage" className="carousel slide mx-auto col-md-6 caro-div" data-ride="carousel">
-                    <div className="carousel-inner">
-                      <div className="carousel-item active">
-                        <img src="../images/pic3.jpg" alt="Los Angeles" className="img-fluid rounded float-left"/>
-                        <div className="carousel-caption">
-                          <h3>Front View</h3>
-                          <p>Grandeur</p>
-                        </div>   
-                      </div>
-                      <div className="carousel-item">
-                        <img src="../images/pic2.jpg" alt="Chicago" className="img-fluid rounded float-left"/>
-                        <div className="carousel-caption">
-                          <h3>Lodge View</h3>
-                          <p>Classy</p>
-                        </div>   
-                      </div>
-                      <div className="carousel-item">
-                        <img src="../images/pic7.jpg" alt="New York" className="img-fluid rounded float-left"/>
-                        <div className="carousel-caption">
-                          <h3>Hall Entrance</h3>
-                          <p>Scenic</p>
-                        </div>   
-                      </div>
-                    </div>
-                    <a className="carousel-control-prev" href="#centerImage" data-slide="prev">
-                      <span className="carousel-control-prev-icon"></span>
-                    </a>
-                    <a className="carousel-control-next" href="#centerImage" data-slide="next">
-                      <span className="carousel-control-next-icon"></span>
-                    </a>
-                  </div>
-                  <div className="card-body">
-                    <h4 className="card-title">{currentCenter.centerName}</h4>
-                    <h5 className="card-title">{currentCenter.centerDescription}</h5>
-                    <h6 className="card-subtitle mb-2 text-muted">Center address</h6>
-                    <p className="card-text">{currentCenter.centerAddress}</p>
-                    <h6 className="card-subtitle mb-2 text-muted">Country</h6>
-                    <p className="card-text">{currentCenter.centerCountry}</p>
-                    <h6 className="card-subtitle mb-2 text-muted">State</h6>
-                    <p className="card-text">{currentCenter.centerState}</p>
-                    <h6 className="card-subtitle mb-2 text-muted">Center Capacity</h6>
-                    <p className="card-text">{currentCenter.centerCapacity}</p>
+              <div className="card container" id="card-div">
+                <div className="card-center row" id="center-descrip">
+                    
+                  <div className="card-body col-lg-6">
+                    <h3 className="card-title">{currentCenter.centerName}</h3>
+                  
+                    <h4 className="card-subtitle mb-2 text-muted space-top">Address</h4>
+                    <h5 className="card-text">{currentCenter.centerAddress}</h5>
+                    
+                    <h4 className="card-subtitle mb-2 text-muted space-top">Country</h4>
+                    <h5 className="card-text">{currentCenter.centerCountry}</h5>
+                    
+                    <h4 className="card-subtitle mb-2 text-muted space-top">State</h4>
+                    <h5 className="card-text">{currentCenter.centerState}</h5>
+                    
+                    <h4 className="card-subtitle mb-2 text-muted space-top">Center Capacity</h4>
+                    <h5 className="card-text">{currentCenter.centerCapacity}</h5>
                     {loggedIn?
                       (
                         <div>
-                          <h6 className="card-subtitle mb-2 text-muted">Rate per hour</h6>
-                          <p className="card-text">#{currentCenter.centerRate}</p>
-                          <h6 className="card-subtitle mb-2 text-muted">Status</h6>
-                          <p className="card-text">{currentCenter.centerStatus}</p>
+                          <h4 className="card-subtitle mb-2 text-muted space-top">Rate(per day)</h4>
+                          <h5 className="card-text">#{currentCenter.centerRate}</h5>
+                          <h4 className="card-subtitle mb-2 text-muted space-top">Status</h4>
+                          <h5 className="card-text">{currentCenter.centerStatus}</h5>
                         </div>
                       ):(
                         null
                       )
                     }
-                    <h6 className="card-subtitle mb-2 text-muted">Amenities</h6>
+                    <h4 className="card-subtitle mb-2 text-muted space-top">Amenities</h4>
                     <AmenitiesList center={currentCenter}/>
                   </div>
+                  
+                  <div className="col-lg-6">
+                    <div className='mx-auto space-top'>
+                      <h5 className="card-title">{currentCenter.centerDescription}</h5>
+                    </div>
+
+                    <div className='d-flex flex-row flex-wrap justify-content-around space-top'>
+                      {
+                        currentCenter.images.map((image, index) => {
+                          let path = '/images/'+ image.imagePath;
+                          return (
+                            <figure className='fig-res'>
+                              <img key={image.id} src={path} title={image.imageDescription} alt={image.imageDescription} className='img-res' />
+                            </figure>
+                            
+                          )
+                        })
+                      }
+                    </div>
+                  </div>
+
+
                 </div>
               </div>
               {
@@ -208,7 +204,19 @@ class SingleCenter extends React.Component {
                   <CenterForm type="update" centerId={currentCenter.id} centerUpdateToggleInput={this.centerUpdateToggleInput} />
                 </div>
               ) : (null)}
+
+              { userType === 'admin' ? 
+                (
+                  <input type='button' className="btn btn-delete grp-btn" value='Delete' onClick={ e => {
+                    e.preventDefault();
+                    initiateDeleteCenterFunc(currentCenter.id);
+                  }}/>
+                ):(
+                  null
+                )
+              }
             </main>
+            <ModalView mode={modalViewMode} callback={modalCallbackFunc} closeModalFunc={closeModalFunc} modalContent={modalContent} showModal={showModal}/>
             <Footer />
           </div>
         ) : (
@@ -228,6 +236,10 @@ const mapStateToProps = (state) => {
     centerUpdateForm: state.app.centerUpdateForm,
     eventForm: state.app.eventForm,
     slatedEvents: state.app.slatedEvents,
+    modalContent: state.app.modalContent,
+    modalViewMode: state.app.modalMode,
+    modalCallBack: state.app.modalCallBack,
+    showModal: state.app.showModal,
     userType,
     loggedIn,
   }
@@ -235,6 +247,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    dispatch,
+
     unmountFunc: () => {
       dispatch(resetAppState());
       dispatch(resetCenterEntries());
@@ -261,10 +275,33 @@ const mapDispatchToProps = (dispatch) => {
     toggleEventFormFunc: () => {
       dispatch(toggleEventForm());
     },
+
+    closeModalFunc: () => {
+      dispatch(closeModal());
+    },
+
+    initiateDeleteCenterFunc: (centerId) => {
+      dispatch(openModal('decision', `
+      <h4>Are you sure you want to delete this center?</h4>
+      <p>***Note all events associated with this center will be deleted</p>
+      `, deleteCenter(centerId)));
+    },
+  }
+}
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  return {
+    ...stateProps,
+    ...dispatchProps,
+    ...ownProps,
+    modalCallbackFunc: () => {
+      dispatchProps.dispatch(stateProps.modalCallBack());
+    },
   }
 }
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps,
 )(SingleCenter)

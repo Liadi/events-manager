@@ -42,7 +42,6 @@ const Navbar = (props) => {
                   <Link className="dropdown-item" to="create-admin">Add Admin</Link>
                 )
               }
-              <Link className="dropdown-item" to="create-event">Create Event</Link>
               <div className="dropdown-divider"></div>
               <button className="dropdown-item" 
                 onClick={ e => {

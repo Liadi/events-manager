@@ -18,6 +18,7 @@ export default function reducer(
     // NOTE: reset app doesn't reset dashboard content
     case 'RESET_APP_STATE': {
       return {
+        ...state,
         advancedSearch: false,
         centerUpdateForm: false,
         eventForm: false,
@@ -26,7 +27,8 @@ export default function reducer(
         infoTabMsg: [],
         showModal: false,
         modalContent: null,
-        dashboardContent: null,
+        modalMode: undefined,
+        modalCallBack: undefined,
       }
     }
 		case 'TOGGLE_ADVANCED_SEARCH': {

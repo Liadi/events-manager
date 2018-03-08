@@ -172,6 +172,48 @@ module.exports = {
     }
   },
 
+  deleteEvent(eventId){
+    const func = () => {
+      console.log("WHOOOOOOOP! Event, ", eventId, " just about to get deleted. :( ");
+      return function(dispatch, getState) {
+        console.log('should dispatch');
+        dispatch({
+          type: 'DELETE_EVENT',
+          payload: axios({
+            method: 'delete',
+            url: `/api/v1/events/${eventId}`,
+            headers: {
+              'token': getState().user.userToken,
+            }
+          }),
+        }).then((res) => {
+          dispatch({
+            type: 'CHANGE_EVENT_PAGE',
+            payload: {
+              page: 1,
+            }
+          });
+          history.push('/events');
+          dispatch({
+            type: 'OPEN_MODAL',
+            payload: {
+              htmlContent: '<h4>Event successfully deleted</h4>',
+            },
+          });
+        }).catch((err) => {
+          let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
+          dispatch({
+            type: 'OPEN_INFO_TAB',
+            payload: {
+              msg,
+            },
+          });
+        })
+      };
+    }
+    return func;
+  },
+
   updateEvent(inputFieldSetArg, eventId) {
     return function(dispatch, getState) {
       const temp = getState().event.event.eventTime;

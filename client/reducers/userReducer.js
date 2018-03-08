@@ -1,7 +1,6 @@
 export default function reducer(
   state={
     user: {},
-    logs: [],
     accountUser: {},
     userToken: null,
     passwordConfirmed: true,
@@ -13,7 +12,7 @@ export default function reducer(
     },
   }, action) {
 
-	switch (action.type) {
+  switch (action.type) {
     case 'USER_FIELD_ERROR': {
       let temp = state.error.fieldError;
       temp = {...temp};
@@ -233,33 +232,6 @@ export default function reducer(
         user: {
           id: action.payload,
         },
-      }
-    }
-
-    case 'FETCH_LOGS_PENDING': {
-      return {
-        ...state,
-        fetching: true,
-        fetched: false,
-      }
-    }
-
-    case 'FETCH_LOGS_REJECTED': {
-      return {
-        ...state,
-        fetching: false,
-        fetched: false,
-        error: Object.assign({}, state.error, {serverError: action.payload.message}),
-      }
-    }
-
-    case 'FETCH_LOGS_FULFILLED': {
-      return {
-        ...state,
-        fetching: false,
-        fetched: true,
-        error: Object.assign({}, state.error, {serverError: null}),
-        logs: action.payload.data.logs,
       }
     }
 

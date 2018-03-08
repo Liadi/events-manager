@@ -60,15 +60,6 @@ class Events extends React.Component {
                             <Link className="btn btn-primary grp-btn" to={`/events/${event.id}`}>
                               View
                             </Link>
-                            { parseInt(event.userId, 10) === parseInt(accountUserId, 10) ? 
-                              (
-                                <input type='button' className="btn btn-delete grp-btn" value='Delete' onClick={ e => {
-                                  e.preventDefault();
-                                }}/>
-                              ):(
-                                null
-                              )
-                            }
                           </div>
                         </div>
                       </div>
