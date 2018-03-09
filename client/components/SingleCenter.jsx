@@ -139,8 +139,17 @@ class SingleCenter extends React.Component {
                         null
                       )
                     }
-                    <h4 className="card-subtitle mb-2 text-muted space-top">Amenities</h4>
-                    <AmenitiesList center={currentCenter}/>
+                    { currentCenter.centerAmenities && currentCenter.centerAmenities.length > 0?
+                      (
+                        <div>
+                          <h4 className="card-subtitle mb-2 text-muted space-top">Amenities</h4>
+                          <AmenitiesList center={currentCenter}/>
+                        </div>
+                      ):(
+                       null
+                      )
+                    }
+                    
                   </div>
                   
                   <div className="col-lg-6">
@@ -148,19 +157,27 @@ class SingleCenter extends React.Component {
                       <h5 className="card-title">{currentCenter.centerDescription}</h5>
                     </div>
 
-                    <div className='d-flex flex-row flex-wrap justify-content-around space-top'>
-                      {
-                        currentCenter.images.map((image, index) => {
-                          let path = '/images/'+ image.imagePath;
-                          return (
-                            <figure className='fig-res'>
-                              <img key={image.id} src={path} title={image.imageDescription} alt={image.imageDescription} className='img-res' />
-                            </figure>
-                            
-                          )
-                        })
-                      }
-                    </div>
+                    { currentCenter.images?(
+                      <div className='d-flex flex-row flex-wrap justify-content-around space-top'>
+                        {
+
+                          currentCenter.images.map((image, index) => {
+                            let path = '/images/'+ image.imagePath;
+                            return (
+                              <figure key={image.id} className='fig-res'>
+                                <img src={path} title={image.imageDescription} alt={image.imageDescription} className='img-res' />
+                              </figure>
+                              
+                            )
+                          })
+                        }
+                      </div>  
+                    ):(
+                      null
+                    )
+                    }
+
+                    
                   </div>
 
 
@@ -285,6 +302,10 @@ const mapDispatchToProps = (dispatch) => {
       <h4>Are you sure you want to delete this center?</h4>
       <p>***Note all events associated with this center will be deleted</p>
       `, deleteCenter(centerId)));
+    },
+
+    resetCenterEntriesFunc: () => {
+      dispatch(resetCenterEntries());
     },
   }
 }

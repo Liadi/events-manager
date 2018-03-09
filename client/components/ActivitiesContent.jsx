@@ -4,7 +4,6 @@ import React from 'react';
 
 const ActivitiesContent = (props) => {
   if (props.show) {
-    console.log('outer ', props);
     return (
       <div id="timelineContent" className="tab-content">
         <h4>

@@ -33,7 +33,7 @@ class EventForm extends React.Component {
     const time = this.props.event.eventTime
     return (
       <div className="container">
-        <InfoTab className="col-12"infoTabMsg={this.props.infoTabMsg} showInfoTab={this.props.showInfoTab} closeInfoTabFunc={this.props.closeInfoTabFunc}/>
+        <InfoTab className="col-12" infoTabMsg={this.props.infoTabMsg} showInfoTab={this.props.showInfoTab} closeInfoTabFunc={this.props.closeInfoTabFunc}/>
           
         <div className="row">
           <form className="main-form card col-sm-9 col-lg-6 mx-auto">
