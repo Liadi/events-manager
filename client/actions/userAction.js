@@ -179,6 +179,45 @@ module.exports = {
     }
   },
 
+  deleteAccount() {
+    const func = () => {
+      return function(dispatch, getState) {
+        dispatch({
+          type: 'DELETE_ACCOUNT',
+          payload: axios({
+            method: 'delete',
+            url: `/api/v1/accounts`,
+            headers: {
+              'token': getState().user.userToken,
+            }
+          }),
+        }).then((res) => {
+          history.push('/');
+          dispatch({
+            type: 'OPEN_MODAL',
+            payload: {
+              htmlContent: '<h4>Account successfully deleted</h4>',
+            },
+          });
+        }).catch((err) => {
+          let msg;
+          try {
+            msg = [err.response.data.message];
+          } catch(error){
+            msg = ['Server error. If this persists contact our technical team'];
+          }
+          dispatch({
+            type: 'OPEN_INFO_TAB',
+            payload: {
+              msg,
+            },
+          });
+        })
+      };
+    }
+    return func;
+  },
+
   userFieldInputError(field, msg) {
     return {
       type: 'USER_FIELD_ERROR',

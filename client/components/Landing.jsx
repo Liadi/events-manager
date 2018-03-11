@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link, Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { resetAppState } from '../actions/appAction';
+import { closeModal, resetAppState } from '../actions/appAction';
 import { resetCenterFields, resetCenterEntries } from '../actions/centerAction';
 import Footer from './Footer.jsx';
+import ModalView from './ModalView.jsx';
 import CenterSearch from './CenterSearch.jsx';
 import '../style/index.scss';
 import '../awesome/scss/font-awesome.scss';
@@ -21,7 +22,7 @@ class Landing extends React.Component {
   }
 
   render() {
-    const { loggedIn } = this.props;
+    const { loggedIn, closeModalFunc, modalContent, showModal } = this.props;
     return (
       <Route render={props => (
         loggedIn ? (
@@ -100,6 +101,7 @@ class Landing extends React.Component {
               </div>
             </main>
 
+            <ModalView closeModalFunc={closeModalFunc} modalContent={modalContent} showModal={showModal}/>
 
             <Footer />
           </div>
@@ -112,6 +114,8 @@ class Landing extends React.Component {
 const mapStateToProps = (state) => {
   const loggedIn = validateUser(state.user.userToken, state.user.accountUser.userId);
   return {
+    modalContent: state.app.modalContent,
+    showModal: state.app.showModal,
     loggedIn,
   }
 }
@@ -122,6 +126,10 @@ const mapDispatchToProps = (dispatch, state) => {
       dispatch(resetCenterFields());
       dispatch(resetAppState());
       dispatch(resetCenterEntries());
+    },
+
+    closeModalFunc: () => {
+      dispatch(closeModal());
     },
   }
 }

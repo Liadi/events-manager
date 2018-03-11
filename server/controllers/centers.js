@@ -122,9 +122,11 @@ module.exports = {
           for (let i = 0; i < center.images.length; i++) {
             console.log('images id => ', center.images[i].dataValues.id);
             Image.findById(center.images[i].dataValues.id).then((singleImage) => {
-              console.log('destroying!!!');
-              fs.unlink(process.cwd() + '/client/images/' + singleImage.imagePath, (err) => {if (err) console.log('Ooops, ', err)});
-              singleImage.destroy();  
+              if (singleImage) {
+                console.log('destroying!!!');
+                fs.unlink(process.cwd() + '/client/images/' + singleImage.imagePath, (err) => {if (err) console.log('Ooops, ', err)});
+                singleImage.destroy();
+              }  
             })
           }
           const images = [];
@@ -494,7 +496,7 @@ const centerUpdatedResponse = ((req, res, center, oldCenter, images=[]) => {
       centerRate: oldCenter.centerRate,
       centerStatus: oldCenter.centerStatus,
       centerAmenities: oldCenter.centerAmenities,
-      images: JSON.stringify([]),
+      images: JSON.stringify(oldCenter.images),
     }),
     after: JSON.stringify({
       centerName: center.centerName,

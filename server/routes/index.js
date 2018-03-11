@@ -73,6 +73,7 @@ router.get('/', (req, res) => {
 router.post('/users/signup/', cleanData, userMiddlewares.validateUserFields, userControllers.createUser);
 router.post('/users/signin/', cleanData, userControllers.signIn);
 router.put('/users/', cleanData, userMiddlewares.validateToken, userControllers.modifyUser);
+router.delete('/accounts/', cleanData, userMiddlewares.validateToken, userControllers.deleteAccount);
 
 // add admin
 router.post('/users/admin', cleanData, userMiddlewares.validateToken, userMiddlewares.isAdmin, userMiddlewares.validateUserFields, userControllers.createUser);

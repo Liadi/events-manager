@@ -221,4 +221,54 @@ module.exports = {
       });
     });
   },
+
+  deleteAccount(req, res) {
+    User.findById(req.userId).then((user) => {
+      console.log('first');
+      if (!user) {
+        console.log('second');
+        return res.status(404).send({
+          message: 'Server error',
+          status: false,
+        });  
+      }
+      const oldUser = {...user.dataValues};
+      user.destroy();
+      console.log('third')
+      
+      res.status(200).send({
+        message: 'Account deleted',
+        status: true,
+      });
+
+      const logData = {
+        entityName: oldUser.userFirstName,
+        entity: 'User',
+        entityId: oldUser.id,
+        userId: req.userId,
+        action: 'DELETE',
+        before: JSON.stringify({
+          userFirstName: oldUser.userFirstName,
+          userLastName: oldUser.userLastName,
+          userEmail: oldUser.userEmail,
+          userPassword: '****',
+          userPhoneNumber: oldUser.userPhoneNumber,
+        }),
+        after: JSON.stringify({}),
+      }
+
+      log(logData);
+
+    }).catch((err) => {
+      console.log('fourth');
+      return res.status(400).send({
+        message: `Something went wrong, it's on us. Pls try again or report situation if it persists`,
+        status: false,
+      });
+    })
+  },
+
+  deleteUser(req, res) {
+
+  },
 };

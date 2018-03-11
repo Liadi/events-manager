@@ -6,7 +6,7 @@ const changeSet = new Set();
 
 const ProfileContent = (props) => {
   if (props.show) {
-    const { userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, closeModalFunc, closeInfoTabFunc, updateUserFieldFunc, updateUserFunc, passwordConfirmed, user } = props;
+    const { userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, modalViewMode, closeModalFunc, closeInfoTabFunc, updateUserFieldFunc, updateUserFunc, initiateDeleteAccountFunc, modalCallbackFunc, passwordConfirmed, user } = props;
     return (
       <div id="profileContent" className="tab-content">
         <InfoTab className='infoTab' infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} closeInfoTabFunc={closeInfoTabFunc}/>
@@ -153,7 +153,12 @@ const ProfileContent = (props) => {
             Change
           </button> 
         </form>
-        <ModalView closeModalFunc={closeModalFunc} modalContent={modalContent} showModal={showModal}/>
+
+        <button type='button' className="btn btn-delete grp-btn space-top" onClick={ e => {
+          e.preventDefault();
+          initiateDeleteAccountFunc();
+        }}> Delete </button>
+        <ModalView mode={modalViewMode} closeModalFunc={closeModalFunc} callback={modalCallbackFunc} modalContent={modalContent} showModal={showModal}/>
       </div>
     );
   }

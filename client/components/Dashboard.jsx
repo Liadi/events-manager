@@ -1,9 +1,9 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { closeInfoTab, closeModal, resetAppState, changeDashboardContent } from '../actions/appAction';
+import { closeInfoTab, closeModal, resetAppState, changeDashboardContent, openModal } from '../actions/appAction';
 import { fetchEvents } from '../actions/eventAction';
-import { resetUserFields, userLogout, updateUser, updateUserField, deleteUserFieldError, userFieldInputError, updatePasswordConfirmation } from '../actions/userAction';
+import { resetUserFields, userLogout, updateUser, updateUserField, deleteUserFieldError, userFieldInputError, updatePasswordConfirmation, deleteAccount } from '../actions/userAction';
 
 import { changeLogPage, fetchUserLogs, resetLogFields, restLogEntries } from '../actions/logAction';
 
@@ -36,7 +36,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { dashboardContent, changeDashboardContentFunc, loggedIn, userType, events, logs, userLogoutFunc, userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, closeInfoTabFunc, closeModalFunc, updateUserFieldFunc,props, updateUserFunc, passwordConfirmed, user, logPage, logLimit, logTotalElement, changeLogPageFunc } = this.props;
+    const { dashboardContent, changeDashboardContentFunc, loggedIn, userType, events, logs, userLogoutFunc, userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, modalViewMode, closeInfoTabFunc, closeModalFunc, updateUserFieldFunc,props, updateUserFunc, passwordConfirmed, user, logPage, logLimit, logTotalElement, changeLogPageFunc, initiateDeleteAccountFunc, modalCallbackFunc } = this.props;
     return (
       <Route render={() => (
         loggedIn ? (
@@ -51,7 +51,7 @@ class Dashboard extends React.Component {
                 
                 <HowContent show={ dashboardContent === 'how' ? true : false } />
                 
-                <ProfileContent show={ dashboardContent === 'profile' ? true : false } userFieldError={userFieldError} infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} modalContent={modalContent} showModal={showModal} updateUserFieldFunc={updateUserFieldFunc} closeInfoTabFunc={closeInfoTabFunc} closeModalFunc={closeModalFunc} updateUserFunc={updateUserFunc} passwordConfirmed={passwordConfirmed} user={user} />
+                <ProfileContent show={ dashboardContent === 'profile' ? true : false } userFieldError={userFieldError} infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} modalContent={modalContent} showModal={showModal} updateUserFieldFunc={updateUserFieldFunc} closeInfoTabFunc={closeInfoTabFunc} closeModalFunc={closeModalFunc} updateUserFunc={updateUserFunc} initiateDeleteAccountFunc={initiateDeleteAccountFunc} passwordConfirmed={passwordConfirmed} user={user} modalCallbackFunc={modalCallbackFunc} modalViewMode={modalViewMode}/>
                 
                 <SecurityContent show={ dashboardContent === 'security' ? true : false } updateUserFieldFunc={updateUserFieldFunc} />
               </div>
@@ -83,6 +83,8 @@ const mapStateToProps = (state) => {
     infoTabMsg: state.app.infoTabMsg,
     showInfoTab: state.app.showInfoTab,
     modalContent: state.app.modalContent,
+    modalCallBack: state.app.modalCallBack,
+    modalViewMode: state.app.modalMode,
     showModal: state.app.showModal,
     dashboardContent: state.app.dashboardContent,
     events: state.event.events,
@@ -94,6 +96,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, state) => {
   return {
+    dispatch,
+
     changeDashboardContentFunc: (newContent) => {
       dispatch(changeDashboardContent(newContent));
       switch (newContent) {
@@ -120,6 +124,7 @@ const mapDispatchToProps = (dispatch, state) => {
     closeInfoTabFunc: () => {
       dispatch(closeInfoTab());
     },
+    
     updateUserFieldFunc: (field, value) => {
       dispatch(updateUserField(field, value));
       switch(field) {
@@ -193,6 +198,13 @@ const mapDispatchToProps = (dispatch, state) => {
       dispatch(restLogEntries());
     },
 
+
+    initiateDeleteAccountFunc: () => {
+      dispatch(openModal('decision', `
+      <h4>Are you sure you want to delete your account?</h4>
+      <p>***Note: All your activities will be deleted`, deleteAccount()));
+    },
+
     userLogoutFunc: () => {
       dispatch(userLogout());
     },
@@ -204,7 +216,19 @@ const mapDispatchToProps = (dispatch, state) => {
   }
 }
 
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  return {
+    ...stateProps,
+    ...dispatchProps,
+    ...ownProps,
+    modalCallbackFunc: () => {
+      dispatchProps.dispatch(stateProps.modalCallBack());
+    },
+  }
+}
+
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps,
 )(Dashboard)

@@ -125,6 +125,34 @@ export default function reducer(
       }
     }
 
+    case 'DELETE_ACCOUNT_PENDING': {
+      return {
+        ...state,
+        fetching: true,
+        fetched: false,
+      }
+    }
+
+    case 'DELETE_ACCOUNT_REJECTED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: false,
+        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message || 'Server error. If this persists contact our technical team'}),
+      }
+    }
+
+    case 'DELETE_ACCOUNT_FULFILLED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        accountUser: {},
+        userToken: null,
+        error: Object.assign({}, state.error, {serverError: null}),
+      }
+    }
+
     case 'USER_SIGNIN_PENDING' : {
       return {
         ...state,

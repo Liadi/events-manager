@@ -12,43 +12,56 @@ const Navbar = (props) => {
         <span className="navbar-toggler-icon"></span>
       </button>
       <div className="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-        <ul className="navbar-nav">
-          <li className="nav-item navbar-item mx-auto">
-            <Link className="nav-link" to='/centers'>Centers</Link>
-          </li>
-          { props.userType === 'admin' ?
-            (
-              <ul className="navbar-nav">
-                <li className="nav-item navbar-item mx-auto">
-                  <Link className="nav-link" to='/create-center'>Create Center</Link>
-                </li>
-                <li className="nav-item navbar-item mx-auto">
-                  <Link className="nav-link" to='/events'>Events</Link>
-                </li>
-                { props.userType === 'regular'?
-                  (
-                    <li className="nav-item navbar-item mx-auto">
-                      <Link className="nav-link" to="/events">My Events</Link>
-                    </li>
-                  ):(
-                    <li className="nav-item navbar-item mx-auto">
-                      <Link className="nav-link" to="create-admin">Add Admin</Link>
-                    </li>
-                  )
-                }
-                <li className="nav-item navbar-item mx-auto">
-                  <input value='Log out' type='button' className="nav-link btn btn-light" 
-                    onClick={ e => {
-                      props.userLogoutFunc();
-                    }
-                  }/>
-                </li>
-              </ul>
-            ):(
-              null
-            )
-          }
-        </ul>
+          
+        { props.userType === 'admin' ?
+          (
+            <ul className="navbar-nav">
+              <li className="nav-item navbar-item mx-auto">
+                <Link className="nav-link" to='/centers'>Centers</Link>
+              </li>
+              <li className="nav-item navbar-item mx-auto">
+                <Link className="nav-link" to='/create-center'>Create Center</Link>
+              </li>
+              <li className="nav-item navbar-item mx-auto">
+                <Link className="nav-link" to='/events'>Events</Link>
+              </li>
+              <li className="nav-item navbar-item mx-auto">
+                <Link className="nav-link" to="create-admin">Add Admin</Link>
+              </li>
+              <li className="nav-item navbar-item mx-auto">
+                <input value='Log out' type='button' className="nav-link btn btn-light" 
+                  onClick={ e => {
+                    props.userLogoutFunc();
+                  }
+                }/>
+              </li>
+            </ul>
+          ):(
+            null
+          )
+        }
+
+        { props.userType === 'regular'?
+          (
+            <ul className="navbar-nav">
+              <li className="nav-item navbar-item mx-auto">
+                <Link className="nav-link" to='/centers'>Centers</Link>
+              </li>
+              <li className="nav-item navbar-item mx-auto">
+                <Link className="nav-link" to="/events">My Events</Link>
+              </li>
+              <li className="nav-item navbar-item mx-auto">
+                <input value='Log out' type='button' className="nav-link btn btn-light" 
+                  onClick={ e => {
+                    props.userLogoutFunc();
+                  }
+                }/>
+              </li>
+            </ul>
+          ):(
+            null
+          )
+        }
       </div>
     </nav>
   );
