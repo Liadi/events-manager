@@ -3,8 +3,9 @@ import CenterAdvancedSearch from './CenterAdvancedSearch.jsx';
 import CenterSearchResult from './CenterSearchResult.jsx';
 import '../style/index.scss';
 import { connect } from 'react-redux';
+import { validateUser } from '../util';
 import { toggleAdvancedSearch } from '../actions/appAction';
-import { updateCenterField, fetchAllCenters, fieldInputError, updateCenterSortOrder, updateCenterSortItem, updateCenterLimit } from '../actions/centerAction';
+import { updateCenterField, fetchAllCenters, fieldInputError, updateCenterSortOrder, updateCenterSortItem, updateCenterLimit, resetCenterEntries } from '../actions/centerAction';
 
 class CenterSearch extends React.Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class CenterSearch extends React.Component {
   }
 
   render () {
-    const { showAdvanced, fetching, fetched, centers, center, panel, jumbo, toggleAdvancedSearchFunc, updateCenterFieldFunc, fetchSearchedCenterFunc, updateCenterSortOrderFunc, updateCenterSortItemFunc, updateCenterLimitFunc } = this.props;
+    const { showAdvanced, fetching, fetched, centers, center, panel, jumbo, toggleAdvancedSearchFunc, updateCenterFieldFunc, fetchSearchedCenterFunc, updateCenterSortOrderFunc, updateCenterSortItemFunc, updateCenterLimitFunc, loggedIn, resetCenterEntriesFunc } = this.props;
     return (
       <form className="search-form">
         <div>
@@ -33,30 +34,29 @@ class CenterSearch extends React.Component {
             </span>
           </div>
 
-          <div className="row">
-            <div className="form-group">
-              <label htmlFor="pageSize">Page size</label>
-              <select className="form-control" id="pageSize" defaultValue='10' onChange={ e => {
-                updateCenterLimitFunc(parseInt(e.target.value, 10));
-              }}>
-                <option>5</option>
-                <option>10</option>
-                <option>20</option>
-                <option>30</option>
-                <option>40</option>
-                <option>50</option>
-                <option>60</option>
-                <option>70</option>
-                <option>80</option>
-                <option>90</option>
-                <option>100</option>
-              </select>
-            </div>
-
-            <div>
+          {loggedIn? (
+            <div className="row">
+              <div className="form-group">
+                <label htmlFor="pageSize">Page size</label>
+                <select className="form-control form-control-sm" id="pageSize" defaultValue='10' onChange={ e => {
+                  updateCenterLimitFunc(parseInt(e.target.value, 10));
+                }}>
+                  <option>5</option>
+                  <option>10</option>
+                  <option>20</option>
+                  <option>30</option>
+                  <option>40</option>
+                  <option>50</option>
+                  <option>60</option>
+                  <option>70</option>
+                  <option>80</option>
+                  <option>90</option>
+                  <option>100</option>
+                </select>
+              </div>
               <div className="form-group">
                 <label htmlFor="sortItem">sort by</label>
-                <select className="form-control" id="sortItem" defaultValue='Price' onChange={ e => {
+                <select className="form-control form-control-sm" id="sortItem" defaultValue='Price' onChange={ e => {
                   switch (e.target.value) {
                     case 'Price': {
                       updateCenterSortItemFunc('centerRate');
@@ -74,28 +74,31 @@ class CenterSearch extends React.Component {
                   <option>Price</option>
                   <option>Capacity</option>
                 </select>
+                <div>
+                  <div className="form-check">
+                    <input className="form-check-input" type="radio" name="order" id="orderAscending" value="INC" onChange={ e => {
+                      updateCenterSortOrderFunc(e.target.value);
+                    }}/>
+                    <label className="form-check-label" htmlFor="orderAscending">
+                      low to high
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input className="form-check-input" type="radio" name="order" id="orderDescending" value="DESC" onChange={ e => {
+                      updateCenterSortOrderFunc(e.target.value);
+                    }}/>
+                    <label className="form-check-label" htmlFor="orderDescending">
+                      high to low
+                    </label>
+                  </div>
+                </div>
               </div>
+            </div>  
+          ):(
+            null
+          )}
 
-              <div className="form-group">
-                <div className="form-check">
-                  <input className="form-check-input" type="radio" name="order" id="orderAscending" value="INC" onChange={ e => {
-                    updateCenterSortOrderFunc(e.target.value);
-                  }}/>
-                  <label className="form-check-label" htmlFor="orderAscending">
-                    low to high
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input className="form-check-input" type="radio" name="order" id="orderDescending" value="DESC" onChange={ e => {
-                    updateCenterSortOrderFunc(e.target.value);
-                  }}/>
-                  <label className="form-check-label" htmlFor="orderDescending">
-                    high to low
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
+          
 
           <div className="space-top">
             <button type="button" className="search-toggle" onClick={ e => {
@@ -107,9 +110,9 @@ class CenterSearch extends React.Component {
             </button>
           </div>
         </div>
-        <CenterAdvancedSearch showAdvanced={showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} center={center}/>
+        <CenterAdvancedSearch loggedIn={loggedIn} showAdvanced={showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} center={center}/>
         {panel?(
-            <CenterSearchResult fetching={fetching} fetched={fetched} centers={centers}/>
+            <CenterSearchResult resetCenterEntriesFunc={resetCenterEntriesFunc} fetching={fetching} fetched={fetched} centers={centers}/>
           ):(
             null
           )
@@ -121,6 +124,7 @@ class CenterSearch extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const loggedIn = validateUser(state.user.userToken, state.user.accountUser.userId);
   return {
     showAdvanced: state.app.advancedSearch,
     fetching: state.center.fetching,
@@ -129,6 +133,7 @@ const mapStateToProps = (state, ownProps) => {
     center: state.center.center,
     panel: ownProps.panel,
     jumbo: ownProps.jumbo,
+    loggedIn,
   }
 }
 
@@ -140,6 +145,10 @@ const mapDispatchToProps = (dispatch) => {
       advancedSearchFields.forEach((field)=> {
         dispatch(updateCenterField(field, ""));
       })
+    },
+
+    resetCenterEntriesFunc: () => {
+      dispatch(resetCenterEntries());
     },
 
     updateCenterFieldFunc: (field, value) => {

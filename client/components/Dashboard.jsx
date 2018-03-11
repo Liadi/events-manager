@@ -44,16 +44,16 @@ class Dashboard extends React.Component {
             <Navbar userType={userType} userLogoutFunc={userLogoutFunc} />
             <main className="container-fluid d-flex">
               <DashboardSideBar changeDashboardContentFunc={changeDashboardContentFunc} userType={userType}/>
-              <div id="tabContentContainer">
-                  <TimelineContent show={ dashboardContent === 'timeline' ? true : false } events={events} />
+              <div id="tabContentContainer" className='col-lg-6 col-md-8 mx-auto'>
+                <TimelineContent show={ dashboardContent === 'timeline' ? true : false } events={events} />
 
-                  <ActivitiesContent show={ dashboardContent === 'activities' ? true : false } logs={logs} logPage={logPage} logLimit={logLimit} logTotalElement={logTotalElement} changeLogPageFunc={changeLogPageFunc} />
-                  
-                  <HowContent show={ dashboardContent === 'how' ? true : false } />
-                  
-                  <ProfileContent show={ dashboardContent === 'profile' ? true : false } userFieldError={userFieldError} infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} modalContent={modalContent} showModal={showModal} updateUserFieldFunc={updateUserFieldFunc} closeInfoTabFunc={closeInfoTabFunc} closeModalFunc={closeModalFunc} updateUserFunc={updateUserFunc} passwordConfirmed={passwordConfirmed} user={user} />
-                  
-                  <SecurityContent show={ dashboardContent === 'security' ? true : false } updateUserFieldFunc={updateUserFieldFunc} />
+                <ActivitiesContent show={ dashboardContent === 'activities' ? true : false } logs={logs} logPage={logPage} logLimit={logLimit} logTotalElement={logTotalElement} changeLogPageFunc={changeLogPageFunc} />
+                
+                <HowContent show={ dashboardContent === 'how' ? true : false } />
+                
+                <ProfileContent show={ dashboardContent === 'profile' ? true : false } userFieldError={userFieldError} infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} modalContent={modalContent} showModal={showModal} updateUserFieldFunc={updateUserFieldFunc} closeInfoTabFunc={closeInfoTabFunc} closeModalFunc={closeModalFunc} updateUserFunc={updateUserFunc} passwordConfirmed={passwordConfirmed} user={user} />
+                
+                <SecurityContent show={ dashboardContent === 'security' ? true : false } updateUserFieldFunc={updateUserFieldFunc} />
               </div>
             </main>
 
@@ -98,16 +98,9 @@ const mapDispatchToProps = (dispatch, state) => {
       dispatch(changeDashboardContent(newContent));
       switch (newContent) {
         case 'timeline': {
-          const now = new Date(Date.now());
-          const farthestFuture = new Date(now.getFullYear() + 2, now.getMonth(), now.getDate());
-          const timeFrame = JSON.stringify({
-            low: now,
-            high: farthestFuture,
-          });
           const tempParams = {
             limit: 10,
             sort: JSON.stringify({item: 'eventTime', order: 'INC'}),
-            eventTime: timeFrame,
           }
           dispatch(fetchEvents(tempParams));
           break;

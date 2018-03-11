@@ -29,44 +29,49 @@ const CenterAdvancedSearch = (props) => {
             updateCenterFieldFunc('centerCity', e.target.value.trim());
           }}/>
         </div>
+        
+        <div className="form-group col-md-2">
+          <label htmlFor="searchCapacity" className="form-label-sm">Capacity</label>
+          <input type="text" className="form-control form-control-sm" id="searchCapacity" onChange={ e => {
+            if (String(parseInt(e.target.value)) === e.target.value || e.target.value === "") {
+              updateCenterFieldFunc('centerCapacity', e.target.value);
+            } else {
+              e.target.value = center.centerCapacity || "";
+            }
+          }}/>
+        </div>
       </div>
-      <div className="form-group">
-        <label htmlFor="searchCapacity" className="form-label-sm">Capacity</label>
-        <input type="text" className="form-control form-control-sm col-md-4" id="searchCapacity" onChange={ e => {
-          if (String(parseInt(e.target.value)) === e.target.value || e.target.value === "") {
-            updateCenterFieldFunc('centerCapacity', e.target.value);
-          } else {
-            e.target.value = center.centerCapacity || "";
-          }
-        }}/>
-      </div>
-      <div className="row container div-price-range">
-        <div className="form-group card col-md-4">
-          <label htmlFor="searchPrice"><h6>Price Range</h6></label>
-          <div className="form-row mx-auto" id="searchPrice">
-            <div className="form-group col-sm-6">
-              <label htmlFor="searchPriceLower" className="form-label-sm">From</label>
-              <input type="text" className="form-control form-control-sm" id="searchPriceLower" onChange={ e => {
-                if (String(parseInt(e.target.value)) === e.target.value || e.target.value === "") {
-                  updateCenterFieldFunc('centerPriceLower', e.target.value);
-                } else {
-                  e.target.value = center.centerPriceLower || "";
-                }
-              }}/>
-            </div>
-            <div className="form-group col-sm-6">
-              <label htmlFor="searchPriceUpper" className="form-label-sm">To</label>
-              <input type="text" className="form-control form-control-sm" id="searchPriceUpper" onChange={ e => {
-                if (String(parseInt(e.target.value)) === e.target.value || e.target.value === "") {
-                  updateCenterFieldFunc('centerPriceUpper', e.target.value);
-                } else {
-                  e.target.value = center.centerPriceUpper || "";
-                }
-              }}/>
-            </div>
+
+      {props.loggedIn?(
+        <div className='form-row'>
+
+          <div className="form-group col-md-2">
+            <label htmlFor="searchPriceLower" className="form-label-sm">Price</label>
+            <input type="text" className="form-control form-control-sm" placeholder='Lower' id="searchPriceLower" onChange={ e => {
+              if (String(parseInt(e.target.value)) === e.target.value || e.target.value === "") {
+                updateCenterFieldFunc('centerPriceLower', e.target.value);
+              } else {
+                e.target.value = center.centerPriceLower || "";
+              }
+            }}/>
           </div>
-        </div>    
-      </div>  
+          
+          <div className="form-group col-md-2">
+            <label htmlFor="searchPriceUpper" className="form-label-sm">Price</label>
+            <input type="text" className="form-control form-control-sm" placeholder='Upper' id="searchPriceUpper" onChange={ e => {
+              if (String(parseInt(e.target.value)) === e.target.value || e.target.value === "") {
+                updateCenterFieldFunc('centerPriceUpper', e.target.value);
+              } else {
+                e.target.value = center.centerPriceUpper || "";
+              }
+            }}/>
+          </div>
+
+        </div>
+      ):(
+        null
+      )}
+        
     </div>
   )
 }

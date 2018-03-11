@@ -18,9 +18,26 @@ class SingleCenter extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;
+    this.state = {
+      showCenterOrEventForm: null,
+      showSlatedEvents: false,
+    };
     this.id = props.match.params.id;
     this.amenitiesInputElement = undefined;
-    this.centerUpdateToggleInput = undefined;
+    this.toggleSlatedEvents = this.toggleSlatedEvents.bind(this);
+    this.setShowCenterOrEventForm = this.setShowCenterOrEventForm.bind(this);
+  }
+
+  toggleSlatedEvents(){
+    this.setState((prevState, props) => ({
+      showSlatedEvents: !prevState.showSlatedEvents,
+    }));
+  }
+
+  setShowCenterOrEventForm(nextValue) {
+    this.setState((prevState, props) => ({
+      showCenterOrEventForm: nextValue,
+    }));
   }
 
   componentWillUnmount() {
@@ -32,7 +49,7 @@ class SingleCenter extends React.Component {
   }
 
   render() {
-    const { centersArray, userType, loggedIn, centerUpdateForm, eventForm, slatedEvents, userLogoutFunc, toggleCenterUpdateFormFunc, toggleEventFormFunc, toggleSlatedEventsFunc, modalViewMode, modalCallbackFunc, closeModalFunc, modalContent, showModal, initiateDeleteCenterFunc } = this.props;
+    const { centersArray, userType, loggedIn, centerUpdateForm, eventForm, slatedEvents, userLogoutFunc, modalViewMode, modalCallbackFunc, closeModalFunc, modalContent, showModal, initiateDeleteCenterFunc } = this.props;
 
     let currentCenter;
 
@@ -54,61 +71,40 @@ class SingleCenter extends React.Component {
               )
             }
             <main className="container">
-              { loggedIn ?
+              { (loggedIn && userType === 'admin' && this.state.showCenterOrEventForm !== 'center')?
+                
                 (
-                  <label className="custom-control custom-checkbox d-block">
-                    <input type="checkbox" className="custom-control-input" id="slatedEventsToggle" onChange={ e => {
-                      toggleSlatedEventsFunc();
-                    }}/>
-                    <span className="custom-control-indicator"></span>
-                    { (slatedEvents)?
-                      (
-                        <span className="custom-control-description">Hide slated events</span>
-                      ):(
-                        <span className="custom-control-description">Show slated events</span>
-                      )
-                    }
-                  </label>
+                  <input type='button' className='btn space-right-sm' value='Update Center' onClick= { e => {
+                    this.setShowCenterOrEventForm('center');
+                  }}/>
                 ):(
                   null
                 )
-              }
-              
-              { (loggedIn && userType === 'admin')?
-                (<label className="custom-control custom-checkbox d-block">
-                  <input type="checkbox" className="custom-control-input" id="updateFormToggle" onChange={ e => {
-                    this.centerUpdateToggleInput = e.target;
-                    toggleCenterUpdateFormFunc();
-                  }}/>
-                  <span className="custom-control-indicator"></span>
-                  { centerUpdateForm?
-                    (
-                      <span className="custom-control-description">Close Update Form</span>
-                    ):
-                    (
-                      <span className="custom-control-description">Update Center</span>
-                    )
-                  }
-                </label>): (null)
               }
 
-              { loggedIn?
+              { loggedIn && this.state.showCenterOrEventForm !== 'event'?
                 (
-                    <input type='button' className='btn' value={ eventForm? ('Close Form'):('Add Event')} onClick= { e => {
-                      toggleEventFormFunc()
+                    <input type='button' className='btn' value='Add Event' onClick= { e => {
+                      this.setShowCenterOrEventForm('event');
                     }}/>
                 ):(
                   null
                 )
               }
-              { eventForm?
+              
+              { this.state.showCenterOrEventForm === 'event'?
                 (
-                  <EventForm centerId={this.id} type='create'/>
+                  <EventForm centerId={this.id} closeFormFunc={this.setShowCenterOrEventForm} type='create'/>
                 ):(
                   null
                 )
               }
               
+              {this.state.showCenterOrEventForm === 'center'? (
+                <div>
+                  <CenterForm type="update" closeFormFunc={this.setShowCenterOrEventForm} centerId={currentCenter.id} centerUpdateToggleInput={this.centerUpdateToggleInput} />
+                </div>
+              ) : (null)}
               
               <div className="card container" id="card-div">
                 <div className="card-center row" id="center-descrip">
@@ -183,8 +179,27 @@ class SingleCenter extends React.Component {
 
                 </div>
               </div>
+              { loggedIn ?
+                (
+                  <label className="custom-control custom-checkbox space-top">
+                    <input type="checkbox" className="custom-control-input" id="slatedEventsToggle" onChange={ e => {
+                      this.toggleSlatedEvents();
+                    }}/>
+                    <span className="custom-control-indicator"></span>
+                    { (this.state.showSlatedEvents)?
+                      (
+                        <span className="custom-control-description">Hide slated events</span>
+                      ):(
+                        <span className="custom-control-description">Show slated events</span>
+                      )
+                    }
+                  </label>
+                ):(
+                  null
+                )
+              }
               {
-                slatedEvents?
+                this.state.showSlatedEvents?
                 (
                   <div>
                     {
@@ -216,15 +231,9 @@ class SingleCenter extends React.Component {
                 (null)
               }
 
-              {centerUpdateForm ? (
-                <div>
-                  <CenterForm type="update" centerId={currentCenter.id} centerUpdateToggleInput={this.centerUpdateToggleInput} />
-                </div>
-              ) : (null)}
-
               { userType === 'admin' ? 
                 (
-                  <input type='button' className="btn btn-delete grp-btn" value='Delete' onClick={ e => {
+                  <input type='button' className="btn btn-delete grp-btn space-top" value='Delete' onClick={ e => {
                     e.preventDefault();
                     initiateDeleteCenterFunc(currentCenter.id);
                   }}/>

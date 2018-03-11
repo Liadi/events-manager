@@ -47,8 +47,8 @@ class Landing extends React.Component {
               </div>
             </nav>
 
-            <main className="container mx-auto">
-              <img src="../images/top.png" alt="yap" className="img-fluid"/>
+            <main className="container">
+              <h1 className='display-2 text-center rider'>Your <span>Events</span> in <span className=''>1</span> place</h1>
               <div className="container">
                 <CenterSearch panel={true} jumbo={true}/>
                 <div id="caro-div" className="carousel slide mx-auto img-thumbnail" data-ride="carousel">
@@ -82,6 +82,21 @@ class Landing extends React.Component {
                     <span className="carousel-control-next-icon"></span>
                   </a>
                 </div>
+
+                <div>
+                  <img src="../images/Landing-Page-Large-Image.jpeg" alt="Los Angeles" className="img-fluid" />
+                </div>
+
+                <div className='card col-md-2'>
+                  <img className='card-img-top tile-img' src='../images/1520520751029CompassPark.png' alt=''/>
+                  <div className='card-body'>
+                    <h5 className='card-title'>Classic</h5>
+                    <p className='card-text'>Expeerience Beuty at it's peak</p>
+
+                  </div>
+                </div>
+
+
               </div>
             </main>
 

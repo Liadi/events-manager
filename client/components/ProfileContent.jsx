@@ -14,21 +14,21 @@ const ProfileContent = (props) => {
           Profile
         </h4>
         <div>
-          <div className="row profile-div">
-            <div className="col-sm-5 profile-field"><h5>First Name</h5></div>
-            <div className="col-sm-7 profile-value">{user.userFirstName}</div>
+          <div className='row space-top'>
+            <div className='col-md-3 col-sm-5 col-xs-6 col-12'><h5>First Name</h5></div>
+            <div className='col-md-9 col-sm-7 col-xs-6 col-12'>{user.userFirstName}</div>
           </div>
-          <div className="row profile-div">
-            <div className="col-sm-5 profile-field"><h5>Last Name</h5></div>
-            <div className="col-sm-7 profile-value">{user.userLastName}</div>
+          <div className='row space-top'>
+            <div className='col-md-3 col-sm-5 col-xs-6 col-12'><h5>Last Name</h5></div>
+            <div className='col-md-9 col-sm-7 col-xs-6 col-12'>{user.userLastName  || 'Nill'}</div>
           </div>
-          <div className="row profile-div">
-            <div className="col-sm-5 profile-field"><h5>Email</h5></div>
-            <div className="col-sm-7 profile-value">{user.userEmail}</div>
+          <div className='row space-top'>
+            <div className='col-md-3 col-sm-5 col-xs-6 col-12'><h5>Email</h5></div>
+            <div className='col-md-9 col-sm-7 col-xs-6 col-12'>{user.userEmail}</div>
           </div>
-          <div className="row profile-div">
-            <div className="col-sm-5 profile-field"><h5>Telephone</h5></div>
-            <div className="col-sm-7 profile-value">{user.userPhoneNumber}</div>
+          <div className='row space-top'>
+            <div className='col-md-3 col-sm-5 col-xs-6 col-12'><h5>Telephone</h5></div>
+            <div className='col-md-9 col-sm-7 col-xs-6 col-12'>{user.userPhoneNumber || 'Nill'}</div>
           </div>
 
         </div>

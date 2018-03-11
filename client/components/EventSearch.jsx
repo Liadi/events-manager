@@ -35,7 +35,7 @@ class EventSearch extends React.Component {
           <div className="row">
             <div className="form-group">
               <label htmlFor="pageSize">Page size</label>
-              <select className="form-control" id="pageSize" defaultValue='10' onChange={ e => {
+              <select className="form-control form-control-sm" id="pageSize" defaultValue='10' onChange={ e => {
                 updateEventLimitFunc(parseInt(e.target.value, 10));
               }}>
                 <option>5</option>

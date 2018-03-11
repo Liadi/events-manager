@@ -72,6 +72,19 @@ class CenterForm extends React.Component {
               {(type === "update")?(null):(<h3>Create Center</h3>)}
               <div className="row" id={(type === "update")?(null):("")}>
                 <form className="card row col-sm-9 col-lg-7 mx-auto">
+
+                  { this.props.closeFormFunc?
+                    (
+                      <button className='btn badge badge-warning space-top-sm form-cancel' onClick={ e => {
+                        e.preventDefault();
+                        this.props.closeFormFunc(null);
+                      }}>
+                        <i className="fa fa-times"></i>
+                      </button>
+                    ):(
+                      null
+                    )
+                  }
                   
                   <div className='container-fluid'>
                     <div className='row'>
@@ -266,27 +279,30 @@ class CenterForm extends React.Component {
 
                   <div className="d-flex flex-wrap" id="imagesContainer" ref={container => this.imageContainer=container } ></div>
 
-                  {(type === "update")?(
+
                     <div className="d-flex  justify-content-end grp form-group">
-                      <button type="button" className="btn btn-warning grp-btn space-right-sm" onClick={ e => {
-                        e.preventDefault();
-                        updateCenterFunc(parseInt(centerId, 10), this.imgArray, this.srcArray);
-                      }}>Update</button>
+                      {(type === "update")?
+                        (
+                          <button type="button" className="btn btn-warning grp-btn space-right-sm" onClick={ e => {
+                            e.preventDefault();
+                            updateCenterFunc(parseInt(centerId, 10), this.imgArray, this.srcArray);
+                          }}>Update</button>
+                        ):(
+                          <button type="button" className="btn grp-btn space-right-sm" onClick={ e => {
+                            e.preventDefault();
+                            createCenterFunc(this.imgArray, this.srcArray);
+                          }}>Create</button>
+                        )
+                      }
                       <button type="reset" className="btn btn-danger grp-btn" onClick={ e => {
+                        const imageNodes = this.imageContainer.children;
+                        while (this.imageContainer.firstChild) {
+                          this.imageContainer.removeChild(this.imageContainer.firstChild);
+                        }
+                        this.imgArray = [];
                         resetFunc();
                       }}>Clear</button>
                     </div>
-                  ):(
-                    <div className="d-flex  justify-content-end grp form-group">
-                      <button type="button" className="btn grp-btn space-right-sm" onClick={ e => {
-                        e.preventDefault();
-                        createCenterFunc(this.imgArray, this.srcArray);
-                      }}>Create</button>
-                      <button type="reset" className="btn btn-danger grp-btn" onClick={ e => {
-                        resetFunc();
-                      }}>Clear</button>
-                    </div>
-                  )}
 
                 </form>
               </div>

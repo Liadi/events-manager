@@ -2,6 +2,10 @@ textarea {
   resize: none;
 }
 
+.form-cancel{
+  max-width: 20px;
+}
+
 .btn-delete {
   background-color: tomato;
   color: white;
@@ -37,19 +41,17 @@ textarea {
 .outputBox {
   max-height: 200px;
   overflow: auto;
+  padding:5px;
   margin: 0px 10px 10px;
+  background-color: #E7FFE7;
 }
 
-.profile-field {
-  border-right: 5px solid $primary-color;
+.link {
+  text-decoration: none;
 }
 
-.profile-value {
-  padding-left: 50px;
-}
-
-.profile-div {
-  padding-bottom: 40px;
+.link:hover {
+  text-decoration: none;;
 }
 
 .nav-item {
@@ -71,6 +73,12 @@ textarea {
   margin: 0px 10px 10px;
 }
 
+.tile-img {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+}
+
 #page-control {
   margin-top: 30px;
   margin-bottom: 20px; 
@@ -82,6 +90,12 @@ textarea {
 #currentPage {
   border-color: orange;
   border-style: solid;
+}
+
+h1 {
+  span {
+    color: $primary-color;
+  }
 }
 
 main {
@@ -110,6 +124,11 @@ footer {
   }  */      
 }
 
+@media screen and (max-width: 780px) {
+  .rider {
+    display: none;
+  }
+}
 
 @media screen and (min-width: 720px) {
   .p-footer {

@@ -25,31 +25,29 @@ const Navbar = (props) => {
                 <li className="nav-item navbar-item mx-auto">
                   <Link className="nav-link" to='/events'>Events</Link>
                 </li>
+                { props.userType === 'regular'?
+                  (
+                    <li className="nav-item navbar-item mx-auto">
+                      <Link className="nav-link" to="/events">My Events</Link>
+                    </li>
+                  ):(
+                    <li className="nav-item navbar-item mx-auto">
+                      <Link className="nav-link" to="create-admin">Add Admin</Link>
+                    </li>
+                  )
+                }
+                <li className="nav-item navbar-item mx-auto">
+                  <input value='Log out' type='button' className="nav-link btn btn-light" 
+                    onClick={ e => {
+                      props.userLogoutFunc();
+                    }
+                  }/>
+                </li>
               </ul>
             ):(
               null
             )
           }
-          <li className="nav-item navbar-item mx-auto dropdown">
-            <div className="nav-link" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i className="fa fa-user fa-1x mx-auto" aria-hidden="true"></i>
-            </div>
-            <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-              { props.userType === 'regular'?
-                (
-                  <Link className="dropdown-item" to="events">My Events</Link>
-                ):(
-                  <Link className="dropdown-item" to="create-admin">Add Admin</Link>
-                )
-              }
-              <div className="dropdown-divider"></div>
-              <button className="dropdown-item" 
-                onClick={ e => {
-                  props.userLogoutFunc();
-                }
-              }>Log out</button>
-            </div>
-          </li>
         </ul>
       </div>
     </nav>

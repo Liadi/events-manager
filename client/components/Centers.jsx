@@ -54,16 +54,18 @@ class Centers extends React.Component {
                         <p className="card-text">{center.centerDescription}</p>
                         <div className="d-flex justify-content-end">
                           <div className="d-flex flex-wrap justify-content-center grp">
-                            <Link to="./create-event" className="btn btn-add grp-btn">
-                              Add Event
-                            </Link>
+                            
                             <Link className="btn btn-primary grp-btn" to={`/centers/${center.id}`}>
                               View
                             </Link>
-                            <input type='button' className="btn btn-delete grp-btn" value='Delete' onClick={ e => {
-                              e.preventDefault();
-                              initiateDeleteCenterFunc(center.id);
-                            }}/>
+                            { userType === 'admin'?(
+                              <input type='button' className="btn btn-delete grp-btn" value='Delete' onClick={ e => {
+                                e.preventDefault();
+                                initiateDeleteCenterFunc(center.id);
+                              }}/>
+                            ):(
+                              null
+                            )}
                           </div>
                         </div>
                       </div>

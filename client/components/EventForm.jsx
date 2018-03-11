@@ -37,6 +37,20 @@ class EventForm extends React.Component {
           
         <div className="row">
           <form className="main-form card col-sm-9 col-lg-6 mx-auto">
+
+            { this.props.closeFormFunc?
+              (
+                <button className='btn badge badge-warning space-top-sm form-cancel' onClick={ e => {
+                  e.preventDefault();
+                  this.props.closeFormFunc(null);
+                }}>
+                  <i className="fa fa-times"></i>
+                </button>
+              ):(
+                null
+              )
+            }
+            
             <div className="form-group section-group">
               <label htmlFor="eventName"><h6>Name</h6></label>
               <input type="text" className="form-control" id="eventName" placeholder={"E.g " + this.props.userName.toUpperCase() + "\'s Birthday Party"} onChange={ e => {

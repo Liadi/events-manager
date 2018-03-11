@@ -9,9 +9,10 @@ module.exports = {
     return function(dispatch, getState) {  
       let eventParams;
       const temp = getState().event.event.eventTime;
+      console.log('temp => ', temp);
       if (temp.year && temp.month && temp.date) { 
         let tempDate = temp.year.toString()
-        
+        console.log('tempDate A => ', tempDate);
         if (temp.month.toString().length === 1) {
           tempDate += '-0' + temp.month.toString()
         } else {
@@ -23,8 +24,10 @@ module.exports = {
           tempDate += '-' + temp.date.toString()
         } 
         eventParams = Object.assign({}, getState().event.event, {eventTime: tempDate})
+        console.log('tempDate => ', tempDate);
       } else {
         eventParams = Object.assign({}, getState().event.event, {eventTime: undefined});
+        console.log('out')
       }
 
       eventParams = {

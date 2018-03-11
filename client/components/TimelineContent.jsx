@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
 class TimelineContent extends React.Component {
   constructor(props) {
@@ -16,16 +17,25 @@ class TimelineContent extends React.Component {
       return (
         <div id="timelineContent" className="tab-content">
           <h4>
-            Timeline
+            Events
           </h4>
           <div className="tabSection">
-            <h5>
-              Events
-            </h5>
             <div>
               {events.map((event) => 
-                <div key={event.id} className='container'>
-                  <p className="mx-auto col-9">{event.eventName}</p>
+                <div className="card mx-auto card-center" key={event.id}>
+                  <div className="card-body">
+                    <span className={`badge badge-pill ${event.eventStatus==='upcoming'?('badge-warning'):(null)} ${event.eventStatus==='successful'?('badge-secondary'):(null)} ${event.eventStatus==='cancelled'?('badge-danger'):(null)}`}>{event.eventStatus}</span>
+                    <h4 className="card-title">{event.eventName}</h4>
+                    <h6 className="card-subtitle mb-2">{event.center.centerName}</h6>
+                    <h6 className="card-subtitle mb-2 text-muted">{event.center.centerAddress}</h6>
+                    <div className="d-flex justify-content-end">
+                      <div className="d-flex flex-wrap justify-content-center grp">
+                        <Link className="btn btn-primary grp-btn" to={`/events/${event.id}`}>
+                          View
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
