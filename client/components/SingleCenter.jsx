@@ -28,6 +28,14 @@ class SingleCenter extends React.Component {
     this.setShowCenterOrEventForm = this.setShowCenterOrEventForm.bind(this);
   }
 
+  componentWillUnmount() {
+    this.props.unmountFunc();
+  }
+
+  componentWillMount() {
+    this.props.fetchCurrentCenterFunc(this.id);
+  }
+
   toggleSlatedEvents(){
     this.setState((prevState, props) => ({
       showSlatedEvents: !prevState.showSlatedEvents,
@@ -38,14 +46,6 @@ class SingleCenter extends React.Component {
     this.setState((prevState, props) => ({
       showCenterOrEventForm: nextValue,
     }));
-  }
-
-  componentWillUnmount() {
-    this.props.unmountFunc();
-  }
-
-  componentWillMount() {
-    this.props.fetchCurrentCenterFunc(this.id);
   }
 
   render() {

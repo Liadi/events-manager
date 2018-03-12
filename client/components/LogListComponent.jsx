@@ -29,7 +29,7 @@ class LogListComponent extends React.Component {
   render() {
     const {log} = this.props;
     return (
-      <div className='card mx-auto card-center'>
+      <div className='card mx-auto card-center space-top'>
         <div className="card-body">
           <h5>{log.action + ' ' + log.entity + ' ' + log.entityName}</h5>
           <h6>{new Date(log.createdAt).toDateString() + ' ' + new Date(log.createdAt).toTimeString()}</h6>

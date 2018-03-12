@@ -5,8 +5,6 @@ import { closeInfoTab, closeModal, resetAppState, changeDashboardContent, openMo
 import { fetchEvents } from '../actions/eventAction';
 import { resetUserFields, userLogout, updateUser, updateUserField, deleteUserFieldError, userFieldInputError, updatePasswordConfirmation, deleteAccount } from '../actions/userAction';
 
-import { changeLogPage, fetchUserLogs, resetLogFields, restLogEntries } from '../actions/logAction';
-
 import Footer from './Footer.jsx';
 import Navbar from './Navbar.jsx';
 import TimelineContent from './TimelineContent.jsx';
@@ -47,11 +45,11 @@ class Dashboard extends React.Component {
               <div id="tabContentContainer" className='col-lg-6 col-md-8 mx-auto'>
                 <TimelineContent show={ dashboardContent === 'timeline' ? true : false } events={events} />
 
-                <ActivitiesContent show={ dashboardContent === 'activities' ? true : false } logs={logs} logPage={logPage} logLimit={logLimit} logTotalElement={logTotalElement} changeLogPageFunc={changeLogPageFunc} />
+                <ActivitiesContent show={ dashboardContent === 'activities' ? true : false } />
                 
                 <HowContent show={ dashboardContent === 'how' ? true : false } />
                 
-                <ProfileContent show={ dashboardContent === 'profile' ? true : false } userFieldError={userFieldError} infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} modalContent={modalContent} showModal={showModal} updateUserFieldFunc={updateUserFieldFunc} closeInfoTabFunc={closeInfoTabFunc} closeModalFunc={closeModalFunc} updateUserFunc={updateUserFunc} initiateDeleteAccountFunc={initiateDeleteAccountFunc} passwordConfirmed={passwordConfirmed} user={user} modalCallbackFunc={modalCallbackFunc} modalViewMode={modalViewMode}/>
+                <ProfileContent show={ dashboardContent === 'profile' ? true : false } />
                 
                 <SecurityContent show={ dashboardContent === 'security' ? true : false } updateUserFieldFunc={updateUserFieldFunc} />
               </div>
@@ -74,9 +72,6 @@ const mapStateToProps = (state) => {
   const loggedIn = validateUser(state.user.userToken, state.user.accountUser.userId);
   const userType = state.user.accountUser.userType;
   return {
-    logPage: state.log.page,
-    logLimit: state.log.limit,
-    logTotalElement: state.log.totalElement,
     userFieldError: state.user.error.fieldError,
     user: state.user.accountUser,
     passwordConfirmed: state.user.passwordConfirmed,
@@ -100,25 +95,13 @@ const mapDispatchToProps = (dispatch, state) => {
 
     changeDashboardContentFunc: (newContent) => {
       dispatch(changeDashboardContent(newContent));
-      switch (newContent) {
-        case 'timeline': {
-          const tempParams = {
-            limit: 10,
-            sort: JSON.stringify({item: 'eventTime', order: 'INC'}),
-          }
-          dispatch(fetchEvents(tempParams));
-          break;
+      if (newContent === 'timeline') {
+        const tempParams = {
+          limit: 10,
+          sort: JSON.stringify({item: 'eventTime', order: 'INC'}),
         }
-        case 'activities': {
-          const tempParams = {
-            limit: 10,
-            sort: JSON.stringify({item: 'createdAt', order: 'DESC'}),
-          }
-          dispatch(fetchUserLogs(tempParams));
-          break;
-        }
+        dispatch(fetchEvents(tempParams));
       }
-
     },
 
     closeInfoTabFunc: () => {
@@ -194,8 +177,6 @@ const mapDispatchToProps = (dispatch, state) => {
     unmountDashboardFunc: () => {
       dispatch(resetUserFields());
       dispatch(resetAppState());
-      dispatch(resetLogFields());
-      dispatch(restLogEntries());
     },
 
 
@@ -207,11 +188,6 @@ const mapDispatchToProps = (dispatch, state) => {
 
     userLogoutFunc: () => {
       dispatch(userLogout());
-    },
-
-    changeLogPageFunc: (page) => {
-      dispatch(changeLogPage(page));
-      dispatch(fetchUserLogs());
     },
   }
 }
