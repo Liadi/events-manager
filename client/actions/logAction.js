@@ -46,6 +46,16 @@ module.exports = {
     }
   },
 
+  updateLogField(field, value) {
+    return {
+      type: 'UPDATE_LOG_FIELD',
+      payload: {
+        field,
+        value,
+      },
+    } 
+  },
+
   updateLogLimit(limit) {
     return {
       type: 'UPDATE_LOG_LIMIT',

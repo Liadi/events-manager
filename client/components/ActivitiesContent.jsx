@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PageControl from './PageControl.jsx';
 import LogListComponent from './LogListComponent.jsx';
-import { changeLogPage, fetchUserLogs, resetLogFields, restLogEntries } from '../actions/logAction';
+import { changeLogPage, fetchUserLogs, resetLogFields, restLogEntries, updateLogField } from '../actions/logAction';
 
 class ActivitiesContent extends React.Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class ActivitiesContent extends React.Component {
   }
 
   render() {
-    const { show, logs, logPage, logLimit, changeLogPageFunc, logTotalElement } = this.props;
+    const { show, currentUserId, logField, logs, logPage, logLimit, changeLogPageFunc, logTotalElement, updateLogFieldFunc } = this.props;
     if (show) {
       return (
         <div id="timelineContent" className="tab-content">
@@ -42,14 +42,54 @@ class ActivitiesContent extends React.Component {
           }}>Settings</button>
           { this.state.showSettings?
             (
-              <form>
-                <select>
-                  <option>My logs</option>
-                  <option>All logs</option>
-                </select>
-                <input />
-                <button className='btn space-right-sm'>Submit</button>
-                <button type='reset' className='btn btn-danger'>Reset</button>
+              <form className='container'>
+                <div className='row'>
+                  <label htmlFor='myLogsCheck' className="custom-control custom-checkbox col-sm-3 space-top-sm">
+                    <input type="checkbox" checked={logField.userId === currentUserId? (true):(false) } className="custom-control-input" id="myLogsCheck" onChange={ e => {
+                      if (logField.userId === currentUserId){
+                        updateLogFieldFunc('userId', null);
+                      } else {
+                        updateLogFieldFunc('userId', currentUserId);
+                      }
+                    }}/>
+                    <span className="custom-control-indicator"></span>
+                    <span className="custom-control-description">My logs</span>
+                  </label>
+                </div>                
+
+                <div className='row space-top'>
+                  <div className="col-sm-3 space-bottom-sm space-right-sm">
+                    <label htmlFor='logEntityControl'>Entity</label>
+                    <select value={logField.entity || 'All'} id='logEntityControl' className="form-control form-control-sm" onChange={ e => {
+                      if (e.target.value === 'All'){
+                        updateLogFieldFunc('entity', null);
+                      } else {
+                        updateLogFieldFunc('entity', e.target.value);
+                      }
+                    }}>
+                      <option>All</option>
+                      <option>Center</option>
+                      <option>Event</option>
+                      <option>User</option>
+                    </select>
+                  </div>
+
+                  <div className="col-sm-3 space-bottom-sm space-right-sm">
+                    <label htmlFor='logActionControl'>Action</label>
+                    <select value={logField.action || 'All'} id='logActionControl' className="form-control form-control-sm" onChange={e => {
+                      if (e.target.value === 'All'){
+                        updateLogFieldFunc('action', null);
+                      } else {
+                        updateLogFieldFunc('action', e.target.value);
+                      }
+                    }}>
+                      <option>All</option>
+                      <option>POST</option>
+                      <option>UPDATE</option>
+                      <option>DELETE</option>
+                    </select>
+                  </div>
+                </div>
               </form>
             ):(
               null
@@ -72,19 +112,22 @@ const mapStateToProps = (state) => {
   return {
     infoTabMsg: state.app.infoTabMsg,
     showInfoTab: state.app.showInfoTab,
+    currentUserId: state.user.accountUser.userId,
     logs: state.log.logs,
-    log: state.log.log,
+    logField: state.log.log,
     logPage: state.log.page,
     logLimit: state.log.limit,
     logTotalElement: state.log.totalElement,
-    
   }
 }
 
-const mapDispatchToProps = (dispatch, state) => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    mountFunc: () => {
-      dispatch(fetchUserLogs());
+    dispatch,
+
+    updateLogFieldFunc: (field, value) => {
+      dispatch(updateLogField(field, value));
+      dispatchProps.dispatch(fetchUserLogs());
     },
 
     unmountFunc: () => {
@@ -99,7 +142,21 @@ const mapDispatchToProps = (dispatch, state) => {
   }
 }
 
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  return {
+    ...stateProps,
+    ...dispatchProps,
+    ...ownProps,
+    
+    mountFunc: () => {
+      dispatchProps.dispatch(updateLogField('userId', stateProps.currentUserId));
+      dispatchProps.dispatch(fetchUserLogs());
+    },
+  }
+}
+
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps,
 )(ActivitiesContent);

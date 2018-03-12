@@ -39,6 +39,16 @@ export default function reducer(
       }
     }
 
+    case 'UPDATE_LOG_FIELD': {
+      let temp = state.log;
+      temp = {...temp};
+      temp[action.payload.field] = action.payload.value;
+      return {
+        ...state,
+        log: {...temp},
+      }
+    }
+
     case 'FETCH_LOGS_PENDING': {
       return {
         ...state,
