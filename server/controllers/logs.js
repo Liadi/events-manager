@@ -8,13 +8,11 @@ module.exports = {
     const tempParams = req.query;
     const finalParams = {};
     for (let field in tempParams) {
-      if (tempParams.hasOwnProperty(field) && tempParams[field] !== undefined && tempParams[field] !== '') {
+      if (tempParams.hasOwnProperty(field) && tempParams[field]) {
         finalParams[field] = tempParams[field];
       }
     }
-    Log.findAll({
-      where: {userId: req.userId}
-    }).then((logs) => {
+    Log.findAll().then((logs) => {
       return findLogs(logs, finalParams, res);
     }).catch((error) => {
       return res.status(400).json({
@@ -32,6 +30,12 @@ const searchLogs = ((logs, finalParams) => {
     let foundIndex = 0;
     for (let key in finalParams) {
       switch(key) {
+        case 'userId': {
+          if (parseInt(log[key]) !== parseInt(finalParams[key])) {
+            foundIndex = -1;
+          }
+          break;
+        }
         case 'entity': {
           if (log[key] !== finalParams[key]){
             foundIndex = -1;

@@ -118,6 +118,29 @@ module.exports = {
     }
 	},
 
+  fetchAllUsers(tempParams = {}) {
+    return function(dispatch, getState) {
+      const userParams = {
+        ...getState().user.user,
+        limit: getState().user.limit,
+        sort: JSON.stringify(getState().user.sort),
+        page: getState().user.page,
+        ...tempParams,
+      }
+      dispatch({
+        type: 'FETCH_USERS',
+        payload: axios({
+          method: 'get',
+          url: 'api/v1/users',
+          params: userParams,
+          headers: {
+            'token': getState().user.userToken,
+          }
+        }),
+      });
+    }
+  },
+
   userLogin() {
     return function(dispatch, getState) {
       if (!getState().user.user.userEmail) {
@@ -375,7 +398,6 @@ module.exports = {
           }
         });
       } else {
-        console.log('user fields => ', userField);
         dispatch({
           type: 'UPDATE_USER',
           payload: axios({
@@ -410,9 +432,51 @@ module.exports = {
     }
   },
 
+  changeUserPage(page) {
+    return {
+      type: 'CHANGE_USER_PAGE',
+      payload: {
+        page,
+      }
+    }
+  },
+
+  updateUserLimit(limit) {
+    return {
+      type: 'UPDATE_USER_LIMIT',
+      payload: {
+        limit,
+      }
+    }
+  },
+
+  updateUserSortItem(item) {
+    return {
+      type: 'UPDATE_USER_SORT',
+      payload: {
+        item,
+      }
+    }
+  },
+
+  updateUserSortOrder(order) {
+    return {
+      type: 'UPDATE_USER_SORT',
+      payload: {
+        order,
+      }
+    }
+  },
+
   resetUserFields() {
     return {
       type: 'RESET_USER_FIELDS',
+    }
+  },
+
+  resetUserEntries() {
+    return {
+      type: 'RESET_USER_ENTRIES',
     }
   },
 }

@@ -306,7 +306,7 @@ module.exports = {
     const finalParams = {};
 
     for (let field in tempParams) {
-      if (tempParams.hasOwnProperty(field) && tempParams[field] !== undefined && tempParams[field] !== '') {
+      if (tempParams.hasOwnProperty(field) && tempParams[field]) {
         finalParams[field] = tempParams[field];
       }
     }

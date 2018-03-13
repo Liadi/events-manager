@@ -69,30 +69,31 @@ router.get('/', (req, res) => {
   });
 });
 
-// users route
+// user routes
 router.post('/users/signup/', cleanData, userMiddlewares.validateUserFields, userControllers.createUser);
 router.post('/users/signin/', cleanData, userControllers.signIn);
 router.put('/users/', cleanData, userMiddlewares.validateToken, userControllers.modifyUser);
 router.delete('/accounts/', cleanData, userMiddlewares.validateToken, userControllers.deleteAccount);
+router.get('/users/', cleanData, userMiddlewares.validateToken, userMiddlewares.isAdmin, userControllers.getAllUsers);
 
 // add admin
 router.post('/users/admin', cleanData, userMiddlewares.validateToken, userMiddlewares.isAdmin, userMiddlewares.validateUserFields, userControllers.createUser);
 
-// centers route
+// centers routes
 router.post('/centers/', upload.array('file'), cleanData, userMiddlewares.validateToken, userMiddlewares.isAdmin, centerControllers.createCenter);
 router.put('/centers/:centerId', upload.array('file'), cleanData, userMiddlewares.validateToken, userMiddlewares.isAdmin, centerControllers.modifyCenter);
 router.get('/centers/:centerId', cleanData, userMiddlewares.determineUser, centerControllers.getCenter);
 router.delete('/centers/:centerId', cleanData, userMiddlewares.validateToken, userMiddlewares.isAdmin, centerControllers.deleteCenter);
 router.get('/centers/', cleanData, userMiddlewares.determineUser, centerControllers.getAllCenters);
 
-// event route
+// event routes
 router.post('/events/', cleanData, userMiddlewares.validateToken, eventMiddlewares.validateEventFields, eventControllers.createEvent);
 router.put('/events/:eventId', cleanData, userMiddlewares.validateToken, eventMiddlewares.validateEventFields, eventControllers.modifyEvent);
 router.get('/events/:eventId', cleanData, userMiddlewares.validateToken, eventControllers.getEvent);
 router.delete('/events/:eventId', cleanData, userMiddlewares.validateToken, eventControllers.deleteEvent);
 router.get('/events/', cleanData, userMiddlewares.validateToken, eventMiddlewares.validateEventFields, eventControllers.getAllEvents);
 
-// log
+// log routes
 router.get('/logs/', cleanData, userMiddlewares.validateToken, logControllers.getAllLogs);
 
 export default router;

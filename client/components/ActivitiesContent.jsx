@@ -127,7 +127,8 @@ const mapDispatchToProps = (dispatch) => {
 
     updateLogFieldFunc: (field, value) => {
       dispatch(updateLogField(field, value));
-      dispatchProps.dispatch(fetchUserLogs());
+      dispatch(changeLogPage(1));
+      dispatch(fetchUserLogs());
     },
 
     unmountFunc: () => {
@@ -150,6 +151,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     
     mountFunc: () => {
       dispatchProps.dispatch(updateLogField('userId', stateProps.currentUserId));
+      dispatchProps.dispatch(changeLogPage(1));
       dispatchProps.dispatch(fetchUserLogs());
     },
   }

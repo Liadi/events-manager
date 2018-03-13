@@ -9,10 +9,8 @@ module.exports = {
     return function(dispatch, getState) {  
       let eventParams;
       const temp = getState().event.event.eventTime;
-      console.log('temp => ', temp);
       if (temp.year && temp.month && temp.date) { 
         let tempDate = temp.year.toString()
-        console.log('tempDate A => ', tempDate);
         if (temp.month.toString().length === 1) {
           tempDate += '-0' + temp.month.toString()
         } else {
@@ -24,10 +22,8 @@ module.exports = {
           tempDate += '-' + temp.date.toString()
         } 
         eventParams = Object.assign({}, getState().event.event, {eventTime: tempDate})
-        console.log('tempDate => ', tempDate);
       } else {
         eventParams = Object.assign({}, getState().event.event, {eventTime: undefined});
-        console.log('out')
       }
 
       eventParams = {
@@ -37,8 +33,6 @@ module.exports = {
         page: getState().event.page,
         ...tempParams,
       }
-
-      console.log('eventParams => ', eventParams);
 
       dispatch({
         type: 'FETCH_EVENTS',
@@ -177,9 +171,7 @@ module.exports = {
 
   deleteEvent(eventId){
     const func = () => {
-      console.log("WHOOOOOOOP! Event, ", eventId, " just about to get deleted. :( ");
       return function(dispatch, getState) {
-        console.log('should dispatch');
         dispatch({
           type: 'DELETE_EVENT',
           payload: axios({

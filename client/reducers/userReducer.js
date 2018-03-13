@@ -1,6 +1,7 @@
 export default function reducer(
   state={
     user: {},
+    users: [],
     accountUser: {},
     userToken: null,
     passwordConfirmed: true,
@@ -10,8 +11,15 @@ export default function reducer(
       fieldError: {},
       serverError: null,
     },
+    page: 1,
+    limit: 10,
+    totalElement: 0,
+    sort: {
+      item: 'createdAt',
+      order: 'INC',
+    },
   }, action) {
-
+  
   switch (action.type) {
     case 'USER_FIELD_ERROR': {
       let temp = state.error.fieldError;
@@ -46,23 +54,36 @@ export default function reducer(
       }
     }
 
-    // case 'CLEAR_USER': {
-    //   return {
-    //     ...state,
-    //     user: {},
-    //     error: Object.assign({}, state.error, {fieldError: new Map()}), 
-    //   }
-    // }
-
     case 'RESET_USER_FIELDS': {
       return {
         ...state,
         user: {},
+        page: 1,
+        limit: 10,
+        totalElement: 0,
+        sort: {
+          item: 'createdAt',
+          order: 'DESC',
+        },
         error: {
           fieldError: {},
           serverError: null,
         },
-        logs: [],
+      }
+    }
+
+    case 'RESET_USER_ENTRIES': {
+      return {
+        ...state,
+        users: [],
+        page: 1,
+        limit: 10,
+        totalElement: 0,
+        sort: {
+          item: 'createdAt',
+          order: 'INC',
+        },
+        error: Object.assign({}, state.error, {serverError: null}),
       }
     }
 
@@ -96,6 +117,35 @@ export default function reducer(
         fetching: false,
         fetched: true,
         error: Object.assign({}, state.error, {serverError: null}),
+      }
+    }
+
+    case 'FETCH_USERS_PENDING': {
+      return {
+        ...state,
+        fetching: true,
+        fetched: false,
+      }
+    }
+
+    case 'FETCH_USERS_REJECTED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: false,
+        error: Object.assign({}, state.error, {serverError: action.payload.message || 'Server error. If this persists contact our technical team'}),
+        users: [],
+      }
+    }
+
+    case 'FETCH_USERS_FULFILLED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        error: Object.assign({}, state.error, {serverError: null}),
+        users: action.payload.data.users,
+        totalElement: action.payload.data.totalElement,
       }
     }
 
@@ -236,29 +286,26 @@ export default function reducer(
       }
     }
 
-    case 'DELETE_USER_PENDING' : {
+    case 'CHANGE_USER_PAGE': {
       return {
         ...state,
-        user: {
-          id: action.payload,
-        },
+        page: action.payload.page,
       }
     }
 
-    case 'DELETE_USER_REJECTED' : {
+    case 'UPDATE_USER_LIMIT': {
       return {
         ...state,
-        user: {
-          id: action.payload,
-        },
+        limit: action.payload.limit,
       }
     }
 
-    case 'DELETE_USER_FULFILLED' : {
+    case 'UPDATE_USER_SORT': {
       return {
         ...state,
-        user: {
-          id: action.payload,
+        sort: {
+          item: action.payload.item || state.sort.item,
+          order: action.payload.order || state.sort.order,
         },
       }
     }

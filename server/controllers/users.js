@@ -271,4 +271,117 @@ module.exports = {
   deleteUser(req, res) {
 
   },
+
+  getAllUsers(req, res) {
+    const tempParams = req.query;
+    const finalParams = {};
+
+    for (let field in tempParams) {
+      if (tempParams.hasOwnProperty(field) && tempParams[field]) {
+        finalParams[field] = tempParams[field];
+      }
+    }
+
+    User.findAll({
+      attributes: ['id', 'userFirstName', 'userLastName', 'userEmail', 'userPhoneNumber', 'userType', 'createdAt', 'updatedAt'],
+    }).then((users) => {
+      return findUsers(users, finalParams, res);
+    })
+    .catch((error) => {
+      return res.status(400).json({
+        message: 'invalid query',
+        status: false,
+      });
+    });
+  },
 };
+
+
+const searchUsers = ((users, finalParams) => {
+  const retUsers = [];
+  for(let i in users) {
+    const user = users[i];
+    let foundIndex = 0;
+    for (let key in finalParams) {
+      switch(key) {
+        case 'userFirstName': {
+          if (user[key].toLowerCase() !== finalParams[key].toLowerCase()){
+            foundIndex = -1;
+          }
+          break;
+        }
+
+        case 'userLastName': {
+          if (user[key].toLowerCase() !== finalParams[key].toLowerCase()){
+            foundIndex = -1;
+          }
+          break;
+        }
+
+        case 'userEmail': {
+          if (user[key].toLowerCase() !== finalParams[key].toLowerCase()){
+            foundIndex = -1;
+          }
+          break;
+        }
+
+        case 'userPhoneNumber': {
+          if (user[key] !== finalParams[key]){
+            foundIndex = -1;
+          }
+          break;
+        }
+
+        case 'userType': {
+          if (user[key].toLowerCase() !== finalParams[key]){
+            foundIndex = -1;
+          }
+          break;
+        }
+      }
+      if (foundIndex === -1) {
+        break;
+      }
+    }
+    if (foundIndex !== -1) {
+      // user['searchIndex'] = foundIndex;
+      retUsers.push(user);
+    }
+  }
+  return retUsers;
+});
+
+const findUsers = ((users, finalParams, res ) => {
+  let retUsers = searchUsers(users, finalParams);
+  if (finalParams['sort']) {
+    const tempSortObj = JSON.parse(finalParams['sort']);
+    retUsers.sort((a, b) => {
+      if (tempSortObj['order'] === 'INC'){
+        return a[tempSortObj['item']] - b[tempSortObj['item']];
+      }
+      return b[tempSortObj['item']] - a[tempSortObj['item']];
+    });
+  }
+  const totalElement = retUsers.length;
+  const [limit, page] = [parseInt(finalParams['limit']), parseInt(finalParams['page'])];
+  if ( limit && limit > 0) {
+    if (page && page > 0) {
+      retUsers = retUsers.slice((page - 1) * limit, page * limit);
+    } else {
+      retUsers = retUsers.slice(0, limit);
+    }
+  }
+
+  if (retUsers.length > 0){
+    return res.status(200).json({
+      message: 'users found',
+      status: true,
+      users: retUsers,
+      totalElement,
+    });
+  }
+  return res.status(404).json({
+    message: 'users not found',
+    status: false,
+  })
+});

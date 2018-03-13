@@ -29,6 +29,10 @@ export default function reducer(
           item: 'createdAt',
           order: 'DESC',
         },
+        error: {
+          fieldError: {},
+          serverError: null,
+        },
       }        
     }
 

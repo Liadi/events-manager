@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { closeInfoTab, closeModal, resetAppState, changeDashboardContent, openModal } from '../actions/appAction';
 import { fetchEvents } from '../actions/eventAction';
 import { resetUserFields, userLogout, updateUser, updateUserField, deleteUserFieldError, userFieldInputError, updatePasswordConfirmation, deleteAccount } from '../actions/userAction';
-
 import Footer from './Footer.jsx';
 import Navbar from './Navbar.jsx';
 import TimelineContent from './TimelineContent.jsx';
@@ -12,6 +11,7 @@ import HowContent from './HowContent.jsx';
 import ProfileContent from './ProfileContent.jsx';
 import SecurityContent from './SecurityContent.jsx';
 import ActivitiesContent from './ActivitiesContent.jsx';
+import UsersContent from './UsersContent.jsx';
 import DashboardSideBar from './DashboardSideBar.jsx';
 import '../style/dashboard.scss';
 import { validateUser, validateEmail } from '../util';
@@ -29,7 +29,12 @@ class Dashboard extends React.Component {
 
   componentWillMount() {
     if (this.props.loggedIn) {
-      (this.props.userType === 'admin')?this.props.changeDashboardContentFunc('activities'):this.props.changeDashboardContentFunc('timeline');
+      this.props.userType === 'admin'? 
+      (
+        this.props.changeDashboardContentFunc('activities')
+      ):(
+        this.props.changeDashboardContentFunc('timeline')
+      );
     }
   }
 
@@ -47,6 +52,8 @@ class Dashboard extends React.Component {
 
                 <ActivitiesContent show={ dashboardContent === 'activities' ? true : false } />
                 
+                <UsersContent show={ dashboardContent === 'users' ? true : false } />
+
                 <HowContent show={ dashboardContent === 'how' ? true : false } />
                 
                 <ProfileContent show={ dashboardContent === 'profile' ? true : false } />
