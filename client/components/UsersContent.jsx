@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PageControl from './PageControl.jsx';
 import UserListComponent from './UserListComponent.jsx';
 import { changeUserPage, fetchAllUsers, resetUserFields, resetUserEntries, updateUserField } from '../actions/userAction';
+import { redirectToLogs } from '../actions/logAction';
 
 class UsersContent extends React.Component {
   constructor(props) {
@@ -29,7 +30,7 @@ class UsersContent extends React.Component {
   }
 
   render() {
-    const { show, currentUserId, userField, users, userPage, userLimit, changeUserPageFunc, userTotalElement, updateUserFieldFunc, fetchAllUsersFunc, resetSearchFieldFunc } = this.props;
+    const { show, currentUserId, userField, users, userPage, userLimit, changeUserPageFunc, userTotalElement, updateUserFieldFunc, fetchAllUsersFunc, resetSearchFieldFunc, redirectToLogsFunc } = this.props;
     if (show) {
       return (
         <div id="timelineContent" className="tab-content">
@@ -109,7 +110,7 @@ class UsersContent extends React.Component {
             )}
           {users.length > 0?(<div>
             {users.map((user) =>
-              <UserListComponent key={user.id} user={user}/>
+              <UserListComponent key={user.id} user={user} redirectToLogsFunc={redirectToLogsFunc}/>
             )}
           </div>):(<h4>No user found. If you find this strange reset search fields and set page index to 1</h4>) }
           <PageControl page={userPage} limit={userLimit} changePageFunc={changeUserPageFunc} totalElement={userTotalElement} />
@@ -161,6 +162,11 @@ const mapDispatchToProps = (dispatch) => {
 
     updateUserFieldFunc: (field, value) => {
       dispatch(updateUserField(field, value));
+    },
+
+    redirectToLogsFunc: (userId, userFirstName) => {
+      dispatch(redirectToLogs(userId, userFirstName));
+
     },
 
     resetSearchFieldFunc: () => {

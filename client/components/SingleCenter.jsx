@@ -18,14 +18,17 @@ class SingleCenter extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;
+    this.currentCenter = undefined;
     this.state = {
       showCenterOrEventForm: null,
       showSlatedEvents: false,
+      imageIndex: 0,
     };
     this.id = props.match.params.id;
     this.amenitiesInputElement = undefined;
     this.toggleSlatedEvents = this.toggleSlatedEvents.bind(this);
     this.setShowCenterOrEventForm = this.setShowCenterOrEventForm.bind(this);
+    this.changeImageIndex = this.changeImageIndex.bind(this);
   }
 
   componentWillUnmount() {
@@ -48,20 +51,30 @@ class SingleCenter extends React.Component {
     }));
   }
 
+  changeImageIndex(forward) {
+    if (forward) {
+      this.setState((prevState, props) => ({
+        imageIndex: ((this.currentCenter.images.length + (prevState.imageIndex + 1)) % this.currentCenter.images.length),
+      }));
+    } else {
+      this.setState((prevState, props) => ({
+        imageIndex: ((this.currentCenter.images.length + (prevState.imageIndex - 1)) % this.currentCenter.images.length),
+      }));
+    }
+  }
+
   render() {
     const { centersArray, userType, loggedIn, centerUpdateForm, eventForm, slatedEvents, userLogoutFunc, modalViewMode, modalCallbackFunc, closeModalFunc, modalContent, showModal, initiateDeleteCenterFunc } = this.props;
 
-    let currentCenter;
-
     for (let i in centersArray){
       if (centersArray[i].id === parseInt(this.id)) {
-        currentCenter = centersArray[i];
+        this.currentCenter = centersArray[i];
       }
     }
 
     return (
       <Route render={() => (
-        currentCenter ? (
+        this.currentCenter ? (
           <div>
             {loggedIn?
               (
@@ -70,9 +83,9 @@ class SingleCenter extends React.Component {
                 null
               )
             }
+            
             <main className="container">
               { (loggedIn && userType === 'admin' && this.state.showCenterOrEventForm !== 'center')?
-                
                 (
                   <input type='button' className='btn space-right-sm' value='Update Center' onClick= { e => {
                     this.setShowCenterOrEventForm('center');
@@ -102,44 +115,44 @@ class SingleCenter extends React.Component {
               
               {this.state.showCenterOrEventForm === 'center'? (
                 <div>
-                  <CenterForm type="update" closeFormFunc={this.setShowCenterOrEventForm} centerId={currentCenter.id} centerUpdateToggleInput={this.centerUpdateToggleInput} />
+                  <CenterForm type="update" closeFormFunc={this.setShowCenterOrEventForm} centerId={this.currentCenter.id} centerUpdateToggleInput={this.centerUpdateToggleInput} />
                 </div>
               ) : (null)}
               
               <div className="card container" id="card-div">
                 <div className="card-center row" id="center-descrip">
                     
-                  <div className="card-body col-lg-6">
-                    <h3 className="card-title">{currentCenter.centerName}</h3>
+                  <div className="card-body col-lg-5">
+                    <h3 className="card-title">{this.currentCenter.centerName}</h3>
                   
                     <h4 className="card-subtitle mb-2 text-muted space-top">Address</h4>
-                    <h5 className="card-text">{currentCenter.centerAddress}</h5>
+                    <h5 className="card-text">{this.currentCenter.centerAddress}</h5>
                     
                     <h4 className="card-subtitle mb-2 text-muted space-top">Country</h4>
-                    <h5 className="card-text">{currentCenter.centerCountry}</h5>
+                    <h5 className="card-text">{this.currentCenter.centerCountry}</h5>
                     
                     <h4 className="card-subtitle mb-2 text-muted space-top">State</h4>
-                    <h5 className="card-text">{currentCenter.centerState}</h5>
+                    <h5 className="card-text">{this.currentCenter.centerState}</h5>
                     
                     <h4 className="card-subtitle mb-2 text-muted space-top">Center Capacity</h4>
-                    <h5 className="card-text">{currentCenter.centerCapacity}</h5>
+                    <h5 className="card-text">{this.currentCenter.centerCapacity}</h5>
                     {loggedIn?
                       (
                         <div>
                           <h4 className="card-subtitle mb-2 text-muted space-top">Rate(per day)</h4>
-                          <h5 className="card-text">#{currentCenter.centerRate}</h5>
+                          <h5 className="card-text">#{this.currentCenter.centerRate}</h5>
                           <h4 className="card-subtitle mb-2 text-muted space-top">Status</h4>
-                          <h5 className="card-text">{currentCenter.centerStatus}</h5>
+                          <h5 className="card-text">{this.currentCenter.centerStatus}</h5>
                         </div>
                       ):(
                         null
                       )
                     }
-                    { currentCenter.centerAmenities && currentCenter.centerAmenities.length > 0?
+                    { this.currentCenter.centerAmenities && this.currentCenter.centerAmenities.length > 0?
                       (
                         <div>
                           <h4 className="card-subtitle mb-2 text-muted space-top">Amenities</h4>
-                          <AmenitiesList center={currentCenter}/>
+                          <AmenitiesList center={this.currentCenter}/>
                         </div>
                       ):(
                        null
@@ -148,32 +161,34 @@ class SingleCenter extends React.Component {
                     
                   </div>
                   
-                  <div className="col-lg-6">
+                  <div className="col-lg-7">
                     <div className='mx-auto space-top'>
-                      <h5 className="card-title">{currentCenter.centerDescription}</h5>
+                      <h5 className="card-title">{this.currentCenter.centerDescription}</h5>
                     </div>
 
-                    { currentCenter.images?(
-                      <div className='d-flex flex-row flex-wrap justify-content-around space-top'>
-                        {
+                    { (this.currentCenter.images && this.currentCenter.images.length > 0)?(
+                      <figure className='fig-res mx-auto'>
+                        <button className='btn btn-link' id='left-arrow' onClick={ e => {
+                          e.preventDefault();
+                          this.changeImageIndex(false);
 
-                          currentCenter.images.map((image, index) => {
-                            let path = '/images/'+ image.imagePath;
-                            return (
-                              <figure key={image.id} className='fig-res'>
-                                <img src={path} title={image.imageDescription} alt={image.imageDescription} className='img-res' />
-                              </figure>
-                              
-                            )
-                          })
-                        }
-                      </div>  
+                        }}>
+                          <i className='fa fa-angle-left fa-3x'></i>
+                        </button>
+                        
+                        <button className='btn btn-link' id='right-arrow' onClick={ e => {
+                          e.preventDefault();
+                          this.changeImageIndex(true);
+                        }}>
+                          <i className='fa fa-angle-right fa-3x'></i>
+                        </button>
+
+                        <img src={'/images/'+ this.currentCenter.images[this.state.imageIndex].imagePath} alt={this.currentCenter.images[this.state.imageIndex].imageDescription} title={this.currentCenter.images[this.state.imageIndex].imageDescription} className='img-res' />
+                      </figure>
                     ):(
                       null
                     )
                     }
-
-                    
                   </div>
 
 
@@ -198,12 +213,11 @@ class SingleCenter extends React.Component {
                   null
                 )
               }
-              {
-                this.state.showSlatedEvents?
+              {this.state.showSlatedEvents?
                 (
                   <div>
                     {
-                      (currentCenter.events.length > 0) ?
+                      (this.currentCenter.events.length > 0) ?
                       (
                         <table className="table table-striped" id="eventTable">
                           <thead>
@@ -213,7 +227,7 @@ class SingleCenter extends React.Component {
                             </tr>
                           </thead>
                           <tbody>
-                            {currentCenter.events.map((event, index) =>
+                            {this.currentCenter.events.map((event, index) =>
                               <tr key={event.id}>
                                 <th scope="row">{parseInt(index, 10) + 1}</th>
                                 <td>{new Date(event.eventTime).toDateString()}</td>
@@ -235,13 +249,14 @@ class SingleCenter extends React.Component {
                 (
                   <input type='button' className="btn btn-delete grp-btn space-top" value='Delete' onClick={ e => {
                     e.preventDefault();
-                    initiateDeleteCenterFunc(currentCenter.id);
+                    initiateDeleteCenterFunc(this.currentCenter.id);
                   }}/>
                 ):(
                   null
                 )
               }
             </main>
+            
             <ModalView mode={modalViewMode} callback={modalCallbackFunc} closeModalFunc={closeModalFunc} modalContent={modalContent} showModal={showModal}/>
             <Footer />
           </div>

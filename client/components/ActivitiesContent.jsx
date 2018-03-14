@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PageControl from './PageControl.jsx';
 import LogListComponent from './LogListComponent.jsx';
-import { changeLogPage, fetchUserLogs, resetLogFields, restLogEntries, updateLogField } from '../actions/logAction';
+import { changeLogPage, fetchUserLogs, resetLogFields, resetLogEntries, updateLogField } from '../actions/logAction';
 
 class ActivitiesContent extends React.Component {
   constructor(props) {
@@ -29,13 +29,37 @@ class ActivitiesContent extends React.Component {
   }
 
   render() {
-    const { show, currentUserId, logField, logs, logPage, logLimit, changeLogPageFunc, logTotalElement, updateLogFieldFunc } = this.props;
+    const { show, currentUserId, logField, logs, logPage, logLimit, changeLogPageFunc, logTotalElement, updateLogFieldFunc, resetFunc } = this.props;
     if (show) {
       return (
         <div id="timelineContent" className="tab-content">
-          <h4>
-            Activities So far
-          </h4>
+          { (logField.userId === currentUserId)?(
+            <h4>
+              Your Activities
+            </h4>  
+          ):(
+            null
+          )}
+
+          { (logField.userId && logField.userId !== currentUserId)?(
+            <div className='alert alert-info'>
+              <button className='btn badge badge-warning' onClick={resetFunc}>
+                <i className="fa fa-times"></i>
+              </button>
+              <h4>
+                {`${logField.userFirstName}'s Activities`}
+              </h4>
+            </div>
+          ):(
+            null
+          )}
+
+          { (!logField.userId)?(
+            <h4>All user activities</h4>
+          ):(
+            null
+          )}
+
           <button className='btn' onClick={ e =>{
             e.preventDefault();
             this.toggleShowSettings();
@@ -133,7 +157,7 @@ const mapDispatchToProps = (dispatch) => {
 
     unmountFunc: () => {
       dispatch(resetLogFields());
-      dispatch(restLogEntries());
+      dispatch(resetLogEntries());
     },
 
     changeLogPageFunc: (page) => {
@@ -152,6 +176,14 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     mountFunc: () => {
       dispatchProps.dispatch(updateLogField('userId', stateProps.currentUserId));
       dispatchProps.dispatch(changeLogPage(1));
+      dispatchProps.dispatch(fetchUserLogs());
+    },
+
+    resetFunc: () => {
+      dispatchProps.dispatch(resetLogFields());
+      dispatchProps.dispatch(resetLogEntries());
+      dispatchProps.dispatch(changeLogPage(1));
+      dispatchProps.dispatch(updateLogField('userId', stateProps.currentUserId));
       dispatchProps.dispatch(fetchUserLogs());
     },
   }

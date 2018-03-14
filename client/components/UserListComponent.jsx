@@ -31,7 +31,7 @@ class UserListComponent extends React.Component {
 
           <button className='btn' onClick={ e => {
             e.preventDefault();
-            // redirectToLogsFunc(user.id);
+            redirectToLogsFunc(user.id, user.userFirstName);
           }}>
             User Logs
           </button>

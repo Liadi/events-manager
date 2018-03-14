@@ -8,7 +8,7 @@ module.exports = {
     }
   },
 
-  restLogEntries() {
+  resetLogEntries() {
     return {
       type: 'RESET_LOG_ENTRIES',
     }
@@ -35,6 +35,53 @@ module.exports = {
         }),
       });
     }
+  },
+
+  redirectToLogs(userId, userFirstName){
+    return function(dispatch, getState) {
+      dispatch({
+        type: 'CHANGE_DASHBOARD_CONTENT',
+        payload: {
+          newContent: 'activities',
+        }
+      });
+
+      dispatch({
+        type: 'UPDATE_LOG_FIELD',
+        payload: {
+          field: 'userId',
+          value: userId,
+        },
+      });
+
+      dispatch({
+        type: 'UPDATE_LOG_FIELD',
+        payload: {
+          field: 'userFirstName',
+          value: userFirstName,
+        },
+      });
+      
+      const logParams = {
+        ...getState().log.log,
+        limit: getState().log.limit,
+        sort: JSON.stringify(getState().log.sort),
+        page: getState().log.page,
+      }
+      dispatch({
+        type: 'FETCH_LOGS',
+        payload: axios({
+          method: 'get',
+          url: 'api/v1/logs',
+          params: logParams,
+          headers: {
+            'token': getState().user.userToken,
+          }
+        }),
+      });
+
+    }
+
   },
 
   changeLogPage(page) {
