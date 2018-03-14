@@ -11,6 +11,7 @@ import SingleCenter from './SingleCenter.jsx';
 import Events from './Events.jsx';
 import SingleEvent from './SingleEvent.jsx';
 import CreateAdminUser from './CreateAdminUser.jsx';
+import UnderConstruction from './UnderConstruction.jsx';
 import NotFound from './NotFound.jsx';
 import history from '../history';
 
@@ -28,6 +29,7 @@ const App = () => {
         <Route exact path='/events' component={Events}/>
         <Route exact path='/events/:id' component={SingleEvent}/>
         <Route exact path='/create-admin' component={CreateAdminUser}/>
+        <Route exact path='/under-construction' component={UnderConstruction}/>
         <Route path="*" component={NotFound}/>
       </Switch>
     </Router>

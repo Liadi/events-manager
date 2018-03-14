@@ -84,27 +84,39 @@ class Landing extends React.Component {
                   </a>
                 </div>
 
-                <div>
-                  <img src="../images/Landing-Page-Large-Image.jpeg" alt="Los Angeles" className="img-fluid" />
-                </div>
+                <div className='row mx-auto col-12 space-top'>
+                  <div className='col-md-8 col-lg-6 mx-auto space-top'>
+                    <h3>What we offer</h3>
+                    <ul>
+                      <li><h4>Over 70 centers and counting</h4></li>
+                      <li className='space-top-sm'><h4>Across 10 cities</h4></li>
+                      <li className='space-top-sm'><h4>Seemlessly Create/Manage Events</h4></li>
+                    </ul>
+                  </div>
 
-                <div className='card col-md-2'>
-                  <img className='card-img-top tile-img' src='../images/1520520751029CompassPark.png' alt=''/>
-                  <div className='card-body'>
-                    <h5 className='card-title'>Classic</h5>
-                    <p className='card-text'>Expeerience Beuty at it's peak</p>
-
+                  <div className='col-md-8 col-lg-6 mx-auto space-top'>
+                    <h3>Partner with us</h3>
+                    <ul>
+                      <li><h4>Host & Manage Your Centers</h4></li>
+                      <li className='space-top-sm'><h4>Choose your plan</h4></li>
+                      <li className='space-top-sm'><h4>Access our API for free</h4></li>
+                    </ul>
                   </div>
                 </div>
 
+                <div className='space-top'>
+                  <h3 className='text-center'>Our Venues</h3>
+                  <img src="../images/Landing-Page-Large-Image.jpeg" alt="Los Angeles" className="img-fluid" />
+                </div>
 
               </div>
             </main>
 
             <ModalView closeModalFunc={closeModalFunc} modalContent={modalContent} showModal={showModal}/>
 
-            <Footer />
+            <Footer />  
           </div>
+
         )
       )}/>
     )

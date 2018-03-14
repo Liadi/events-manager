@@ -1,3 +1,7 @@
+.text-center {
+  text-align: center;
+}
+
 textarea {
   resize: none;
 }
@@ -48,6 +52,7 @@ textarea {
 
 .link {
   text-decoration: none;
+  color: black;
 }
 
 .link:hover {
@@ -99,30 +104,27 @@ h1 {
 }
 
 main {
-  min-height: calc(100vh - 125.5px);
+  min-height: calc(100vh - 125px);
 }
+
 
 footer {
   border-top: 5px solid $secondary-color;
-  height: 60px;
-  padding-top: 10px;
   background-color: $primary-color;
 
-  p {
-    margin-right: 20px;
-    color: $secondary-color;
+  .footer-bottom {
+    margin-left: 5px;
+    margin-right: 5px;
+    position: relative;
+    bottom: 0;
+    left: 0;
+  }
 
-    a {
-      color: $secondary-color;
-    }
+  p {
+    margin-bottom: 5px;
   }
 }
 
-@media screen and (min-width: 800px) {
-  /* main {
-    min-height: calc(100vh - 125.5px);
-  }  */      
-}
 
 @media screen and (max-width: 780px) {
   .rider {
@@ -131,31 +133,21 @@ footer {
 }
 
 @media screen and (min-width: 720px) {
-  .p-footer {
-    font-size: 100%;
-  }
+  
 }
 
 @media screen and (min-width: 420px) {
-  .p-footer {
-    font-size: 90%;
-  }
+  
 }
 
 @media screen and (min-width: 320px) {
-  .p-footer {
-    font-size: 80%;
-  }
+  
 }
 
 @media screen and (max-width: 319px) {
-  .p-footer {
-    font-size: 70%;
-  }
+  
 }
 
 @media screen and (max-width: 250px) {
-  .p-footer {
-    font-size: 60%;
-  }
+  
 }
