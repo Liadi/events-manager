@@ -35,7 +35,7 @@ class UsersContent extends React.Component {
       return (
         <div id="timelineContent" className="tab-content">
           <h4>
-            Placeholder
+            Users' Info
           </h4>
           <button className='btn' onClick={ e => {
             e.preventDefault();

@@ -6,7 +6,6 @@ import InfoTab from './InfoTab.jsx';
 import { closeInfoTab, resetAppState } from '../actions/appAction';
 import { updateUserField, deleteUserFieldError, userLogin, resetUserFields } from '../actions/userAction';
 import { validateUser } from '../util';
-const inputFieldSet = new Set();
 
 class Login extends React.Component {
   constructor(props) {
@@ -18,7 +17,7 @@ class Login extends React.Component {
     this.props.unmountFunc();
   }
   render() {
-    const { infoTabMsg, showInfoTab, closeInfoTabFunc, userFieldError, updateUserFieldFunc, userLoginFunc, loggedIn } = this.props;
+    const { user, infoTabMsg, showInfoTab, closeInfoTabFunc, userFieldError, updateUserFieldFunc, userLoginFunc, loggedIn } = this.props;
     return (
       <Route render={props => (
         loggedIn ? (
@@ -39,9 +38,8 @@ class Login extends React.Component {
                   <form>
                     <div className="form-group board-element">
                       <label htmlFor="inputEmail">Email address</label>
-                      <input type="text" id="inputEmail" onChange={ e => {
+                      <input type="text" value={user.userEmail || ''} id="inputEmail" onChange={ e => {
                           updateUserFieldFunc('userEmail', e.target.value.trim());
-                          inputFieldSet.add(e.target);
                         }
                       }
                       className={
@@ -51,9 +49,8 @@ class Login extends React.Component {
                     </div>
                     <div className="form-group board-element">
                       <label htmlFor="confirmPassword">Password</label>
-                      <input type="password" id="confirmPassword" onChange={ e => {
+                      <input type="password" value={user.userPassword || ''} id="confirmPassword" onChange={ e => {
                           updateUserFieldFunc('userPassword', e.target.value.trim());
-                          inputFieldSet.add(e.target);
                         }
                       }
                       className={
@@ -63,7 +60,7 @@ class Login extends React.Component {
                     </div>
                     <div className="form-group board-element" id="lower-form-group">
                       <button type="button" className="board-btn btn" onClick={ e => {
-                          userLoginFunc(inputFieldSet);
+                          userLoginFunc();
                         }
                       }>Log in</button>
                       <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
@@ -83,6 +80,7 @@ class Login extends React.Component {
 const mapStateToProps = (state) => {
   const loggedIn = validateUser(state.user.userToken, state.user.accountUser.userId);
   return {
+    user: state.user.user,
     userFieldError: state.user.error.fieldError,
     infoTabMsg: state.app.infoTabMsg,
     showInfoTab: state.app.showInfoTab,
@@ -101,8 +99,8 @@ const mapDispatchToProps = (dispatch, state) => {
         dispatch(deleteUserFieldError(field));
       }
     },
-    userLoginFunc: (inputFieldSetArg) => {
-      dispatch(userLogin(inputFieldSetArg));
+    userLoginFunc: () => {
+      dispatch(userLogin());
     },
     unmountFunc: () => {
       dispatch(resetUserFields());

@@ -9,7 +9,6 @@ import Navbar from './Navbar.jsx';
 import TimelineContent from './TimelineContent.jsx';
 import HowContent from './HowContent.jsx';
 import ProfileContent from './ProfileContent.jsx';
-import SecurityContent from './SecurityContent.jsx';
 import ActivitiesContent from './ActivitiesContent.jsx';
 import UsersContent from './UsersContent.jsx';
 import DashboardSideBar from './DashboardSideBar.jsx';
@@ -57,8 +56,6 @@ class Dashboard extends React.Component {
                 <HowContent show={ dashboardContent === 'how' ? true : false } />
                 
                 <ProfileContent show={ dashboardContent === 'profile' ? true : false } />
-                
-                <SecurityContent show={ dashboardContent === 'security' ? true : false } updateUserFieldFunc={updateUserFieldFunc} />
               </div>
             </main>
 

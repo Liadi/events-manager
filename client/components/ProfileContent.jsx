@@ -18,6 +18,7 @@ class ProfileContent extends React.Component {
   }
 
   componentWillUnmount() {
+    this.props.unmountFunc();
   }
 
   componentWillMount() {
@@ -31,7 +32,7 @@ class ProfileContent extends React.Component {
 
   render() {
     if (this.props.show) {
-      const { userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, modalViewMode, closeModalFunc, closeInfoTabFunc, updateUserFieldFunc, updateUserFunc, initiateDeleteAccountFunc, modalCallbackFunc, passwordConfirmed, user } = this.props;
+      const { userField, userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, modalViewMode, closeModalFunc, closeInfoTabFunc, updateUserFieldFunc, updateUserFunc, initiateDeleteAccountFunc, modalCallbackFunc, passwordConfirmed, user } = this.props;
       return (
         <div id="profileContent" className="tab-content">
           <h4>
@@ -96,63 +97,59 @@ class ProfileContent extends React.Component {
                 <form>
                   <div className="form-group">
                     <label htmlFor="inputFirstName">First Name</label>
-                    <input type="text"
+                    <input type="text" value={userField.userFirstName || ''}
                       name="inputFirstName" 
                       className={
                         (userFieldError['userFirstName'] === undefined) ? "form-control" : "form-control field-error"
                       }
                       onChange={ e => {
                         updateUserFieldFunc('userFirstName', e.target.value);
-                        updateSet.add(e.target);
                       }}
                     />
                   </div>
                   
                   <div className="form-group">
                     <label htmlFor="inputLastName">Last Name</label>
-                    <input type="text"
+                    <input type="text" value={userField.userLastName || ''}
                       name="inputLastName" 
                       className={
                         (userFieldError['userLastName'] === undefined) ? "form-control" : "form-control field-error"
                       }
                       onChange={ e => {
                         updateUserFieldFunc('userLastName', e.target.value);
-                        updateSet.add(e.target);
                       }}
                     />
                   </div>
                   
                   <div className="form-group">
                     <label htmlFor="inputEmail">Email address</label>
-                    <input type="text"
+                    <input type="text" value={userField.userEmail || ''}
                       name="inputEmail" 
                       className={
                         (userFieldError['userEmail'] === undefined) ? "form-control" : "form-control field-error"
                       }
                       onChange={ e => {
                         updateUserFieldFunc('userEmail', e.target.value);
-                        updateSet.add(e.target);
                       }}
                     />
                   </div>
                         
                   <div className="form-group">
                     <label htmlFor="inputTelephone">Telephone</label>
-                    <input type="text"
+                    <input type="text" value={userField.userPhoneNumber || ''}
                       name="inputTelephone" 
                       className={
                         (userFieldError['userPhoneNumber'] === undefined) ? "form-control" : "form-control field-error"
                       }
                       onChange={ e => {
                         updateUserFieldFunc('userPhoneNumber', e.target.value);
-                        updateSet.add(e.target);
                       }} 
                     />
                   </div>
                     
                   <button type="button" className="btn" onClick={ e => {
                     e.preventDefault();
-                    updateUserFunc(updateSet, 'others');
+                    updateUserFunc('others');
                   }}>
                     Update
                   </button>
@@ -178,28 +175,26 @@ class ProfileContent extends React.Component {
                 <form>
                   <div className="form-group">
                     <label htmlFor="inputOldPassword">Password</label>
-                    <input type="password"
+                    <input type="password" value={userField.oldUserPassword || ''}
                       name="inputOldPassword" 
                       className={
                         (userFieldError['oldUserPassword'] === undefined) ? "form-control" : "form-control field-error"
                       }
                       onChange={ e => {
                         updateUserFieldFunc('oldUserPassword', e.target.value);
-                        changeSet.add(e.target);
                       }}
                     />
                   </div>
 
                   <div className="form-group">
                     <label htmlFor="inputNewPassword">New Password</label>
-                    <input type="password"
+                    <input type="password" value={userField.newUserPassword || ''}
                       name="inputNewPassword" 
                       className={
                         (userFieldError['newUserPassword'] === undefined) ? "form-control" : "form-control field-error"
                       }
                       onChange={ e => {
                         updateUserFieldFunc('newUserPassword', e.target.value);
-                        changeSet.add(e.target);
                       }}
                     />
                   </div>
@@ -207,19 +202,18 @@ class ProfileContent extends React.Component {
                   <div className="form-group">
                     <label htmlFor="inputConfirmPassword">Confirm Password</label>
                     <input type="password"
-                      name="inputConfirmPassword" 
+                      name="inputConfirmPassword"  value={userField.confirmUserPassword || ''}
                       className={
                         passwordConfirmed ? "form-control" : "form-control field-error"
                       }
                       onChange={ e => {
                         updateUserFieldFunc('confirmUserPassword', e.target.value);
-                        changeSet.add(e.target);
                       }}
                     />
                   </div>
                   <button type="button" className="btn" onClick={ e => {
                     e.preventDefault();
-                    updateUserFunc(changeSet, 'password');
+                    updateUserFunc('password');
                   }}>
                     Change
                   </button> 
@@ -241,6 +235,7 @@ class ProfileContent extends React.Component {
 const mapStateToProps = (state) => {
   return {
     userFieldError: state.user.error.fieldError,
+    userField: state.user.user,
     user: state.user.accountUser,
     passwordConfirmed: state.user.passwordConfirmed,
     infoTabMsg: state.app.infoTabMsg,
@@ -319,14 +314,14 @@ const mapDispatchToProps = (dispatch, state) => {
       dispatch(closeModal());
     },
 
-    updateUserFunc: (inputFieldSet, type) => {
-      dispatch(updateUser(inputFieldSet, type));
+    updateUserFunc: (type) => {
+      dispatch(updateUser(type));
       if (type === 'password') {
         dispatch(updatePasswordConfirmation());
       }
     },
 
-    unmountDashboardFunc: () => {
+    unmountFunc: () => {
       dispatch(resetUserFields());
     },
 

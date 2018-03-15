@@ -349,21 +349,21 @@ const searchCenters = ((centers, finalParams) => {
         }
 
         case 'centerCountry':{
-          if (center[key] !== finalParams[key]){
+          if (center[key].toLowerCase() !== finalParams[key].toLowerCase()){
             foundIndex = -1;
           }
           break;
         }
 
         case 'centerState':{
-          if (center[key] !== finalParams[key]){
+          if (center[key].toLowerCase() !== finalParams[key].toLowerCase()){
             foundIndex = -1;
           }
           break;
         }
 
         case 'centerCity':{
-          if (center[key] !== finalParams[key]){
+          if (center[key].toLowerCase() !== finalParams[key].toLowerCase()){
             foundIndex = -1;
           }
           break;

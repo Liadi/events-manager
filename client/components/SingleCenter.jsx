@@ -97,12 +97,63 @@ class SingleCenter extends React.Component {
 
               { loggedIn && this.state.showCenterOrEventForm !== 'event'?
                 (
-                    <input type='button' className='btn' value='Add Event' onClick= { e => {
+                    <input type='button' className='btn space-right-sm' value='Add Event' onClick= { e => {
                       this.setShowCenterOrEventForm('event');
                     }}/>
                 ):(
                   null
                 )
+              }
+
+              { loggedIn ?
+                (
+                  <label className="custom-control custom-checkbox space-top">
+                    <input type="checkbox" className="custom-control-input" id="slatedEventsToggle" onChange={ e => {
+                      this.toggleSlatedEvents();
+                    }}/>
+                    <span className="custom-control-indicator"></span>
+                    { (this.state.showSlatedEvents)?
+                      (
+                        <span className="custom-control-description">Hide slated events</span>
+                      ):(
+                        <span className="custom-control-description">Show slated events</span>
+                      )
+                    }
+                  </label>
+                ):(
+                  null
+                )
+              }
+              {this.state.showSlatedEvents?
+                (
+                  <div>
+                    {
+                      (this.currentCenter.events.length > 0) ?
+                      (
+                        <table className="table table-striped" id="eventTable">
+                          <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Event Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {this.currentCenter.events.map((event, index) =>
+                              <tr key={event.id}>
+                                <th scope="row">{parseInt(index, 10) + 1}</th>
+                                <td>{new Date(event.eventTime).toDateString()}</td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </table>
+                      ):(
+                        <h4>No Events</h4>
+                      )
+                    }
+                  </div>
+                )
+                :
+                (null)
               }
               
               { this.state.showCenterOrEventForm === 'event'?
@@ -194,56 +245,6 @@ class SingleCenter extends React.Component {
 
                 </div>
               </div>
-              { loggedIn ?
-                (
-                  <label className="custom-control custom-checkbox space-top">
-                    <input type="checkbox" className="custom-control-input" id="slatedEventsToggle" onChange={ e => {
-                      this.toggleSlatedEvents();
-                    }}/>
-                    <span className="custom-control-indicator"></span>
-                    { (this.state.showSlatedEvents)?
-                      (
-                        <span className="custom-control-description">Hide slated events</span>
-                      ):(
-                        <span className="custom-control-description">Show slated events</span>
-                      )
-                    }
-                  </label>
-                ):(
-                  null
-                )
-              }
-              {this.state.showSlatedEvents?
-                (
-                  <div>
-                    {
-                      (this.currentCenter.events.length > 0) ?
-                      (
-                        <table className="table table-striped" id="eventTable">
-                          <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Event Date</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {this.currentCenter.events.map((event, index) =>
-                              <tr key={event.id}>
-                                <th scope="row">{parseInt(index, 10) + 1}</th>
-                                <td>{new Date(event.eventTime).toDateString()}</td>
-                              </tr>
-                            )}
-                          </tbody>
-                        </table>
-                      ):(
-                        <h4>No Events</h4>
-                      )
-                    }
-                  </div>
-                )
-                :
-                (null)
-              }
 
               { userType === 'admin' ? 
                 (
@@ -274,9 +275,6 @@ const mapStateToProps = (state) => {
   return {
     center: state.center.center,
     centersArray: state.center.centers,
-    centerUpdateForm: state.app.centerUpdateForm,
-    eventForm: state.app.eventForm,
-    slatedEvents: state.app.slatedEvents,
     modalContent: state.app.modalContent,
     modalViewMode: state.app.modalMode,
     modalCallBack: state.app.modalCallBack,

@@ -122,7 +122,7 @@ class ActivitiesContent extends React.Component {
             {logs.map((log) =>
               <LogListComponent key={log.id} log={log}/>
             )}
-          </div>):(<h5>Nothing Yet</h5>) }
+          </div>):(<h5>No Log</h5>) }
           <PageControl page={logPage} limit={logLimit} changePageFunc={changeLogPageFunc} totalElement={logTotalElement} />
         </div>
       );

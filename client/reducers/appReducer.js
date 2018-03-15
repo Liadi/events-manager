@@ -1,9 +1,5 @@
 export default function reducer(
   state = {
-    advancedSearch: false,
-    centerUpdateForm: false,
-    eventForm: false,
-    slatedEvents: false,
     showInfoTab: false,
     infoTabMsg: [],
     showModal: false,
@@ -19,40 +15,12 @@ export default function reducer(
     case 'RESET_APP_STATE': {
       return {
         ...state,
-        advancedSearch: false,
-        centerUpdateForm: false,
-        eventForm: false,
-        slatedEvents: false,
         showInfoTab: false,
         infoTabMsg: [],
         showModal: false,
         modalContent: null,
         modalMode: undefined,
         modalCallBack: undefined,
-      }
-    }
-		case 'TOGGLE_ADVANCED_SEARCH': {
-      return {
-        ...state,
-        advancedSearch: !state.advancedSearch,
-      }
-    }
-    case 'TOGGLE_EVENT_FORM': {
-      return {
-        ...state,
-        eventForm: !state.eventForm,
-      }
-    }
-    case 'TOGGLE_CENTER_UPDATE_FORM': {
-      return {
-        ...state,
-        centerUpdateForm: !state.centerUpdateForm,
-      }
-    }
-    case 'TOGGLE_SLATED_EVENTS': {
-      return {
-        ...state,
-        slatedEvents: !state.slatedEvents,
       }
     }
     case 'CLOSE_INFO_TAB': {

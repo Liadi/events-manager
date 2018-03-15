@@ -16,9 +16,15 @@ class TimelineContent extends React.Component {
     if (show) {
       return (
         <div id="timelineContent" className="tab-content">
-          <h4>
-            Events
-          </h4>
+          { (events && events.length > 0)?
+            (
+              <h4>
+                Events
+              </h4>
+            ):(
+              <h4>No events! Check out our <Link className='link' to='/centers'>centers</Link></h4>
+            )
+          }
           <div className="tabSection">
             <div>
               {events.map((event) => 

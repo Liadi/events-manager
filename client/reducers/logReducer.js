@@ -66,6 +66,7 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: false,
+        logs: [],
         error: Object.assign({}, state.error, {serverError: action.payload.message}),
       }
     }

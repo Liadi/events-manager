@@ -3,22 +3,35 @@ import EventAdvancedSearch from './EventAdvancedSearch.jsx';
 import CenterSearchResult from './CenterSearchResult.jsx';
 import '../style/index.scss';
 import { connect } from 'react-redux';
-import { toggleAdvancedSearch } from '../actions/appAction';
 import { updateEventField, fetchEvents, updateEventSortOrder, updateEventSortItem, updateEventLimit, setEventTime, changeEventPage, resetEventAdvancedFields } from '../actions/eventAction';
 
 class EventSearch extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;
+    this.state = {
+      showAdvanced: false,
+    };
+    this.toggleAdvancedSearchFunc = this.toggleAdvancedSearchFunc.bind(this);
   }
 
+  toggleAdvancedSearchFunc(){
+    if (this.state.showAdvanced) {
+      this.props.resetEventAdvancedFieldsFunc();
+    }
+    this.setState((prevState) => ({
+      showAdvanced: !prevState.showAdvanced,
+    }));
+  }
+
+
   render () {
-    const { event, orderValue, showAdvanced, updateEventFieldFunc, setEventTimeFunc, updateEventSortItemFunc, updateEventLimitFunc, updateEventSortOrderFunc, toggleAdvancedSearchFunc, fetchSearchedEventFunc, resetEventAdvancedFieldsFunc } = this.props;
+    const { event, limit, orderValue, updateEventFieldFunc, setEventTimeFunc, updateEventSortItemFunc, updateEventLimitFunc, updateEventSortOrderFunc, fetchSearchedEventFunc, resetEventAdvancedFieldsFunc } = this.props;
     return (
       <form className="search-form">
         <div>
           <div className="input-group space-top">
-            <input type="text" className="form-control form-control-sm" placeholder="Search for event" 
+            <input type="text" value={event.eventName || ''} className="form-control form-control-sm" placeholder="Search for event" 
             onChange={ e => {
               updateEventFieldFunc('eventName', e.target.value.trim());
             }}/>
@@ -35,7 +48,7 @@ class EventSearch extends React.Component {
           <div className="row">
             <div className="form-group">
               <label htmlFor="pageSize">Page size</label>
-              <select className="form-control form-control-sm" id="pageSize" defaultValue='10' onChange={ e => {
+              <select className="form-control form-control-sm" id="pageSize" value={limit || 10} onChange={ e => {
                 updateEventLimitFunc(parseInt(e.target.value, 10));
               }}>
                 <option>5</option>
@@ -75,25 +88,23 @@ class EventSearch extends React.Component {
           <div className="space-top">
             <button type="button" className="search-toggle" onClick={ e => {
               e.preventDefault();
-              if (showAdvanced) {
+              if (this.state.showAdvanced) {
                resetEventAdvancedFieldsFunc();
               }
-              toggleAdvancedSearchFunc();
+              this.toggleAdvancedSearchFunc();
             }}
             >
             Advanced Search
             </button>
           </div>
         </div>
-        { showAdvanced ? 
+        { this.state.showAdvanced ? 
           (
-            <EventAdvancedSearch event={event} showAdvanced={showAdvanced} updateEventFieldFunc={updateEventFieldFunc} setEventTimeFunc={setEventTimeFunc} />
+            <EventAdvancedSearch event={event} showAdvanced={this.state.showAdvanced} updateEventFieldFunc={updateEventFieldFunc} setEventTimeFunc={setEventTimeFunc} />
           ):(
             null      
           )
         }
-        
-        <button id="reset-btn" className="btn" type="reset">Reset</button>
       </form>
     )
   }
@@ -101,20 +112,16 @@ class EventSearch extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    showAdvanced: state.app.advancedSearch,
     fetching: state.event.fetching,
     fetched: state.event.fetched,
     event: state.event.event,
+    limit: state.event.limit,
     orderValue: state.event.sort.order,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleAdvancedSearchFunc: () => {
-      dispatch(toggleAdvancedSearch());
-    },
-
     updateEventFieldFunc: (field, value) => {
       dispatch(updateEventField(field, value));
     },

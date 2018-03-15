@@ -2,7 +2,7 @@ import axios from 'axios';
 import history from '../history';
 
 module.exports = {
-  createUser(inputFieldSetArg, admin=false) {
+  createUser(admin=false) {
     return function(dispatch, getState) {
       const fieldError = getState().user.error.fieldError;
       if (!getState().user.user.userFirstName) {
@@ -79,7 +79,6 @@ module.exports = {
             dispatch({
               type: 'RESET_USER_FIELDS',
             });
-            for (let item of inputFieldSetArg) item.value = "";
           }).catch(err =>{
             let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
             dispatch({
@@ -103,7 +102,6 @@ module.exports = {
             dispatch({
               type: 'RESET_USER_FIELDS',
             });
-            for (let item of inputFieldSetArg) item.value = "";
           }).catch(err =>{
             let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
             dispatch({
@@ -314,7 +312,7 @@ module.exports = {
     } 
   },
 
-  updateUser(inputFieldSetArg, type) {
+  updateUser(type) {
     return function(dispatch, getState) {
       let [userField, userFieldError] = [{}, {}];
       if (type === 'others') {
@@ -367,8 +365,9 @@ module.exports = {
         }
       }
       let nothingToChange = true;
-      for (let item of inputFieldSetArg) {
-        if (item.value !== "") {
+      for (let field in getState().user.user) {
+        if (getState().user.user.hasOwnProperty(field))
+        if (getState().user.user.field !== "") {
           nothingToChange = false;
         };
       }
@@ -418,7 +417,6 @@ module.exports = {
           dispatch({
             type: 'RESET_USER_FIELDS',
           });
-          for (let item of inputFieldSetArg) item.value = "";
         }).catch(err =>{
           let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
           dispatch({

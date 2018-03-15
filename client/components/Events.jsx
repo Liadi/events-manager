@@ -23,6 +23,7 @@ class Events extends React.Component {
 
   componentWillUnmount() {
     this.props.resetEventEntriesFunc();
+    this.props.resetFunc();
   }
 
   componentWillMount() {

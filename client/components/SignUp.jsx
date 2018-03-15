@@ -10,8 +10,6 @@ import { closeInfoTab, closeModal, resetAppState } from '../actions/appAction';
 import { updateUserField, resetUserFields, deleteUserFieldError, updatePasswordConfirmation, fetchUser, userFieldInputError, createUser, userLogout } from '../actions/userAction';
 import { validateUser, validateEmail } from '../util';
 
-const inputFieldSet = new Set();
-
 class SignUp extends React.Component {
   constructor(props) {
     super(props);
@@ -23,7 +21,7 @@ class SignUp extends React.Component {
   }
 
   render() {
-    const { passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabMsg, showInfoTab, closeInfoTabFunc, createUserFunc, closeModalFunc, modalContent, showModal, loggedIn, createAdmin, userType, userLogoutFunc } = this.props;
+    const { user, passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabMsg, showInfoTab, closeInfoTabFunc, createUserFunc, closeModalFunc, modalContent, showModal, loggedIn, createAdmin, userType, userLogoutFunc } = this.props;
 
     if(userType !== 'admin' && loggedIn) {
       return(
@@ -63,62 +61,57 @@ class SignUp extends React.Component {
                 <form>
                   <div className="form-group">
                     <label htmlFor="inputFirstName">First Name</label>
-                    <input type="text" className={
+                    <input type="text" value={user.userFirstName || ''} className={
                       (userFieldError['userFirstName'] === undefined) ? "form-control" : "form-control field-error"
                     } 
                     id="inputFirstName" 
                     onChange={ e => {
                         updateUserFieldFunc('userFirstName', e.target.value);
-                        inputFieldSet.add(e.target);
                       }
                     }/>
                   </div>
                   <div className="form-group">
                     <label htmlFor="inputLastName">Last Name</label>
-                    <input type="text" className={
+                    <input type="text" value={user.userLastName || ''} className={
                       (userFieldError['userLastName'] === undefined) ? "form-control" : "form-control field-error"
                     } 
                     id="inputLastName" 
                     onChange={ e => {
                         updateUserFieldFunc('userLastName', e.target.value.trim());
-                        inputFieldSet.add(e.target);
                       }
                     }/>
                   </div>
                   <div className="form-group">
                     <label htmlFor="inputEmail">Email address</label>
-                    <input type="text" className={
+                    <input type="text" value={user.userEmail || ''} className={
                       (userFieldError['userEmail'] === undefined) ? "form-control" : "form-control field-error"
                     } 
                     id="inputEmail" 
                     onChange={ e => {
                         updateUserFieldFunc('userEmail', e.target.value.trim());
-                        inputFieldSet.add(e.target);
                       }
                     }/>
                   </div>
                   <div className="form-group">
                     <label htmlFor="inputPassword">Password</label>
-                    <input type="password" className={
+                    <input type="password" value={user.userPassword || ''} className={
                       (userFieldError['userPassword'] === undefined || !passwordConfirmed ) ? "form-control" : "form-control field-error"
                     } 
                     id="inputPassword" 
                     onChange={ e => {
                         updateUserFieldFunc('userPassword', e.target.value);
-                        inputFieldSet.add(e.target);
                       }
                     }/>
                   </div>
                           
                   <div className="form-group">
                     <label htmlFor="inputConfirmPassword">Confirm Password</label>
-                    <input type="password" className={
+                    <input type="password" value={user.userConfirmPassword} className={
                       passwordConfirmed ? "form-control" : "form-control field-error"
                     } 
                     id="inputConfirmPassword"
                     onChange={ e => {
                         updateUserFieldFunc('userConfirmPassword', e.target.value);
-                        inputFieldSet.add(e.target);
                       }
                     }/>
                   </div>
@@ -126,7 +119,7 @@ class SignUp extends React.Component {
                   <div className="form-group">
                     <button type="button" className="btn" onClick={ e => {
                       e.preventDefault();
-                      createUserFunc(inputFieldSet);
+                      createUserFunc();
                     }}>
                       {createAdmin?
                         (
@@ -161,6 +154,7 @@ const mapStateToProps = (state, ownProps) => {
   const loggedIn = validateUser(state.user.userToken, state.user.accountUser.userId);
    const userType = state.user.accountUser.userType;
   return {
+    user: state.user.user,
     userFieldError: state.user.error.fieldError,
     passwordConfirmed: state.user.passwordConfirmed,
     infoTabMsg: state.app.infoTabMsg,
@@ -241,9 +235,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         }
       }
     },
-    createUserFunc: (inputFieldSetArg) => {
+    createUserFunc: () => {
       dispatch(updatePasswordConfirmation());
-      dispatch(createUser(inputFieldSetArg, ownProps.createAdmin));
+      dispatch(createUser(ownProps.createAdmin));
     },
     closeModalFunc: () => {
       dispatch(closeModal());

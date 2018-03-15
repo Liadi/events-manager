@@ -11,26 +11,32 @@ class EventForm extends React.Component {
     super(props);
     this.props = props;
     [this.yearOptions, this.monthOptions, this.dateOptions] = [[], [], []];
-    this.inputFieldSet = new Set()
+    this.mountFunc = this.mountFunc.bind(this);
   }
 
   componentWillUnmount() {
-    this.props.unmountFunc(this.inputFieldSet);
+    this.props.unmountFunc();
   }
 
   componentWillMount() {
+    this.mountFunc();
+  }
+
+  mountFunc() {
     if (this.props.type === 'create') {
       [this.yearOptions, this.monthOptions, this.dateOptions] = getTimeOptions(this.props.setEventTimeFunc, this.props.event.eventTime, this.props.type, true);
-    } else if (this.props.type === 'update')
+    } else if (this.props.type === 'update') {
       [this.yearOptions, this.monthOptions, this.dateOptions] = getTimeOptions(this.props.setEventTimeFunc, this.props.event, this.props.type, true, this.props.currentEventTime);
     }
+  }
 
   componentWillReceiveProps(nextProps) {
     [this.yearOptions, this.monthOptions, this.dateOptions] = getTimeOptions(this.props.setEventTimeFunc, nextProps.event.eventTime, this.props.type);
   }
 
   render() {
-    const time = this.props.event.eventTime
+    const { event, resetEventFieldsFunc } = this.props;
+    const time = this.props.event.eventTime;
     return (
       <div className="container">
         <InfoTab className="col-12" infoTabMsg={this.props.infoTabMsg} showInfoTab={this.props.showInfoTab} closeInfoTabFunc={this.props.closeInfoTabFunc}/>
@@ -53,8 +59,7 @@ class EventForm extends React.Component {
             
             <div className="form-group section-group">
               <label htmlFor="eventName"><h6>Name</h6></label>
-              <input type="text" className="form-control" id="eventName" placeholder={"E.g " + this.props.userName.toUpperCase() + "\'s Birthday Party"} onChange={ e => {
-                this.inputFieldSet.add(e.target);
+              <input type="text" value={event.eventName || ''} placeholder={"E.g " + this.props.userName.toUpperCase() + "\'s Birthday Party"} className="form-control" id="eventName" onChange={ e => {
                 this.props.updateEventFieldFunc('eventName', e.target.value);
               }}/>
             </div>
@@ -99,8 +104,7 @@ class EventForm extends React.Component {
             </div>
 
             <div className="form-group section-group">
-              <textarea className="form-control" id="eventName" placeholder="Leave a message (500 characters max)"  rows="5" onChange={ e => {
-                this.inputFieldSet.add(e.target);
+              <textarea className="form-control" id="eventName" value={event.eventDescription || ''} placeholder= "Leave a message (500 characters max)" rows="5" onChange={ e => {
                 this.props.updateEventFieldFunc('eventDescription', e.target.value);
               }}>
               </textarea>
@@ -110,15 +114,21 @@ class EventForm extends React.Component {
               { this.props.type === 'create'?(
                 <button className="btn btn-warning grp-btn" onClick={ e => {
                   e.preventDefault();
-                  this.props.createEventFunc(this.inputFieldSet, this.props.centerId);
+                  this.props.createEventFunc(this.props.centerId);
                 }}>Create</button>
               ):(
                 <button className="btn btn-warning grp-btn" onClick={ e => {
                   e.preventDefault();
-                  this.props.updateEventFunc(this.inputFieldSet.add(this.props.eventUpdateToggleInput), this.props.eventId);
+                  this.props.updateEventFunc(this.props.eventId);
+                  resetEventFieldsFunc();
+                  this.mountFunc();
                 }}>Update</button>
               )}
-              <button type="reset" className="btn btn-danger grp-btn">Clear</button>
+              <button type="reset" className="btn btn-danger grp-btn" onClick={ e => {
+                e.preventDefault();
+                resetEventFieldsFunc();
+                this.mountFunc();
+              }}>Reset</button>
             </div>
           </form>
         </div>
@@ -137,7 +147,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     setEventTimeFunc: (field, value) => {
       dispatch(setEventTime(field, value));
@@ -147,24 +157,24 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(updateEventField(field, value));
     },
 
-    createEventFunc: (inputFieldSetArg, centerId) => {
-      dispatch(createEvent(inputFieldSetArg, centerId));
+    createEventFunc: (centerId) => {
+      dispatch(createEvent(centerId));
     },
 
-    updateEventFunc: (inputFieldSet, eventId, centerId) => {
-      dispatch(updateEvent(inputFieldSet, eventId, centerId));
+    updateEventFunc: (eventId, centerId) => {
+      dispatch(updateEvent(eventId, centerId));
     },
 
     closeInfoTabFunc: () => {
       dispatch(closeInfoTab());
     },
 
-    unmountFunc: (inputFieldSet) => {
-      if (inputFieldSet.size > 0) {
-        dispatch(resetEventFields(inputFieldSet));
-      } else {
-        dispatch(resetEventFields());
-      }
+    resetEventFieldsFunc: () => {
+      dispatch(resetEventFields());
+    },
+
+    unmountFunc: () => {
+      dispatch(resetEventFields());
     },
   }
 }

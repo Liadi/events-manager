@@ -6,7 +6,6 @@ class UserListComponent extends React.Component {
     this.props = props;
   }
 
-  toggleShowDetails 
   render() {
     const { user, redirectToLogsFunc } = this.props;
     return (

@@ -10,7 +10,7 @@ import '../style/center-events.scss';
 import { validateUser } from '../util';
 import { userLogout } from '../actions/userAction';
 import { closeModal, openModal, closeInfoTab, resetAppState, toggleEventForm } from '../actions/appAction';
-import { fetchEvent, deleteEvent } from '../actions/eventAction';
+import { fetchEvent, deleteEvent, resetEventAdvancedFields, resetEventEntries, resetEventFields } from '../actions/eventAction';
 
 class SingleEvent extends React.Component {
   constructor(props) {
@@ -18,7 +18,10 @@ class SingleEvent extends React.Component {
     this.props = props;
     this.id = props.match.params.id;
     this.accountUserId = props.accountUserId;
-    this.eventUpdateToggleInput = undefined;
+    this.state = {
+      showEventUpdateForm: false,
+    };
+    this.toggleEventUpdateFormFunc = this.toggleEventUpdateFormFunc.bind(this);
   }
 
   componentWillUnmount() {
@@ -31,12 +34,21 @@ class SingleEvent extends React.Component {
   	}
   }
 
+  toggleEventUpdateFormFunc(){
+    if (this.state.showAdvanced) {
+      this.props.resetEventAdvancedFieldsFunc();
+    }
+    this.setState((prevState) => ({
+      showEventUpdateForm: !prevState.showEventUpdateForm,
+    }));
+  }
+
   render() {
     if (!this.props.loggedIn) {
       return(<NotFound />);
     }
 
-    const { eventsArray, userType, userLogoutFunc, toggleEventUpdateFormFunc, eventUpdateForm, accountUserId, initiateDeleteEventFunc, modalViewMode, modalCallbackFunc, closeModalFunc, modalContent, showModal } = this.props;
+    const { eventsArray, userType, userLogoutFunc, accountUserId, initiateDeleteEventFunc, modalViewMode, modalCallbackFunc, closeModalFunc, modalContent, showModal } = this.props;
 
     let currentEvent;
 
@@ -54,13 +66,12 @@ class SingleEvent extends React.Component {
 
             <main className="container">
               { (currentEvent.userId ===  accountUserId)?
-                (<label className="custom-control custom-checkbox d-block">
+                (<label className="custom-control custom-checkbox d-inline">
                   <input type="checkbox" className="custom-control-input" id="updateFormToggle" onChange={ e => {
-                    this.eventUpdateToggleInput = e.target;
-                    toggleEventUpdateFormFunc();
+                    this.toggleEventUpdateFormFunc();
                   }}/>
                   <span className="custom-control-indicator"></span>
-                  { eventUpdateForm?
+                  { this.state.showEventUpdateForm?
                     (
                       <span className="custom-control-description">Close Update Form</span>
                     ):
@@ -71,7 +82,13 @@ class SingleEvent extends React.Component {
                 </label>): (null)
               }
               
-              <div className="card" id="card-div">
+              {this.state.showEventUpdateForm ? (
+                <div>
+                  <EventForm eventId={currentEvent.id} type='update' currentEventTime = {new Date(currentEvent.eventTime)}/>
+                </div>
+              ) : (null)}
+
+              <div className="card space-top" id="card-div">
                 <div className="card-center d-flex flex-wrap flex-row-reverse justify-content-center" id="center-descrip">
                   <div className="card-body">
                     <h4 className="card-title">{currentEvent.eventName}</h4>
@@ -87,12 +104,6 @@ class SingleEvent extends React.Component {
                   </div>
                 </div>
               </div>
-
-              {eventUpdateForm ? (
-                <div>
-                  <EventForm eventId={currentEvent.id} eventUpdateToggleInput={this.eventUpdateToggleInput} type='update' currentEventTime = {new Date(currentEvent.eventTime)}/>
-                </div>
-              ) : (null)}
 
               { (parseInt(currentEvent.userId, 10) == parseInt(accountUserId, 10) || userType === 'admin') ? 
                 (
@@ -123,7 +134,6 @@ const mapStateToProps = (state) => {
   const accountUserId = state.user.accountUser.userId;
   return {
     eventsArray: state.event.events,
-    eventUpdateForm: state.app.eventForm,
     accountUserId,
     modalContent: state.app.modalContent,
     modalViewMode: state.app.modalMode,
@@ -140,6 +150,8 @@ const mapDispatchToProps = (dispatch) => {
 
     unmountFunc: () => {
       dispatch(resetAppState());
+      dispatch(resetEventEntries());
+      dispatch(resetEventFields());
     },
 
     fetchCurrentEventFunc: (id) => {
@@ -150,12 +162,12 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(userLogout());
     },
 
-    toggleEventUpdateFormFunc: () => {
-      dispatch(toggleEventForm());
-    },
-
     closeModalFunc: () => {
       dispatch(closeModal());
+    },
+
+    resetEventAdvancedFieldsFunc: () => {
+      dispatch(resetEventAdvancedFields());
     },
 
     initiateDeleteEventFunc: (eventId) => {

@@ -5,21 +5,38 @@ import '../style/index.scss';
 import { connect } from 'react-redux';
 import { validateUser } from '../util';
 import { toggleAdvancedSearch } from '../actions/appAction';
-import { updateCenterField, fetchAllCenters, fieldInputError, updateCenterSortOrder, updateCenterSortItem, updateCenterLimit, resetCenterEntries } from '../actions/centerAction';
+import { updateCenterField, fetchAllCenters, fieldInputError, updateCenterSortOrder, updateCenterSortItem, updateCenterLimit, resetCenterEntries, resetCenterFields, changeCenterPage } from '../actions/centerAction';
 
 class CenterSearch extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;
+    this.state = {
+      showAdvanced: false,
+    };
+
+    this.toggleAdvancedSearchFunc = this.toggleAdvancedSearchFunc.bind(this);
+  }
+
+  toggleAdvancedSearchFunc(){
+    if (this.state.showAdvanced) {
+      let searchName = this.props.center.centerName || '';
+      this.props.resetCenterFieldsFunc();
+      this.props.updateCenterFieldFunc('centerName', searchName);
+    }
+    
+    this.setState((prevState) => ({
+      showAdvanced: !prevState.showAdvanced,
+    }));
   }
 
   render () {
-    const { showAdvanced, fetching, fetched, centers, center, panel, jumbo, toggleAdvancedSearchFunc, updateCenterFieldFunc, fetchSearchedCenterFunc, updateCenterSortOrderFunc, updateCenterSortItemFunc, updateCenterLimitFunc, loggedIn, resetCenterEntriesFunc } = this.props;
+    const {fetching, fetched, centers, center, limit, sortObj, panel, jumbo, updateCenterFieldFunc, fetchSearchedCenterFunc, updateCenterSortOrderFunc, updateCenterSortItemFunc, updateCenterLimitFunc, loggedIn, resetCenterEntriesFunc } = this.props;
     return (
       <form className="search-form">
         <div>
           <div className="input-group space-top">
-            <input type="text" className={jumbo?("form-control form-control-lg search-widget"):("form-control form-control-sm")} placeholder="Search for a center" 
+            <input type="text" value={center.centerName || ''} className={jumbo?("form-control form-control-lg search-widget"):("form-control form-control-sm")} placeholder="Search for a center" 
             onChange={ e => {
               updateCenterFieldFunc('centerName', e.target.value.trim());
             }}/>
@@ -38,7 +55,7 @@ class CenterSearch extends React.Component {
             <div className="row">
               <div className="form-group">
                 <label htmlFor="pageSize">Page size</label>
-                <select className="form-control form-control-sm" id="pageSize" defaultValue='10' onChange={ e => {
+                <select value={limit|| 10}className="form-control form-control-sm" id="pageSize" onChange={ e => {
                   updateCenterLimitFunc(parseInt(e.target.value, 10));
                 }}>
                   <option>5</option>
@@ -56,7 +73,7 @@ class CenterSearch extends React.Component {
               </div>
               <div className="form-group">
                 <label htmlFor="sortItem">sort by</label>
-                <select className="form-control form-control-sm" id="sortItem" defaultValue='Price' onChange={ e => {
+                <select value={(sortObj.item === 'centerRate')?('Price'):('Capacity')} className="form-control form-control-sm" id="sortItem" onChange={ e => {
                   switch (e.target.value) {
                     case 'Price': {
                       updateCenterSortItemFunc('centerRate');
@@ -76,7 +93,7 @@ class CenterSearch extends React.Component {
                 </select>
                 <div>
                   <div className="form-check">
-                    <input className="form-check-input" type="radio" name="order" id="orderAscending" value="INC" onChange={ e => {
+                    <input checked={(sortObj.order === "INC")?(true):(false)} className="form-check-input" type="radio" name="order" id="orderAscending" value="INC" onChange={ e => {
                       updateCenterSortOrderFunc(e.target.value);
                     }}/>
                     <label className="form-check-label" htmlFor="orderAscending">
@@ -84,7 +101,7 @@ class CenterSearch extends React.Component {
                     </label>
                   </div>
                   <div className="form-check">
-                    <input className="form-check-input" type="radio" name="order" id="orderDescending" value="DESC" onChange={ e => {
+                    <input checked={(sortObj.order === "DESC")?(true):(false)} className="form-check-input" type="radio" name="order" id="orderDescending" value="DESC" onChange={ e => {
                       updateCenterSortOrderFunc(e.target.value);
                     }}/>
                     <label className="form-check-label" htmlFor="orderDescending">
@@ -103,21 +120,20 @@ class CenterSearch extends React.Component {
           <div className="space-top">
             <button type="button" className="search-toggle" onClick={ e => {
               e.preventDefault();
-              toggleAdvancedSearchFunc();
+              this.toggleAdvancedSearchFunc();
             }}
             >
             Advanced Search
             </button>
           </div>
         </div>
-        <CenterAdvancedSearch loggedIn={loggedIn} showAdvanced={showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} center={center}/>
+        <CenterAdvancedSearch loggedIn={loggedIn} showAdvanced={this.state.showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} center={center}/>
         {panel?(
             <CenterSearchResult resetCenterEntriesFunc={resetCenterEntriesFunc} fetching={fetching} fetched={fetched} centers={centers}/>
           ):(
             null
           )
         }
-        <button id="reset-btn" className="btn" type="reset">Reset</button>
       </form>
     )
   }
@@ -126,13 +142,14 @@ class CenterSearch extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const loggedIn = validateUser(state.user.userToken, state.user.accountUser.userId);
   return {
-    showAdvanced: state.app.advancedSearch,
     fetching: state.center.fetching,
     fetched: state.center.fetched,
     centers: state.center.centers,
     center: state.center.center,
     panel: ownProps.panel,
     jumbo: ownProps.jumbo,
+    limit: state.center.limit,
+    sortObj: state.center.sort,
     loggedIn,
   }
 }
@@ -141,10 +158,11 @@ const mapDispatchToProps = (dispatch) => {
   return {
     toggleAdvancedSearchFunc: () => {
       dispatch(toggleAdvancedSearch());
-      const advancedSearchFields = ['centerCountry', 'centerState', 'centerCity', 'centerCapacity', 'centerPriceLoewer', 'centerPriceUpper'];
-      advancedSearchFields.forEach((field)=> {
-        dispatch(updateCenterField(field, ""));
-      })
+      dispatch(resetCenterFields());
+    },
+
+    resetCenterFieldsFunc: () => {
+      dispatch(resetCenterFields());
     },
 
     resetCenterEntriesFunc: () => {
@@ -157,19 +175,23 @@ const mapDispatchToProps = (dispatch) => {
 
     updateCenterSortOrderFunc: (order) => {
       dispatch(updateCenterSortOrder(order));
+      dispatch(changeCenterPage(1));
       dispatch(fetchAllCenters());
     }, 
     updateCenterSortItemFunc: (item) => {
       dispatch(updateCenterSortItem(item));
+      dispatch(changeCenterPage(1));
       dispatch(fetchAllCenters());
     },
 
     updateCenterLimitFunc: (limit) => {
       dispatch(updateCenterLimit(limit));
+      dispatch(changeCenterPage(1));
       dispatch(fetchAllCenters());
     },
 
     fetchSearchedCenterFunc: () => {
+      dispatch(changeCenterPage(1));
       dispatch(fetchAllCenters());
     },
   }

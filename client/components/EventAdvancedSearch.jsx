@@ -8,7 +8,6 @@ class EventAdvancedSearch extends React.Component{
     super(props);
     this.props = props;
     [this.lowerYearOptions, this.lowerMonthOptions, this.lowerDateOptions, this.yearOptions, this.monthOptions, this.dateOptions] = [[], [], [], [], [], []];
-    this.inputFieldSet = new Set()
   }
 
   componentWillMount() {
@@ -31,13 +30,13 @@ class EventAdvancedSearch extends React.Component{
       <div id= "advancedSearchFrame">
         <div className="form-group">
           <div className="row">
-            <div className="col-sm-3 col-md-2">
+            <div className="col-sm-4 col-md-3 col-lg-2">
               <label htmlFor="searchCenterName" className="form-label-sm">Center</label>
               <input type="text" className= "form-control form-control-sm" id="searchCenterName" onChange={ e => {
                 updateEventFieldFunc('centerName', e.target.value.trim());
               }}/>
             </div>
-            <div className="col-sm-3 col-md-2">
+            <div className="col-sm-4 col-md-3 col-lg-2">
               <label htmlFor="searchStatus" className="form-label-sm">Status</label>
               <select type="text" className= "form-control form-control-sm" id="searchStatus" onChange={ e => {
                 updateEventFieldFunc('eventStatus', e.target.value);
@@ -47,9 +46,14 @@ class EventAdvancedSearch extends React.Component{
                 <option>cancelled</option>
               </select>
             </div>
-            <div className="col-sm-3 col-md-2">
+          </div>
+        </div>
+
+        <div className="form-group">
+          <div className="row">
+            <div className="col-sm-4 col-md-3 col-lg-2">
               <label htmlFor="searchStatus" className="form-label-sm">amount lower(%)</label>
-              <select type="text" value={lowerAmount} className= "form-control form-control-sm" id="searchStatus" onChange={ e => {
+              <select type="text" value={lowerAmount || 0} className= "form-control form-control-sm" id="searchStatus" onChange={ e => {
                 updateEventFieldFunc('eventAmountPaidLower', e.target.value);
               }}>
                 {percentValue.map((elem, index) => {
@@ -59,9 +63,9 @@ class EventAdvancedSearch extends React.Component{
                 })}
               </select>
             </div>
-            <div className="col-sm-3 col-md-2">
+            <div className="col-sm-4 col-md-3 col-lg-2">
               <label htmlFor="searchStatus" className="form-label-sm">amount upper(%)</label>
-              <select type="text" value={upperAmount} className="form-control form-control-sm" id="searchStatus" onChange={ e => {
+              <select type="text" value={upperAmount || 100} className="form-control form-control-sm" id="searchStatus" onChange={ e => {
                 updateEventFieldFunc('eventAmountPaidUpper', e.target.value);
               }}>
                 {percentValue.map((elem, index) => {
@@ -76,7 +80,7 @@ class EventAdvancedSearch extends React.Component{
 
         <div className="form-group">
           <div className="row">
-            <div className="col-sm-3 col-md-2">
+            <div className="col-sm-4 col-md-3 col-lg-2">
               <label htmlFor="eventYear">Year</label>
               <select className="form-control form-control-sm" id="eventYear" value={time.year} onChange={ e => {
                 setEventTimeFunc('year', parseInt(e.target.value, 10));
@@ -87,7 +91,7 @@ class EventAdvancedSearch extends React.Component{
               </select>
             </div>
 
-            <div className="col-sm-3 col-md-2">
+            <div className="col-sm-4 col-md-3 col-lg-2">
               <label htmlFor="eventMonth">Month</label>
               <select className="form-control form-control-sm" id="eventMonth" value={time.month} onChange={ e => {
                 setEventTimeFunc('month', parseInt(e.target.value, 10));
@@ -98,7 +102,7 @@ class EventAdvancedSearch extends React.Component{
               </select>
             </div>
 
-            <div className="col-sm-3 col-md-2">
+            <div className="col-sm-4 col-md-3 col-lg-2">
               <label htmlFor="eventDate">Date</label>
               <select className="form-control form-control-sm" id="eventDate" value={time.date} onChange={ e => {
                 setEventTimeFunc('date', parseInt(e.target.value, 10));

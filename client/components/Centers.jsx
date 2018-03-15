@@ -24,6 +24,7 @@ class Centers extends React.Component {
 
   componentWillUnmount() {
     this.props.resetCenterEntriesFunc();
+    this.props.resetFunc();
   }
 
   componentWillMount() {
@@ -50,7 +51,7 @@ class Centers extends React.Component {
                         <h4 className="card-title">{center.centerName}</h4>
                         <h6 className="card-subtitle mb-2 text-muted">{center.centerAddress}</h6>
                         <h6 className="card-subtitle mb-2">Capacity: {' ' + center.centerCapacity}</h6>
-                        <h6 className="card-subtitle mb-2">Hourly rate: {' ' + center.centerRate}</h6>
+                        <h6 className="card-subtitle mb-2">Daily rate: {' ' + center.centerRate}</h6>
                         <p className="card-text">{center.centerDescription}</p>
                         <div className="d-flex justify-content-end">
                           <div className="d-flex flex-wrap justify-content-center grp">

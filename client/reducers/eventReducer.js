@@ -168,7 +168,9 @@ export default function reducer(
             year: undefined,
             month: undefined,
             date: undefined,
-          }
+          },
+          eventAmountPaidLower: 0,
+          eventAmountPaidUpper: 100,
         },
         error: {
           fieldError: {},

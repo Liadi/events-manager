@@ -63,16 +63,7 @@ module.exports = {
     }
   },
 
-  resetEventFields(inputFieldSetArg=null) {
-    if (inputFieldSetArg) {
-      for (let item of inputFieldSetArg){
-        if (item.type === 'checkbox'){
-          item.checked = false;
-        } else {
-          item.value = "";
-        }
-      }
-    }
+  resetEventFields() {
     return {
       type: 'RESET_EVENT_FIELDS',
     }
@@ -90,7 +81,7 @@ module.exports = {
     }
   },
 
-  createEvent(inputFieldSetArg, centerId) {
+  createEvent(centerId) {
     return function(dispatch, getState) {
       const fieldError = getState().event.error.fieldError;
       if (!getState().event.event.eventName) {
@@ -154,7 +145,6 @@ module.exports = {
           dispatch({
             type: 'RESET_EVENT_FIELDS',
           })
-          for (let item of inputFieldSetArg) item.value = "";
           history.push(`/events/${response.value.data.event.id}`);
         }).catch(err =>{
           let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
@@ -209,7 +199,7 @@ module.exports = {
     return func;
   },
 
-  updateEvent(inputFieldSetArg, eventId) {
+  updateEvent(eventId) {
     return function(dispatch, getState) {
       const temp = getState().event.event.eventTime;
       let tempDate = temp.year.toString()
@@ -238,18 +228,14 @@ module.exports = {
         }),
       }).then((response) => {
         dispatch({
-          type: 'RESET_EVENT_FIELDS',
-        })
-        dispatch({
           type: 'RESET_APP_STATE',
         })
-        for (let item of inputFieldSetArg){
-          if (item.type === 'checkbox'){
-            item.checked = false;
-          } else {
-            item.value = "";
-          }
-        }
+        dispatch({
+          type: 'OPEN_MODAL',
+          payload: {
+            htmlContent: '<h4>Event successfully updated</h4>',
+          },
+        });
       }).catch((error) => {
         dispatch ({
           type: 'OPEN_INFO_TAB',

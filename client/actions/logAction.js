@@ -40,13 +40,6 @@ module.exports = {
   redirectToLogs(userId, userFirstName){
     return function(dispatch, getState) {
       dispatch({
-        type: 'CHANGE_DASHBOARD_CONTENT',
-        payload: {
-          newContent: 'activities',
-        }
-      });
-
-      dispatch({
         type: 'UPDATE_LOG_FIELD',
         payload: {
           field: 'userId',
@@ -61,7 +54,37 @@ module.exports = {
           value: userFirstName,
         },
       });
+
+      dispatch({
+        type: 'CHANGE_LOG_PAGE',
+        payload: {
+          page:  1,
+        },
+      });
+
+      dispatch({
+        type: 'UPDATE_LOG_FIELD',
+        payload: {
+          field: 'entity',
+          value: null,
+        },
+      });
+
+      dispatch({
+        type: 'UPDATE_LOG_FIELD',
+        payload: {
+          field: 'action',
+          value: null,
+        },
+      });
       
+      dispatch({
+        type: 'CHANGE_DASHBOARD_CONTENT',
+        payload: {
+          newContent: 'activities',
+        }
+      });
+
       const logParams = {
         ...getState().log.log,
         limit: getState().log.limit,

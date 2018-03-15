@@ -91,7 +91,7 @@ class CenterForm extends React.Component {
 
                       <div className="space-top col-md-8 col-lg-9">
                         <label htmlFor="inputCenterName"><h6>Name</h6></label>
-                        <input type="text" id="inputCenterName" className={
+                        <input type="text" value={center.centerName || ''} id="inputCenterName" className={
                           (centerFieldError['centerName'] === undefined) ? "form-control" : "form-control field-error"
                         }
                         onChange={ e => {
@@ -105,7 +105,7 @@ class CenterForm extends React.Component {
                       
                       <div className="space-top col-md-4 col-lg-3">
                         <label htmlFor="inputCenterStatus"><h6>Status</h6></label>
-                        <select type="text" id="inputCenterStatus" className="form-control"
+                        <select type="text" value={center.centerStatus || 'default'} id="inputCenterStatus" className="form-control"
                         onChange={ e => {
                           if (e.target.value === 'default'){
                             updateCenterFieldFunc('centerStatus', '');
@@ -122,7 +122,7 @@ class CenterForm extends React.Component {
 
                       <div className="space-top col-md-4">
                         <label htmlFor="inputCenterCountry"><h6>Country</h6></label>
-                        <input type="text" id="inputCenterCountry" className={
+                        <input type="text" value={center.centerCountry || ''} id="inputCenterCountry" className={
                         (centerFieldError['centerCountry'] === undefined) ? "form-control" : "form-control field-error"
                         }
                         onChange={ e => {
@@ -135,7 +135,7 @@ class CenterForm extends React.Component {
                       </div>
                       <div className="space-top col-md-4">
                         <label htmlFor="inputCenterState"><h6>State</h6></label>
-                        <input type="text" id="inputCenterState" className={
+                        <input type="text" value={center.centerState || ''} id="inputCenterState" className={
                         (centerFieldError['centerState'] === undefined) ? "form-control" : "form-control field-error"
                         }
                         onChange={ e => {
@@ -148,7 +148,7 @@ class CenterForm extends React.Component {
                       </div>
                       <div className="space-top col-md-4">
                         <label htmlFor="inputCenterCity"><h6>City</h6></label>
-                        <input type="text" id="inputCenterCity" className={
+                        <input type="text" value={center.centerCity || ''} id="inputCenterCity" className={
                         (centerFieldError['centerCity'] === undefined) ? "form-control" : "form-control field-error"
                         }
                         onChange={ e => {
@@ -161,7 +161,7 @@ class CenterForm extends React.Component {
                       </div>
                       <div className="space-top col-12">
                         <label htmlFor="inputCenterAddress"><h6>Full address</h6></label>
-                        <input type="text" id="inputCenterAddress" className={
+                        <input type="text" value={center.centerAddress || ''} id="inputCenterAddress" className={
                         (centerFieldError['centerAddress'] === undefined) ? "form-control" : "form-control field-error"
                         }
                         onChange={ e => {
@@ -175,7 +175,7 @@ class CenterForm extends React.Component {
 
                       <div className="space-top col-md-6">
                         <label htmlFor="inputCenterCapacity"><h6>Capacity</h6></label>
-                        <input type="text" id="centerCapacity" className={
+                        <input type="text" value={center.centerCapacity || ''} id="centerCapacity" className={
                           (centerFieldError['centerCapacity'] === undefined) ? "form-control" : "form-control field-error"
                         }
                         onChange={ e => {
@@ -193,7 +193,7 @@ class CenterForm extends React.Component {
                       </div>        
                       <div className="space-top col-md-6">
                         <label htmlFor="inputCenterRate"><h6>Rate</h6></label>
-                        <input type="text" id="inputCenterRate" placeholder="per hour" className={
+                        <input type="text" value={center.centerRate || ''} id="inputCenterRate" placeholder="per hour" className={
                           (centerFieldError['centerRate'] === undefined) ? "form-control" : "form-control field-error"
                         }
                         onChange={ e => {
@@ -240,7 +240,7 @@ class CenterForm extends React.Component {
 
                       <div className="space-top col-12">
                         <label htmlFor="inputCenterDescription"><h6>Short Description</h6></label>
-                        <input type="text" id="inputCenterDescription" placeholder="maximum of 120 characters" className={
+                        <input type="text" value={center.centerDescription || ''} id="inputCenterDescription" placeholder="maximum of 120 characters" className={
                           (centerFieldError['centerDescription'] === undefined) ? "form-control" : "form-control field-error"
                         }
                         onChange={ e => {
@@ -254,7 +254,7 @@ class CenterForm extends React.Component {
 
                       <div className="space-top col-12">
                         <label htmlFor="inputCenterMantra"><h6>Mantra</h6></label>
-                        <input type="text" id="inputCenterMantra" placeholder="maximum of 50 characters" className={
+                        <input type="text" value={center.centerMantra || ''} id="inputCenterMantra" placeholder="maximum of 50 characters" className={
                           (centerFieldError['centerMantra'] === undefined) ? "form-control" : "form-control field-error"
                         }
                         onChange={ e => {
@@ -442,9 +442,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     resetFunc: () => {
-      if (ownProps.centerUpdateToggleInput) {
-        ownProps.centerUpdateToggleInput.checked = false;
-      }
       dispatch(resetCenterFields());
       dispatch(resetAppState());
     },

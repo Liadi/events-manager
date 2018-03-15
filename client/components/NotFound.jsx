@@ -2,7 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../style/index.scss';
 
-const NotFound = () => {
+const NotFound = (props) => {
+  if (props.fetching) {
+    return (<p>loading</p>)
+
+  }
+
   return (
     <div className='space-top'>
       <h1 className='display-4 text-center'>404</h1>
