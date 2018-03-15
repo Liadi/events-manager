@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PageControl from './PageControl.jsx';
 import UserListComponent from './UserListComponent.jsx';
+import ListFetching from './ListFetching.jsx';
 import { changeUserPage, fetchAllUsers, resetUserFields, resetUserEntries, updateUserField } from '../actions/userAction';
 import { redirectToLogs } from '../actions/logAction';
 
@@ -30,7 +31,7 @@ class UsersContent extends React.Component {
   }
 
   render() {
-    const { show, currentUserId, userField, users, userPage, userLimit, changeUserPageFunc, userTotalElement, updateUserFieldFunc, fetchAllUsersFunc, resetSearchFieldFunc, redirectToLogsFunc } = this.props;
+    const { show, currentUserId, userField, users, userPage, userLimit, fetching, changeUserPageFunc, userTotalElement, updateUserFieldFunc, fetchAllUsersFunc, resetSearchFieldFunc, redirectToLogsFunc } = this.props;
     if (show) {
       return (
         <div id="timelineContent" className="tab-content">
@@ -80,7 +81,7 @@ class UsersContent extends React.Component {
                       } else {
                         updateUserFieldFunc('userType', e.target.value);
                       }
-                      changeUserPageFunc(1);
+                      changeUserPageFunc(1, false);
                       fetchAllUsersFunc();
                     }}>
                       <option>All</option>
@@ -92,7 +93,7 @@ class UsersContent extends React.Component {
                 <div className='d-flex flex-row space-top'>
                   <button className='btn space-right-sm' type='submit' onClick={ e => {
                     e.preventDefault();
-                    changeUserPageFunc(1);
+                    changeUserPageFunc(1, false);
                     fetchAllUsersFunc();
                   }}>
                     Search
@@ -108,11 +109,28 @@ class UsersContent extends React.Component {
             ):(
               null
             )}
-          {users.length > 0?(<div>
-            {users.map((user) =>
-              <UserListComponent key={user.id} user={user} redirectToLogsFunc={redirectToLogsFunc}/>
-            )}
-          </div>):(<h4>No user found. If you find this strange reset search fields and set page index to 1</h4>) }
+              
+            { fetching?
+              (
+                <ListFetching />
+              ):(
+                users.length > 0?
+                (
+                  <div>
+                    {users.map((user) =>
+                      <UserListComponent key={user.id} user={user} redirectToLogsFunc={redirectToLogsFunc}/>
+                    )}
+                  </div>
+                ):(
+                  <h4>No user found. If you find this strange reset search fields and set page index to 1</h4>
+                )
+              )
+            }
+
+
+              { }
+          
+
           <PageControl page={userPage} limit={userLimit} changePageFunc={changeUserPageFunc} totalElement={userTotalElement} />
         </div>
       );
@@ -127,6 +145,7 @@ const mapStateToProps = (state) => {
     infoTabMsg: state.app.infoTabMsg,
     showInfoTab: state.app.showInfoTab,
     currentUserId: state.user.accountUser.userId,
+    fetching: state.user.fetching,
     users: state.user.users,
     userField: state.user.user,
     userPage: state.user.page,
@@ -155,9 +174,11 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(fetchAllUsers());
     },
 
-    changeUserPageFunc: (page) => {
+    changeUserPageFunc: (page, shouldFetchUser=true) => {
       dispatch(changeUserPage(page));
-      dispatch(fetchAllUsers());
+      if (shouldFetchUser) {
+        dispatch(fetchAllUsers());
+      }
     },
 
     updateUserFieldFunc: (field, value) => {

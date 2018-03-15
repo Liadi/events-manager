@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PageControl from './PageControl.jsx';
+import ListFetching from './ListFetching.jsx';
 import LogListComponent from './LogListComponent.jsx';
 import { changeLogPage, fetchUserLogs, resetLogFields, resetLogEntries, updateLogField } from '../actions/logAction';
 
@@ -29,7 +30,7 @@ class ActivitiesContent extends React.Component {
   }
 
   render() {
-    const { show, currentUserId, logField, logs, logPage, logLimit, changeLogPageFunc, logTotalElement, updateLogFieldFunc, resetFunc } = this.props;
+    const { show, currentUserId, fetching, logField, logs, logPage, logLimit, changeLogPageFunc, logTotalElement, updateLogFieldFunc, resetFunc } = this.props;
     if (show) {
       return (
         <div id="timelineContent" className="tab-content">
@@ -118,11 +119,24 @@ class ActivitiesContent extends React.Component {
             ):(
               null
             )}
-          {logs.length > 0?(<div>
-            {logs.map((log) =>
-              <LogListComponent key={log.id} log={log}/>
-            )}
-          </div>):(<h5>No Log</h5>) }
+
+          { fetching?
+            (
+              <ListFetching />
+            ):(
+              logs.length > 0?
+              (
+                <div>
+                  {logs.map((log) =>
+                    <LogListComponent key={log.id} log={log}/>
+                  )}
+                </div>
+              ):(
+                <h4>No Log Found</h4>
+              )
+            )
+          }
+
           <PageControl page={logPage} limit={logLimit} changePageFunc={changeLogPageFunc} totalElement={logTotalElement} />
         </div>
       );
@@ -137,6 +151,7 @@ const mapStateToProps = (state) => {
     infoTabMsg: state.app.infoTabMsg,
     showInfoTab: state.app.showInfoTab,
     currentUserId: state.user.accountUser.userId,
+    fetching: state.log.fetching,
     logs: state.log.logs,
     logField: state.log.log,
     logPage: state.log.page,

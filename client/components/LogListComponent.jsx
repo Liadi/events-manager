@@ -26,6 +26,7 @@ class LogListComponent extends React.Component {
       open: false
     };
   }
+
   render() {
     const {log} = this.props;
     return (

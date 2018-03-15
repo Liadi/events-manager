@@ -15,6 +15,8 @@ import UnderConstruction from './UnderConstruction.jsx';
 import NotFound from './NotFound.jsx';
 import history from '../history';
 
+import ListFetching from './ListFetching.jsx';
+
 const App = () => {
   return (
     <Router history={history}>
@@ -30,6 +32,8 @@ const App = () => {
         <Route exact path='/events/:id' component={SingleEvent}/>
         <Route exact path='/create-admin' component={CreateAdminUser}/>
         <Route exact path='/under-construction' component={UnderConstruction}/>
+
+        <Route exact path='/testing' component={ListFetching}/>
         <Route path="*" component={NotFound}/>
       </Switch>
     </Router>

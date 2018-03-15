@@ -2,10 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import InfoTab from './InfoTab.jsx';
 import ModalView from './ModalView.jsx';
+import PageFetching from './PageFetching.jsx';
 import { closeInfoTab, closeModal, openModal } from '../actions/appAction';
 import { resetUserFields, updateUser, updateUserField, deleteUserFieldError, userFieldInputError, updatePasswordConfirmation, deleteAccount } from '../actions/userAction';
-const updateSet = new Set();
-const changeSet = new Set();
+import { validateEmail } from '../util';
 
 class ProfileContent extends React.Component {
   constructor(props) {
@@ -25,6 +25,7 @@ class ProfileContent extends React.Component {
   }
 
   setShowEditOrPasswordForm(nextValue) {
+    this.props.resetUserFieldsFunc();
     this.setState((prevState, props) => ({
       showEditOrPasswordForm: nextValue,
     }));
@@ -32,7 +33,14 @@ class ProfileContent extends React.Component {
 
   render() {
     if (this.props.show) {
-      const { userField, userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, modalViewMode, closeModalFunc, closeInfoTabFunc, updateUserFieldFunc, updateUserFunc, initiateDeleteAccountFunc, modalCallbackFunc, passwordConfirmed, user } = this.props;
+      const { fetching, userField, userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, modalViewMode, closeModalFunc, closeInfoTabFunc, updateUserFieldFunc, updateUserFunc, initiateDeleteAccountFunc, modalCallbackFunc, passwordConfirmed, user } = this.props;
+
+      if (fetching) {
+        return (
+          <PageFetching />
+        )
+      }
+
       return (
         <div id="profileContent" className="tab-content">
           <h4>
@@ -81,7 +89,7 @@ class ProfileContent extends React.Component {
             initiateDeleteAccountFunc();
           }}> Delete Account</button>
           
-          <InfoTab className='infoTab space-top' infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} closeInfoTabFunc={closeInfoTabFunc}/>
+          <InfoTab infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} closeInfoTabFunc={closeInfoTabFunc}/>
           { this.state.showEditOrPasswordForm === 'edit'?
             (
               <div>
@@ -234,6 +242,7 @@ class ProfileContent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    fetching: state.user.fetching,
     userFieldError: state.user.error.fieldError,
     userField: state.user.user,
     user: state.user.accountUser,
@@ -320,6 +329,10 @@ const mapDispatchToProps = (dispatch, state) => {
         dispatch(updatePasswordConfirmation());
       }
     },
+
+    resetUserFieldsFunc: () => {
+      dispatch(resetUserFields());
+    },    
 
     unmountFunc: () => {
       dispatch(resetUserFields());

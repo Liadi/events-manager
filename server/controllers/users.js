@@ -169,64 +169,83 @@ module.exports = {
           status: false,
         });
       }
-      user.update({
-        userFirstName: req.userFirstName || user.userFirstName,
-        userLastName: req.userLastName || user.userLastName,
-        userEmail: req.userEmail || user.userEmail,
-        userPassword: req.userPassword || user.userPassword,
-        userPhoneNumber: req.userPhoneNumber || user.userPhoneNumber,
-      }).then((user) => {
-        res.status(200).json({
-          message: 'user updated',
-          user: {
-            userId: user.id,
-            userFirstName: user.userFirstName,
-            userLastName: user.userLastName,
-            userEmail: user.userEmail,
-            userPhoneNumber: user.userPhoneNumber,
-            userType: user.userType,
-          },
-          status: true,
-        });
-        
-        const logData = {
-          entityName: oldUser.userFirstName,
-          entity: 'User',
-          entityId: user.id,
-          userId: req.userId,
-          action: 'UPDATE',
-          before: JSON.stringify({
-            userFirstName: oldUser.userFirstName,
-            userLastName: oldUser.userLastName,
-            userEmail: oldUser.userEmail,
-            userPassword: oldUser.userPassword === user.userPassword? '****' : '***',
-            userPhoneNumber: oldUser.userPhoneNumber,
-          }),
-          after: JSON.stringify({
-            userFirstName: user.userFirstName,
-            userLastName: user.userLastName,
-            userEmail: user.userEmail,
-            userPassword: '****',
-            userPhoneNumber: user.userPhoneNumber,
-          }),
+
+      User.findOne({
+        where: { 
+          userEmail: req.userEmail.toLowerCase(),
+        },
+      }).then((tempUser) => {
+        if (tempUser) {
+          if (tempUser.id === user.id) {
+            return res.status(400).json({
+              message: `new email same with the old email, use a new email for update`,
+              status: false, 
+            })
+          }
+          return res.status(400).json({
+            message: 'account with email already exists',
+            status: false, 
+          })
         }
 
-        log(logData);
-      }).catch((error) => {
-        const err = error.errors[0].message;
-        return res.status(400).json({
-          message: err,
-          status: false,
+        user.update({
+          userFirstName: req.userFirstName || user.userFirstName,
+          userLastName: req.userLastName || user.userLastName,
+          userEmail: req.userEmail || user.userEmail,
+          userPassword: req.userPassword || user.userPassword,
+          userPhoneNumber: req.userPhoneNumber || user.userPhoneNumber,
+        }).then((user) => {
+          res.status(200).json({
+            message: 'user updated',
+            user: {
+              userId: user.id,
+              userFirstName: user.userFirstName,
+              userLastName: user.userLastName,
+              userEmail: user.userEmail,
+              userPhoneNumber: user.userPhoneNumber,
+              userType: user.userType,
+            },
+            status: true,
+          });
+          
+          const logData = {
+            entityName: oldUser.userFirstName,
+            entity: 'User',
+            entityId: user.id,
+            userId: req.userId,
+            action: 'UPDATE',
+            before: JSON.stringify({
+              userFirstName: oldUser.userFirstName,
+              userLastName: oldUser.userLastName,
+              userEmail: oldUser.userEmail,
+              userPassword: oldUser.userPassword === user.userPassword? '****' : '***',
+              userPhoneNumber: oldUser.userPhoneNumber,
+            }),
+            after: JSON.stringify({
+              userFirstName: user.userFirstName,
+              userLastName: user.userLastName,
+              userEmail: user.userEmail,
+              userPassword: '****',
+              userPhoneNumber: user.userPhoneNumber,
+            }),
+          }
+
+          log(logData);
+        }).catch((error) => {
+          const err = error.errors[0].message;
+          return res.status(400).json({
+            message: err,
+            status: false,
+          });
         });
+
       });
     });
   },
 
   deleteAccount(req, res) {
     User.findById(req.userId).then((user) => {
-      console.log('first');
       if (!user) {
-        console.log('second');
         return res.status(404).send({
           message: 'Server error',
           status: false,
@@ -234,7 +253,6 @@ module.exports = {
       }
       const oldUser = {...user.dataValues};
       user.destroy();
-      console.log('third')
       
       res.status(200).send({
         message: 'Account deleted',
@@ -260,7 +278,6 @@ module.exports = {
       log(logData);
 
     }).catch((err) => {
-      console.log('fourth');
       return res.status(400).send({
         message: `Something went wrong, it's on us. Pls try again or report situation if it persists`,
         status: false,
@@ -312,7 +329,9 @@ const searchUsers = ((users, finalParams) => {
         }
 
         case 'userLastName': {
-          if (user[key].toLowerCase() !== finalParams[key].toLowerCase()){
+          if (!user[key]) {
+            foundIndex = -1;
+          } else if (user[key].toLowerCase() !== finalParams[key].toLowerCase()) {
             foundIndex = -1;
           }
           break;

@@ -1,10 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import InfoTab from './InfoTab.jsx';
+import PageFetching from './PageFetching.jsx';
 import { setEventTime, updateEventField, createEvent, updateEvent, resetEventFields } from '../actions/eventAction';
 import { closeInfoTab } from '../actions/appAction';
 import '../style/event-form.scss';
 import { getTimeOptions } from '../util';
+
 
 class EventForm extends React.Component {
   constructor(props) {
@@ -35,110 +37,116 @@ class EventForm extends React.Component {
   }
 
   render() {
-    const { event, resetEventFieldsFunc } = this.props;
+    const { event, resetEventFieldsFunc, fetching } = this.props;
     const time = this.props.event.eventTime;
     return (
-      <div className="container">
-        <InfoTab className="col-12" infoTabMsg={this.props.infoTabMsg} showInfoTab={this.props.showInfoTab} closeInfoTabFunc={this.props.closeInfoTabFunc}/>
-          
-        <div className="row">
-          <form className="main-form card col-sm-9 col-lg-6 mx-auto">
-
-            { this.props.closeFormFunc?
-              (
-                <button className='btn badge badge-warning space-top-sm form-cancel' onClick={ e => {
-                  e.preventDefault();
-                  this.props.closeFormFunc(null);
-                }}>
-                  <i className="fa fa-times"></i>
-                </button>
-              ):(
-                null
-              )
-            }
+      (fetching)?
+      (
+        <PageFetching a={console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')}/>
+      ):(
+        <div a={console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')} className="container">
+          <InfoTab className="col-12" infoTabMsg={this.props.infoTabMsg} showInfoTab={this.props.showInfoTab} closeInfoTabFunc={this.props.closeInfoTabFunc}/>
             
-            <div className="form-group section-group">
-              <label htmlFor="eventName"><h6>Name</h6></label>
-              <input type="text" value={event.eventName || ''} placeholder={"E.g " + this.props.userName.toUpperCase() + "\'s Birthday Party"} className="form-control" id="eventName" onChange={ e => {
-                this.props.updateEventFieldFunc('eventName', e.target.value);
-              }}/>
-            </div>
+          <div className="row">
+            <form className="main-form card col-sm-9 col-lg-6 mx-auto">
 
-            <div className="form-group section-group">
-              <div className="d-flex flex-wrap justify-content-between">
-
-                <div className="form-group">
-                  <label htmlFor="eventYear">Year</label>
-                  <select className="form-control" id="eventYear" value={time.year} onChange={ e => {
-                    this.props.setEventTimeFunc('year', parseInt(e.target.value, 10));
+              { this.props.closeFormFunc?
+                (
+                  <button className='btn badge badge-warning space-top-sm form-cancel' onClick={ e => {
+                    e.preventDefault();
+                    this.props.closeFormFunc(null);
                   }}>
-                    {this.yearOptions.map((elem) => 
-                      <option key={elem}>{elem}</option>
-                    )}
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="eventMonth">Month</label>
-                  <select className="form-control" id="eventMonth" value={time.month} onChange={ e => {
-                    this.props.setEventTimeFunc('month', parseInt(e.target.value, 10));
-                  }}>
-                    {this.monthOptions.map((elem) => 
-                      <option key={elem}>{elem}</option>
-                    )}    
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="eventDate">Date</label>
-                  <select className="form-control" id="eventDate" value={time.date} onChange={ e => {
-                    this.props.setEventTimeFunc('date', parseInt(e.target.value, 10));
-                  }}>
-                    {this.dateOptions.map((elem) => 
-                      <option key={elem}>{elem}</option>
-                    )}
-                  </select>
-                </div>
-
+                    <i className="fa fa-times"></i>
+                  </button>
+                ):(
+                  null
+                )
+              }
+              
+              <div className="form-group section-group">
+                <label htmlFor="eventName"><h6>Name</h6></label>
+                <input type="text" value={event.eventName || ''} placeholder={"E.g " + this.props.userName.toUpperCase() + "\'s Birthday Party"} className="form-control" id="eventName" onChange={ e => {
+                  this.props.updateEventFieldFunc('eventName', e.target.value);
+                }}/>
               </div>
-            </div>
 
-            <div className="form-group section-group">
-              <textarea className="form-control" id="eventName" value={event.eventDescription || ''} placeholder= "Leave a message (500 characters max)" rows="5" onChange={ e => {
-                this.props.updateEventFieldFunc('eventDescription', e.target.value);
-              }}>
-              </textarea>
-            </div>
+              <div className="form-group section-group">
+                <div className="d-flex flex-wrap justify-content-between">
 
-            <div className="d-flex flex-wrap justify-content-end grp section-group">
-              { this.props.type === 'create'?(
-                <button className="btn btn-warning grp-btn" onClick={ e => {
+                  <div className="form-group">
+                    <label htmlFor="eventYear">Year</label>
+                    <select className="form-control" id="eventYear" value={time.year} onChange={ e => {
+                      this.props.setEventTimeFunc('year', parseInt(e.target.value, 10));
+                    }}>
+                      {this.yearOptions.map((elem) => 
+                        <option key={elem}>{elem}</option>
+                      )}
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="eventMonth">Month</label>
+                    <select className="form-control" id="eventMonth" value={time.month} onChange={ e => {
+                      this.props.setEventTimeFunc('month', parseInt(e.target.value, 10));
+                    }}>
+                      {this.monthOptions.map((elem) => 
+                        <option key={elem}>{elem}</option>
+                      )}    
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="eventDate">Date</label>
+                    <select className="form-control" id="eventDate" value={time.date} onChange={ e => {
+                      this.props.setEventTimeFunc('date', parseInt(e.target.value, 10));
+                    }}>
+                      {this.dateOptions.map((elem) => 
+                        <option key={elem}>{elem}</option>
+                      )}
+                    </select>
+                  </div>
+
+                </div>
+              </div>
+
+              <div className="form-group section-group">
+                <textarea className="form-control" id="eventName" value={event.eventDescription || ''} placeholder= "Leave a message (500 characters max)" rows="5" onChange={ e => {
+                  this.props.updateEventFieldFunc('eventDescription', e.target.value);
+                }}>
+                </textarea>
+              </div>
+
+              <div className="d-flex flex-wrap justify-content-end grp section-group">
+                { this.props.type === 'create'?(
+                  <button className="btn btn-warning grp-btn" onClick={ e => {
+                    e.preventDefault();
+                    this.props.createEventFunc(this.props.centerId);
+                  }}>Create</button>
+                ):(
+                  <button className="btn btn-warning grp-btn" onClick={ e => {
+                    e.preventDefault();
+                    this.props.updateEventFunc(this.props.eventId);
+                    resetEventFieldsFunc();
+                    this.mountFunc();
+                  }}>Update</button>
+                )}
+                <button type="reset" className="btn btn-danger grp-btn" onClick={ e => {
                   e.preventDefault();
-                  this.props.createEventFunc(this.props.centerId);
-                }}>Create</button>
-              ):(
-                <button className="btn btn-warning grp-btn" onClick={ e => {
-                  e.preventDefault();
-                  this.props.updateEventFunc(this.props.eventId);
                   resetEventFieldsFunc();
                   this.mountFunc();
-                }}>Update</button>
-              )}
-              <button type="reset" className="btn btn-danger grp-btn" onClick={ e => {
-                e.preventDefault();
-                resetEventFieldsFunc();
-                this.mountFunc();
-              }}>Reset</button>
-            </div>
-          </form>
+                }}>Reset</button>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
+      )
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    fetching: state.event.fetching,
     event: state.event.event,
     infoTabMsg: state.app.infoTabMsg,
     showInfoTab: state.app.showInfoTab,

@@ -73,7 +73,7 @@ module.exports = {
             dispatch({
               type: 'OPEN_MODAL',
               payload: {
-                htmlContent: '<h4>Admin user successful created</h4>',
+                htmlContent: '<h4>Admin user successfully created</h4>',
               },
             });
             dispatch({

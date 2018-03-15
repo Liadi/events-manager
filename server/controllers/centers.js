@@ -153,7 +153,7 @@ module.exports = {
             })
           }
         } else {
-          centerUpdatedResponse(req, res, {...center.dataValues}, oldCenter);
+          centerUpdatedResponse(req, res, {...center.dataValues}, oldCenter, center.images);
         }
 
       }).catch((error) => {
@@ -349,42 +349,44 @@ const searchCenters = ((centers, finalParams) => {
         }
 
         case 'centerCountry':{
-          if (center[key].toLowerCase() !== finalParams[key].toLowerCase()){
+          if (center[key].toLowerCase() !== finalParams[key].toLowerCase()) {
             foundIndex = -1;
           }
           break;
         }
 
         case 'centerState':{
-          if (center[key].toLowerCase() !== finalParams[key].toLowerCase()){
+          if (center[key].toLowerCase() !== finalParams[key].toLowerCase()) {
             foundIndex = -1;
           }
           break;
         }
 
         case 'centerCity':{
-          if (center[key].toLowerCase() !== finalParams[key].toLowerCase()){
+          if (!center[key]) {
+            foundIndex = -1;
+          } else if (center[key].toLowerCase() !== finalParams[key].toLowerCase()) {
             foundIndex = -1;
           }
           break;
         }
 
         case 'centerCapacity':{
-          if (parseInt(center[key]) > parseInt(finalParams[key])){
+          if (parseInt(center[key]) > parseInt(finalParams[key])) {
             foundIndex = -1;
           }
           break;
         }
 
         case 'centerPriceLower':{
-          if (parseInt(center['centerRate']) < parseInt(finalParams[key])){
+          if (parseInt(center['centerRate']) < parseInt(finalParams[key])) {
             foundIndex = -1;
           }
           break;
         }
 
         case 'centerPriceUpper':{
-          if (parseInt(center['centerRate']) > parseInt(finalParams[key])){
+          if (parseInt(center['centerRate']) > parseInt(finalParams[key])) {
             foundIndex = -1;
           }
           break;

@@ -3,6 +3,7 @@ import '../style/signin.scss';
 import { Link, Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import InfoTab from './InfoTab.jsx';
+import PageFetching from './PageFetching.jsx';
 import { closeInfoTab, resetAppState } from '../actions/appAction';
 import { updateUserField, deleteUserFieldError, userLogin, resetUserFields } from '../actions/userAction';
 import { validateUser } from '../util';
@@ -17,7 +18,14 @@ class Login extends React.Component {
     this.props.unmountFunc();
   }
   render() {
-    const { user, infoTabMsg, showInfoTab, closeInfoTabFunc, userFieldError, updateUserFieldFunc, userLoginFunc, loggedIn } = this.props;
+    const { user, infoTabMsg, showInfoTab, closeInfoTabFunc, userFieldError, updateUserFieldFunc, userLoginFunc, loggedIn, fetchingUser } = this.props;
+
+    if (fetchingUser) {
+      return (
+        <PageFetching />
+      )
+    }
+
     return (
       <Route render={props => (
         loggedIn ? (
@@ -81,6 +89,7 @@ const mapStateToProps = (state) => {
   const loggedIn = validateUser(state.user.userToken, state.user.accountUser.userId);
   return {
     user: state.user.user,
+    fetchingUser: state.user.fetching,
     userFieldError: state.user.error.fieldError,
     infoTabMsg: state.app.infoTabMsg,
     showInfoTab: state.app.showInfoTab,

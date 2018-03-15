@@ -22,7 +22,7 @@ class EventAdvancedSearch extends React.Component{
     if (!this.props.showAdvanced){
       return null;
     }
-    const {event, updateEventFieldFunc, setEventTimeFunc} = this.props;
+    const {event, updateEventFieldFunc, setEventTimeFunc, fetchSearchedEventFunc} = this.props;
     const {eventTime, eventAmountPaidLower, eventAmountPaidUpper} = event;
     const [time, lowerAmount, upperAmount ] =  [eventTime, eventAmountPaidLower, eventAmountPaidUpper]
     const percentValue = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
@@ -32,15 +32,21 @@ class EventAdvancedSearch extends React.Component{
           <div className="row">
             <div className="col-sm-4 col-md-3 col-lg-2">
               <label htmlFor="searchCenterName" className="form-label-sm">Center</label>
-              <input type="text" className= "form-control form-control-sm" id="searchCenterName" onChange={ e => {
+              <input type="text" value={event.centerName || ''} className= "form-control form-control-sm" id="searchCenterName" onChange={ e => {
                 updateEventFieldFunc('centerName', e.target.value.trim());
               }}/>
             </div>
             <div className="col-sm-4 col-md-3 col-lg-2">
               <label htmlFor="searchStatus" className="form-label-sm">Status</label>
-              <select type="text" className= "form-control form-control-sm" id="searchStatus" onChange={ e => {
-                updateEventFieldFunc('eventStatus', e.target.value);
+              <select type="text" value={event.eventStatus || 'all'} className="form-control form-control-sm" id="searchStatus" onChange={ e => {
+                if (e.target.value === 'all') {
+                  updateEventFieldFunc('eventStatus', null);
+                } else {
+                  updateEventFieldFunc('eventStatus', e.target.value);
+                }
+                fetchSearchedEventFunc();
               }}>
+                <option>all</option>
                 <option>upcoming</option>
                 <option>successful</option>
                 <option>cancelled</option>
@@ -55,6 +61,7 @@ class EventAdvancedSearch extends React.Component{
               <label htmlFor="searchStatus" className="form-label-sm">amount lower(%)</label>
               <select type="text" value={lowerAmount || 0} className= "form-control form-control-sm" id="searchStatus" onChange={ e => {
                 updateEventFieldFunc('eventAmountPaidLower', e.target.value);
+                fetchSearchedEventFunc();
               }}>
                 {percentValue.map((elem, index) => {
                   if (elem <= upperAmount) {
@@ -67,6 +74,7 @@ class EventAdvancedSearch extends React.Component{
               <label htmlFor="searchStatus" className="form-label-sm">amount upper(%)</label>
               <select type="text" value={upperAmount || 100} className="form-control form-control-sm" id="searchStatus" onChange={ e => {
                 updateEventFieldFunc('eventAmountPaidUpper', e.target.value);
+                fetchSearchedEventFunc();
               }}>
                 {percentValue.map((elem, index) => {
                   if (elem >= lowerAmount) {

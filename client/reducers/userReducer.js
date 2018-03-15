@@ -69,6 +69,7 @@ export default function reducer(
           fieldError: {},
           serverError: null,
         },
+        passwordConfirmed: true,
       }
     }
 

@@ -323,6 +323,12 @@ module.exports = {
           dispatch({
             type: 'RESET_APP_STATE',
           })
+          dispatch({
+            type: 'OPEN_MODAL',
+            payload: {
+              htmlContent: '<h4>Center successfully updated</h4>',
+            },
+          });
         }).catch((error) => {
           dispatch ({
             type: 'OPEN_INFO_TAB',

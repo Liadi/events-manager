@@ -8,6 +8,7 @@ import EventForm from './EventForm.jsx';
 import CenterForm  from './CenterForm.jsx';
 import AmenitiesList from './AmenitiesList.jsx';
 import ModalView from './ModalView.jsx';
+import PageFetching from './PageFetching.jsx';
 import '../style/center-events.scss';
 import { validateUser } from '../util';
 import { userLogout } from '../actions/userAction';
@@ -64,12 +65,18 @@ class SingleCenter extends React.Component {
   }
 
   render() {
-    const { centersArray, userType, loggedIn, centerUpdateForm, eventForm, slatedEvents, userLogoutFunc, modalViewMode, modalCallbackFunc, closeModalFunc, modalContent, showModal, initiateDeleteCenterFunc } = this.props;
+    const { fetchingCenter, fetchingEvent, centersArray, userType, loggedIn, centerUpdateForm, eventForm, slatedEvents, userLogoutFunc, modalViewMode, modalCallbackFunc, closeModalFunc, modalContent, showModal, initiateDeleteCenterFunc } = this.props;
 
     for (let i in centersArray){
       if (centersArray[i].id === parseInt(this.id)) {
         this.currentCenter = centersArray[i];
       }
+    }
+
+    if (fetchingCenter || fetchingEvent) {
+      return(
+        <PageFetching />
+      )
     }
 
     return (
@@ -213,8 +220,12 @@ class SingleCenter extends React.Component {
                   </div>
                   
                   <div className="col-lg-7">
-                    <div className='mx-auto space-top'>
+                    <div className='mx-auto space-top text-center'>
                       <h5 className="card-title">{this.currentCenter.centerDescription}</h5>
+                    </div>
+
+                    <div className='mx-auto space-top text-center'>
+                      <h5 className="card-title">{this.currentCenter.centerMantra}</h5>
                     </div>
 
                     { (this.currentCenter.images && this.currentCenter.images.length > 0)?(
@@ -261,9 +272,8 @@ class SingleCenter extends React.Component {
             <ModalView mode={modalViewMode} callback={modalCallbackFunc} closeModalFunc={closeModalFunc} modalContent={modalContent} showModal={showModal}/>
             <Footer />
           </div>
-        ) : (
-          <NotFound />
-        )
+       
+        ) :(<NotFound />)
       )}/>
     )
   }
@@ -273,6 +283,8 @@ const mapStateToProps = (state) => {
   const loggedIn = validateUser(state.user.userToken, state.user.accountUser.userId);
   const userType = state.user.accountUser.userType;
   return {
+    fetchingCenter: state.center.fetching,
+    fetchingEvent: state.event.fetching,
     center: state.center.center,
     centersArray: state.center.centers,
     modalContent: state.app.modalContent,

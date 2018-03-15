@@ -6,6 +6,7 @@ import Navbar from './Navbar.jsx';
 import NotFound from './NotFound.jsx';
 import EventForm  from './EventForm.jsx';
 import ModalView from './ModalView.jsx';
+import PageFetching from './PageFetching.jsx';
 import '../style/center-events.scss';
 import { validateUser } from '../util';
 import { userLogout } from '../actions/userAction';
@@ -48,7 +49,7 @@ class SingleEvent extends React.Component {
       return(<NotFound />);
     }
 
-    const { eventsArray, userType, userLogoutFunc, accountUserId, initiateDeleteEventFunc, modalViewMode, modalCallbackFunc, closeModalFunc, modalContent, showModal } = this.props;
+    const { fetching, eventsArray, userType, userLogoutFunc, accountUserId, initiateDeleteEventFunc, modalViewMode, modalCallbackFunc, closeModalFunc, modalContent, showModal } = this.props;
 
     let currentEvent;
 
@@ -56,6 +57,12 @@ class SingleEvent extends React.Component {
       if (eventsArray[i].id === parseInt(this.id)) {
         currentEvent = eventsArray[i];
       }
+    }
+
+    if (fetching) {
+      return(
+        <PageFetching />
+      )
     }
 
     return (
@@ -133,6 +140,7 @@ const mapStateToProps = (state) => {
   const userType = state.user.accountUser.userType;
   const accountUserId = state.user.accountUser.userId;
   return {
+    fetching: state.event.fetching,
     eventsArray: state.event.events,
     accountUserId,
     modalContent: state.app.modalContent,

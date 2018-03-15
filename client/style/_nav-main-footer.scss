@@ -38,15 +38,19 @@ textarea {
   }
 }
 
-.infoTab {
-  background-color: tomato;
-}
 
 .outputBox {
   max-height: 200px;
   overflow: auto;
   padding:5px;
   margin: 0px 10px 10px;
+  background-color: #E7FFE7;
+}
+
+#infoTab {
+  max-height: 200px;
+  overflow: auto;
+  padding:5px;
   background-color: #E7FFE7;
 }
 
@@ -80,6 +84,41 @@ textarea {
 .tile-img {
   width: 100%;
   max-width: 500px;
+  height: auto;
+}
+
+#load-div {
+  position: relative;
+  top: 38%;
+  left: 45%;
+  width: auto;
+  height: auto;
+}
+
+.list-load-div {
+  position: relative;
+  text-align: center;
+  margin-top: 60px;
+  width: auto;
+  height: auto;
+}
+
+.page-content-center {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba( 220, 220, 220, 0.5 );
+}
+
+.list-content-center {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  padding: 0px;
+  width: 100%;
   height: auto;
 }
 

@@ -18,7 +18,7 @@ const InfoTab = (props) => {
         )
     } else if (props.infoTabMsg.length > 0) {
         return(
-          <div className='outputBox alert alert-info'>
+          <div className='space-top-sm alert alert-info' id='infoTab'>
             <button className='btn badge badge-warning' onClick={props.closeInfoTabFunc}>
               <i className="fa fa-times"></i>
             </button>

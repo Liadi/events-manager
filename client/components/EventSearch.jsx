@@ -71,7 +71,7 @@ class EventSearch extends React.Component {
                   updateEventSortOrderFunc(e.target.value);
                 }}/>
                 <label className="form-check-label" htmlFor="orderAscending">
-                  earliest to latest
+                  earliest to farthest
                 </label>
               </div>
               <div className="form-check">
@@ -79,7 +79,7 @@ class EventSearch extends React.Component {
                   updateEventSortOrderFunc(e.target.value);
                 }}/>
                 <label className="form-check-label" htmlFor="orderDescending">
-                  latest to earliest
+                  farthest to earliest
                 </label>
               </div>
             </div>
@@ -100,7 +100,7 @@ class EventSearch extends React.Component {
         </div>
         { this.state.showAdvanced ? 
           (
-            <EventAdvancedSearch event={event} showAdvanced={this.state.showAdvanced} updateEventFieldFunc={updateEventFieldFunc} setEventTimeFunc={setEventTimeFunc} />
+            <EventAdvancedSearch event={event} showAdvanced={this.state.showAdvanced} updateEventFieldFunc={updateEventFieldFunc} fetchSearchedEventFunc={fetchSearchedEventFunc} setEventTimeFunc={setEventTimeFunc} />
           ):(
             null      
           )

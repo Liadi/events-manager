@@ -116,6 +116,9 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: false,
+        page: 1,
+        limit: 10,
+        totalElement: 0,
         error: Object.assign({}, state.error, {serverError: action.payload.message || 'Server error. If this persists contact our technical team'}),
         centers: [],
       }

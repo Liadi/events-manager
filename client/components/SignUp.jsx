@@ -4,6 +4,7 @@ import { Link, Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import InfoTab from './InfoTab.jsx';
 import NotFound from './NotFound.jsx';
+import PageFetching from './PageFetching.jsx';
 import ModalView from './ModalView.jsx';
 import Navbar from './Navbar.jsx';
 import { closeInfoTab, closeModal, resetAppState } from '../actions/appAction';
@@ -21,14 +22,18 @@ class SignUp extends React.Component {
   }
 
   render() {
-    const { user, passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabMsg, showInfoTab, closeInfoTabFunc, createUserFunc, closeModalFunc, modalContent, showModal, loggedIn, createAdmin, userType, userLogoutFunc } = this.props;
+    const { user, passwordConfirmed, userFieldError, updateUserFieldFunc, infoTabMsg, showInfoTab, closeInfoTabFunc, createUserFunc, closeModalFunc, modalContent, showModal, loggedIn, createAdmin, userType, userLogoutFunc, fetchingUser } = this.props;
 
     if(userType !== 'admin' && loggedIn) {
       return(
         <NotFound />
       )
     }
-
+    if (fetchingUser) {
+      return (
+        <PageFetching />
+      )
+    }
     return (
       <Route render={props => (
         (loggedIn && !createAdmin)? (
@@ -106,7 +111,7 @@ class SignUp extends React.Component {
                           
                   <div className="form-group">
                     <label htmlFor="inputConfirmPassword">Confirm Password</label>
-                    <input type="password" value={user.userConfirmPassword} className={
+                    <input type="password" value={user.userConfirmPassword || ''} className={
                       passwordConfirmed ? "form-control" : "form-control field-error"
                     } 
                     id="inputConfirmPassword"
@@ -154,6 +159,7 @@ const mapStateToProps = (state, ownProps) => {
   const loggedIn = validateUser(state.user.userToken, state.user.accountUser.userId);
    const userType = state.user.accountUser.userType;
   return {
+    fetchingUser: state.user.fetching,
     user: state.user.user,
     userFieldError: state.user.error.fieldError,
     passwordConfirmed: state.user.passwordConfirmed,
