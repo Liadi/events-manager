@@ -32,6 +32,10 @@ textarea {
   color: white;
 }
 
+.footer-link {
+  color: black;
+}
+
 .navbar {
   .navbar-brand {
     color: $primary-color;
@@ -123,9 +127,10 @@ textarea {
 }
 
 #page-control {
+  text-align: center;
   margin-top: 30px;
   margin-bottom: 20px; 
-  border: solid black;
+  border: solid rgba( 200, 200, 200, 0.5 );
   border-width: 1px 0px;
   padding: 5px 5px;
 }
@@ -149,6 +154,7 @@ main {
 footer {
   border-top: 5px solid $secondary-color;
   background-color: $primary-color;
+  padding-bottom: 20px;
 
   .footer-bottom {
     margin-left: 5px;
