@@ -8,6 +8,13 @@ export default function reducer(
       fieldError: {},
       serverError: null,
     },
+    page: 1,
+    limit: 10,
+    totalElement: 0,
+    sort: {
+      item: 'centerRate',
+      order: 'DESC',
+    },
   },
   action) {
 
@@ -37,20 +44,10 @@ export default function reducer(
       let temp = state.center;
       temp = {...temp};
       temp[action.payload.field] = action.payload.value;
-      
-      let errTemp = state.error.fieldError;
-      errTemp = {...errTemp};
-      errTemp[action.payload.field] = action.payload.msg;
-      
-
-      const ret = {
+      return {
         ...state,
         center: {...temp},
-        error: Object.assign({}, state.error, {fieldError: errTemp}),
       }
-      delete ret.error.fieldError[action.payload.field];
-
-      return ret
     }
 
     case 'RESET_CENTER_FIELDS': {
@@ -61,6 +58,21 @@ export default function reducer(
           fieldError: {},
           serverError: null,
         }
+      }
+    }
+
+    case 'RESET_CENTER_ENTRIES': {
+      return {
+        ...state,
+        centers: [],
+        page: 1,
+        limit: 10,
+        totalElement: 0,
+        sort: {
+          item: 'centerRate',
+          order: 'DESC',
+        },
+        error: Object.assign({}, state.error, {serverError: null}),
       }
     }
 
@@ -77,7 +89,7 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: false,
-        error: Object.assign({}, state.error, {serverError: action.payload.message}),
+        error: Object.assign({}, state.error, {serverError: action.payload.message || 'Server error. If this persists contact our technical team'}),
       }
     }
 
@@ -86,7 +98,7 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: true,
-        centers: state.centers.concat(action.payload.data.center),
+        centers: [action.payload.data.center],
         error: Object.assign({}, state.error, {serverError: null}),
       }
     }
@@ -104,7 +116,11 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: false,
-        error: Object.assign({}, state.error, {serverError: action.payload.message}),
+        page: 1,
+        limit: 10,
+        totalElement: 0,
+        error: Object.assign({}, state.error, {serverError: action.payload.message || 'Server error. If this persists contact our technical team'}),
+        centers: [],
       }
     }
 
@@ -115,6 +131,7 @@ export default function reducer(
         fetched: true,
         error: Object.assign({}, state.error, {serverError: null}),
         centers: action.payload.data.centers,
+        totalElement: action.payload.data.totalElement,
       }
     }
 
@@ -131,7 +148,7 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: false,
-        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message}),
+        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message || 'Server error. If this persists contact our technical team'}),
       }
     }
 
@@ -140,7 +157,35 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: true,
-        centers: state.centers.concat(action.payload.data.center),
+        centers: [action.payload.data.center],
+        error: Object.assign({}, state.error, {serverError: null}),
+      }
+    }
+
+    case 'DELETE_CENTER_PENDING': {
+      return {
+        ...state,
+        fetching: true,
+        fetched: false,
+      }
+    }
+
+    case 'DELETE_CENTER_REJECTED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: false,
+        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message || 'Server error. If this persists contact our technical team'}),
+      }
+    }
+
+    case 'DELETE_CENTER_FULFILLED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        center: {},
+        centers: [],
         error: Object.assign({}, state.error, {serverError: null}),
       }
     }
@@ -152,38 +197,48 @@ export default function reducer(
         fetched: false,
       }
     }
+
     case 'UPDATE_CENTER_REJECTED': {
       return {
         ...state,
         fetching: false,
         fetched: false,
-        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message}),
+        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message || 'Server error. If this persists contact our technical team'}),
       }
     }
 
     case 'UPDATE_CENTER_FULFILLED': {
-      // find center in present array. If center exists update else push
-      const centersArray = state.centers.slice(0, state.centers.length);
-      let found = false;
-      const centerId = action.payload.data.center.id;
-      for (let i in centersArray) {
-        if (centersArray[i].id === centerId) {
-          found = true;
-          centersArray[i] = action.payload.data.center
-          break;
-        }
-      }
-      if (!found) {
-        centersArray.push(action.payload.data.center);
-      }
       return {
         ...state,
         fetching: false,
         fetched: true,
-        centers: centersArray,
+        centers: [action.payload.data.center],
         error: Object.assign({}, state.error, {serverError: null}),
       }
+    }
 
+    case 'CHANGE_CENTER_PAGE': {
+      return {
+        ...state,
+        page: action.payload.page,
+      }
+    }
+
+    case 'UPDATE_CENTER_LIMIT': {
+      return {
+        ...state,
+        limit: action.payload.limit,
+      }
+    }
+
+    case 'UPDATE_CENTER_SORT': {
+      return {
+        ...state,
+        sort: {
+          item: action.payload.item || state.sort.item,
+          order: action.payload.order || state.sort.order,
+        },
+      }
     }
 
     default: {

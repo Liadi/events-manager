@@ -1,16 +1,16 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { closeInfoTab, closeModal, resetAppState, changeDashboardContent } from '../actions/appAction';
+import { closeInfoTab, closeModal, resetAppState, changeDashboardContent, openModal } from '../actions/appAction';
 import { fetchEvents } from '../actions/eventAction';
-import { resetUserFields, fetchUserLogs, userLogout, updateUser, updateUserField, deleteUserFieldError, userFieldInputError, updatePasswordConfirmation } from '../actions/userAction';
+import { resetUserFields, userLogout, updateUser, updateUserField, deleteUserFieldError, userFieldInputError, updatePasswordConfirmation, deleteAccount } from '../actions/userAction';
 import Footer from './Footer.jsx';
 import Navbar from './Navbar.jsx';
 import TimelineContent from './TimelineContent.jsx';
 import HowContent from './HowContent.jsx';
 import ProfileContent from './ProfileContent.jsx';
-import SecurityContent from './SecurityContent.jsx';
-import RecentContent from './RecentContent.jsx';
+import ActivitiesContent from './ActivitiesContent.jsx';
+import UsersContent from './UsersContent.jsx';
 import DashboardSideBar from './DashboardSideBar.jsx';
 import '../style/dashboard.scss';
 import { validateUser, validateEmail } from '../util';
@@ -27,11 +27,18 @@ class Dashboard extends React.Component {
   }
 
   componentWillMount() {
-    (this.props.userType === 'admin')? this.props.changeDashboardContentFunc('recent'):this.props.changeDashboardContentFunc('timeline');
+    if (this.props.loggedIn) {
+      this.props.userType === 'admin'? 
+      (
+        this.props.changeDashboardContentFunc('activities')
+      ):(
+        this.props.changeDashboardContentFunc('timeline')
+      );
+    }
   }
 
   render() {
-    const { dashboardContent, changeDashboardContentFunc, loggedIn, userType, events, logs, userLogoutFunc, userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, closeInfoTabFunc, closeModalFunc, updateUserFieldFunc,props, updateUserFunc, passwordConfirmed, user } = this.props;
+    const { dashboardContent, changeDashboardContentFunc, loggedIn, userType, events, logs, userLogoutFunc, userFieldError, infoTabMsg, showInfoTab, modalContent, showModal, modalViewMode, closeInfoTabFunc, closeModalFunc, updateUserFieldFunc,props, updateUserFunc, passwordConfirmed, user, logPage, logLimit, logTotalElement, changeLogPageFunc, initiateDeleteAccountFunc, modalCallbackFunc } = this.props;
     return (
       <Route render={() => (
         loggedIn ? (
@@ -39,18 +46,16 @@ class Dashboard extends React.Component {
             <Navbar userType={userType} userLogoutFunc={userLogoutFunc} />
             <main className="container-fluid d-flex">
               <DashboardSideBar changeDashboardContentFunc={changeDashboardContentFunc} userType={userType}/>
-              <div className="mx-auto">
-                <div id="tabContentContainer">
-                  <TimelineContent show={ dashboardContent === 'timeline' ? true : false } events={events} />
-                  
-                  <RecentContent show={ dashboardContent === 'recent' ? true : false } logs={logs} />
-                  
-                  <HowContent show={ dashboardContent === 'how' ? true : false } />
-                  
-                  <ProfileContent show={ dashboardContent === 'profile' ? true : false } userFieldError={userFieldError} infoTabMsg={infoTabMsg} showInfoTab={showInfoTab} modalContent={modalContent} showModal={showModal} updateUserFieldFunc={updateUserFieldFunc} closeInfoTabFunc={closeInfoTabFunc} closeModalFunc={closeModalFunc} updateUserFunc={updateUserFunc} passwordConfirmed={passwordConfirmed} user={user} />
-                  
-                  <SecurityContent show={ dashboardContent === 'security' ? true : false } updateUserFieldFunc={updateUserFieldFunc} />
-                </div>
+              <div id="tabContentContainer" className='col-lg-6 col-md-8 mx-auto'>
+                <TimelineContent show={ dashboardContent === 'timeline' ? true : false } events={events} />
+
+                <ActivitiesContent show={ dashboardContent === 'activities' ? true : false } />
+                
+                <UsersContent show={ dashboardContent === 'users' ? true : false } />
+
+                <HowContent show={ dashboardContent === 'how' ? true : false } />
+                
+                <ProfileContent show={ dashboardContent === 'profile' ? true : false } />
               </div>
             </main>
 
@@ -77,10 +82,12 @@ const mapStateToProps = (state) => {
     infoTabMsg: state.app.infoTabMsg,
     showInfoTab: state.app.showInfoTab,
     modalContent: state.app.modalContent,
+    modalCallBack: state.app.modalCallBack,
+    modalViewMode: state.app.modalMode,
     showModal: state.app.showModal,
     dashboardContent: state.app.dashboardContent,
     events: state.event.events,
-    logs: state.user.logs,
+    logs: state.log.logs,
     userType,
     loggedIn,
   }
@@ -88,39 +95,23 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, state) => {
   return {
+    dispatch,
+
     changeDashboardContentFunc: (newContent) => {
       dispatch(changeDashboardContent(newContent));
-      switch (newContent) {
-        case 'timeline': {
-          const now = new Date(Date.now());
-          const farthestFuture = new Date(now.getFullYear() + 2, now.getMonth(), now.getDate());
-          const timeFrame = JSON.stringify({
-            low: now,
-            high: farthestFuture,
-          });
-          const tempParams = {
-            limit: 7,
-            sort: JSON.stringify({item: 'eventTime', order: 'increasing'}),
-            eventTime: timeFrame,
-          }
-          dispatch(fetchEvents(tempParams));
-          break;
+      if (newContent === 'timeline') {
+        const tempParams = {
+          limit: 10,
+          sort: JSON.stringify({item: 'eventTime', order: 'INC'}),
         }
-        case 'recent': {
-          const tempParams = {
-            limit: 7,
-            sort: JSON.stringify({item: 'createdAt', order: 'decreasing'}),
-          }
-          dispatch(fetchUserLogs(tempParams));
-          break;
-        }
+        dispatch(fetchEvents(tempParams));
       }
-
     },
 
     closeInfoTabFunc: () => {
       dispatch(closeInfoTab());
     },
+    
     updateUserFieldFunc: (field, value) => {
       dispatch(updateUserField(field, value));
       switch(field) {
@@ -192,13 +183,32 @@ const mapDispatchToProps = (dispatch, state) => {
       dispatch(resetAppState());
     },
 
+
+    initiateDeleteAccountFunc: () => {
+      dispatch(openModal('decision', `
+      <h4>Are you sure you want to delete your account?</h4>
+      <p>***Note: All your activities will be deleted`, deleteAccount()));
+    },
+
     userLogoutFunc: () => {
       dispatch(userLogout());
     },
   }
 }
 
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  return {
+    ...stateProps,
+    ...dispatchProps,
+    ...ownProps,
+    modalCallbackFunc: () => {
+      dispatchProps.dispatch(stateProps.modalCallBack());
+    },
+  }
+}
+
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps,
 )(Dashboard)

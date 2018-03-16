@@ -10,15 +10,22 @@ store.subscribe(() => {
   saveState({
     user: {
       user: {},
-      logs: [],
-      accountUser,
-      userToken,
+      users: [],
+      accountUser: accountUser,
+      userToken: userToken,
       passwordConfirmed: true,
       fetching: false,
       fetched: false,
       error: {
         fieldError: {},
         serverError: null,
+      },
+      page: 1,
+      limit: 10,
+      totalElement: 0,
+      sort: {
+        item: 'createdAt',
+        order: 'INC',
       },
     }
   });

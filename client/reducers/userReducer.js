@@ -1,7 +1,7 @@
 export default function reducer(
   state={
     user: {},
-    logs: [],
+    users: [],
     accountUser: {},
     userToken: null,
     passwordConfirmed: true,
@@ -11,9 +11,16 @@ export default function reducer(
       fieldError: {},
       serverError: null,
     },
+    page: 1,
+    limit: 10,
+    totalElement: 0,
+    sort: {
+      item: 'createdAt',
+      order: 'INC',
+    },
   }, action) {
-
-	switch (action.type) {
+  
+  switch (action.type) {
     case 'USER_FIELD_ERROR': {
       let temp = state.error.fieldError;
       temp = {...temp};
@@ -47,22 +54,37 @@ export default function reducer(
       }
     }
 
-    // case 'CLEAR_USER': {
-    //   return {
-    //     ...state,
-    //     user: {},
-    //     error: Object.assign({}, state.error, {fieldError: new Map()}), 
-    //   }
-    // }
-
     case 'RESET_USER_FIELDS': {
       return {
         ...state,
         user: {},
+        page: 1,
+        limit: 10,
+        totalElement: 0,
+        sort: {
+          item: 'createdAt',
+          order: 'DESC',
+        },
         error: {
           fieldError: {},
           serverError: null,
-        }
+        },
+        passwordConfirmed: true,
+      }
+    }
+
+    case 'RESET_USER_ENTRIES': {
+      return {
+        ...state,
+        users: [],
+        page: 1,
+        limit: 10,
+        totalElement: 0,
+        sort: {
+          item: 'createdAt',
+          order: 'INC',
+        },
+        error: Object.assign({}, state.error, {serverError: null}),
       }
     }
 
@@ -86,7 +108,7 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: false,
-        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message}),
+        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message || 'Server error. If this persists contact our technical team'}),
       }
     }
 
@@ -95,6 +117,89 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: true,
+        error: Object.assign({}, state.error, {serverError: null}),
+      }
+    }
+
+    case 'FETCH_USERS_PENDING': {
+      return {
+        ...state,
+        fetching: true,
+        fetched: false,
+      }
+    }
+
+    case 'FETCH_USERS_REJECTED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: false,
+        error: Object.assign({}, state.error, {serverError: action.payload.message || 'Server error. If this persists contact our technical team'}),
+        users: [],
+      }
+    }
+
+    case 'FETCH_USERS_FULFILLED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        error: Object.assign({}, state.error, {serverError: null}),
+        users: action.payload.data.users,
+        totalElement: action.payload.data.totalElement,
+      }
+    }
+
+    case 'CREATE_ADMIN_USER_PENDING' : {
+      return {
+        ...state,
+        fetching: true,
+        fetched: false,
+      }
+    }
+
+    case 'CREATE_ADMIN_USER_REJECTED' : {
+      return {
+        ...state,
+        fetching: false,
+        fetched: false,
+        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message || 'Server error. If this persists contact our technical team'}),
+      }
+    }
+
+    case 'CREATE_ADMIN_USER_FULFILLED' : {
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        error: Object.assign({}, state.error, {serverError: null}),
+      }
+    }
+
+    case 'DELETE_ACCOUNT_PENDING': {
+      return {
+        ...state,
+        fetching: true,
+        fetched: false,
+      }
+    }
+
+    case 'DELETE_ACCOUNT_REJECTED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: false,
+        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message || 'Server error. If this persists contact our technical team'}),
+      }
+    }
+
+    case 'DELETE_ACCOUNT_FULFILLED': {
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        accountUser: {},
+        userToken: null,
         error: Object.assign({}, state.error, {serverError: null}),
       }
     }
@@ -112,7 +217,7 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: false,
-        error: Object.assign({}, state.error, {serverError: action.payload.message}),
+        error: Object.assign({}, state.error, {serverError: action.payload.message || 'Server error. If this persists contact our technical team'}),
       }
     }
 
@@ -182,57 +287,27 @@ export default function reducer(
       }
     }
 
-    case 'DELETE_USER_PENDING' : {
+    case 'CHANGE_USER_PAGE': {
       return {
         ...state,
-        user: {
-          id: action.payload,
+        page: action.payload.page,
+      }
+    }
+
+    case 'UPDATE_USER_LIMIT': {
+      return {
+        ...state,
+        limit: action.payload.limit,
+      }
+    }
+
+    case 'UPDATE_USER_SORT': {
+      return {
+        ...state,
+        sort: {
+          item: action.payload.item || state.sort.item,
+          order: action.payload.order || state.sort.order,
         },
-      }
-    }
-
-    case 'DELETE_USER_REJECTED' : {
-      return {
-        ...state,
-        user: {
-          id: action.payload,
-        },
-      }
-    }
-
-    case 'DELETE_USER_FULFILLED' : {
-      return {
-        ...state,
-        user: {
-          id: action.payload,
-        },
-      }
-    }
-
-    case 'FETCH_LOGS_PENDING': {
-      return {
-        ...state,
-        fetching: true,
-        fetched: false,
-      }
-    }
-
-    case 'FETCH_LOGS_REJECTED': {
-      return {
-        ...state,
-        fetching: false,
-        fetched: false,
-        error: Object.assign({}, state.error, {serverError: action.payload.message}),
-      }
-    }
-
-    case 'FETCH_LOGS_FULFILLED': {
-      return {
-        ...state,
-        fetching: false,
-        fetched: true,
-        error: Object.assign({}, state.error, {serverError: null}),
-        logs: action.payload.data.logs,
       }
     }
 

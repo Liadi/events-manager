@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link, Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { resetAppState } from '../actions/appAction';
-import { resetCenterFields } from '../actions/centerAction';
+import { closeModal, resetAppState } from '../actions/appAction';
+import { resetCenterFields, resetCenterEntries } from '../actions/centerAction';
 import Footer from './Footer.jsx';
-import JumboSearch from './JumboSearch.jsx';
+import ModalView from './ModalView.jsx';
+import CenterSearch from './CenterSearch.jsx';
 import '../style/index.scss';
 import '../awesome/scss/font-awesome.scss';
 import { validateUser } from '../util';
@@ -21,7 +22,7 @@ class Landing extends React.Component {
   }
 
   render() {
-    const { loggedIn } = this.props;
+    const { loggedIn, closeModalFunc, modalContent, showModal } = this.props;
     return (
       <Route render={props => (
         loggedIn ? (
@@ -47,10 +48,10 @@ class Landing extends React.Component {
               </div>
             </nav>
 
-            <main className="container mx-auto">
-              <img src="../images/top.png" alt="yap" className="img-fluid"/>
+            <main className="container">
+              <h1 className='display-2 text-center rider'>Your <span>Events</span> in <span className=''>1</span> place</h1>
               <div className="container">
-                <JumboSearch />
+                <CenterSearch panel={true} jumbo={true}/>
                 <div id="caro-div" className="carousel slide mx-auto img-thumbnail" data-ride="carousel">
                   <div className="carousel-inner">
                     <div className="carousel-item active">
@@ -82,12 +83,40 @@ class Landing extends React.Component {
                     <span className="carousel-control-next-icon"></span>
                   </a>
                 </div>
+
+                <div className='row mx-auto col-12 space-top'>
+                  <div className='col-md-8 col-lg-6 mx-auto space-top'>
+                    <h3>What we offer</h3>
+                    <ul>
+                      <li><h4>Over 70 centers and counting</h4></li>
+                      <li className='space-top-sm'><h4>Across 10 cities</h4></li>
+                      <li className='space-top-sm'><h4>Seemlessly Create/Manage Events</h4></li>
+                    </ul>
+                  </div>
+
+                  <div className='col-md-8 col-lg-6 mx-auto space-top'>
+                    <h3>Partner with us</h3>
+                    <ul>
+                      <li><h4>Host & Manage Your Centers</h4></li>
+                      <li className='space-top-sm'><h4>Choose your plan</h4></li>
+                      <li className='space-top-sm'><h4>Access our API for free</h4></li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className='space-top'>
+                  <h3 className='text-center'>Our Venues</h3>
+                  <img src="../images/Landing-Page-Large-Image.jpeg" alt="Los Angeles" className="img-fluid" />
+                </div>
+
               </div>
             </main>
 
+            <ModalView closeModalFunc={closeModalFunc} modalContent={modalContent} showModal={showModal}/>
 
-            <Footer />
+            <Footer />  
           </div>
+
         )
       )}/>
     )
@@ -97,6 +126,8 @@ class Landing extends React.Component {
 const mapStateToProps = (state) => {
   const loggedIn = validateUser(state.user.userToken, state.user.accountUser.userId);
   return {
+    modalContent: state.app.modalContent,
+    showModal: state.app.showModal,
     loggedIn,
   }
 }
@@ -106,6 +137,11 @@ const mapDispatchToProps = (dispatch, state) => {
     unmountFunc: () => {
       dispatch(resetCenterFields());
       dispatch(resetAppState());
+      dispatch(resetCenterEntries());
+    },
+
+    closeModalFunc: () => {
+      dispatch(closeModal());
     },
   }
 }

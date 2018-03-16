@@ -1,14 +1,12 @@
 export default function reducer(
   state = {
-    advancedSearch: false,
-    centerUpdateForm: false,
-    slatedEvents: false,
     showInfoTab: false,
     infoTabMsg: [],
     showModal: false,
     modalContent: null,
+    modalMode: undefined,
+    modalCallBack: undefined,
     dashboardContent: null,
-    records: {},
   },
   action) {
 
@@ -17,30 +15,12 @@ export default function reducer(
     case 'RESET_APP_STATE': {
       return {
         ...state,
-        centerUpdateForm: false,
-        advancedSearch: false,
         showInfoTab: false,
         infoTabMsg: [],
         showModal: false,
         modalContent: null,
-      }
-    }
-		case 'TOGGLE_ADVANCED_SEARCH': {
-      return {
-        ...state,
-        advancedSearch: !state.advancedSearch,
-      }
-    }
-    case 'TOGGLE_CENTER_UPDATE_FORM': {
-      return {
-        ...state,
-        centerUpdateForm: !state.centerUpdateForm,
-      }
-    }
-    case 'TOGGLE_SLATED_EVENTS': {
-      return {
-        ...state,
-        slatedEvents: !state.slatedEvents,
+        modalMode: undefined,
+        modalCallBack: undefined,
       }
     }
     case 'CLOSE_INFO_TAB': {
@@ -62,6 +42,8 @@ export default function reducer(
       return {
         ...state,
         modalContent: action.payload.htmlContent,
+        modalMode: action.payload.mode,
+        modalCallBack: action.payload.callBack,
         showModal: true,
       }
     }
@@ -69,7 +51,9 @@ export default function reducer(
       return {
         ...state,
         showModal: false,
+        modalCallBack: undefined,
         modalContent: null,
+        modalMode: undefined,
       }
     }
     case 'CHANGE_DASHBOARD_CONTENT': {

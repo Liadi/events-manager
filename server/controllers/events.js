@@ -34,6 +34,7 @@ module.exports = {
         eventTime: req.eventTime,
         centerId: req.centerId,
         userId: req.userId,
+        eventDescription: req.eventDescription,
       }).then((event) => {
         res.status(201).json({
           message: 'event created',
@@ -53,6 +54,7 @@ module.exports = {
             eventTime: event.eventTime,
             centerId: event.centerId,
             userId: event.userId,
+            eventDescription: event.eventDescription,
           }),
         };
 
@@ -75,6 +77,7 @@ module.exports = {
         status: false,
       });
     }
+
     Event.findOne({
       where: {id: req.eventId, userId: req.userId},
       include: [{
@@ -102,50 +105,66 @@ module.exports = {
           status: false,
         });
       }
-      const oldEvent = {...event.dataValues};
-      event.update({
-        eventName: req.eventName || event.eventName,
-        eventAmountPaid: req.eventAmountPaid || event.eventAmountPaid,
-        eventTime: req.eventTime || event.eventTime,
-        centerId: req.centerId || event.centerId,
-      }).then((event) => {
-        res.status(200).json({
-          message: 'event updated',
-          event,
-          status: true,
+      Center.findOne({
+        where:{id: event.center.id},
+        include:[{
+          model: Event,
+          as: 'events',
+          attributes: ['eventTime', 'id'],
+        }],
+      }).then((center) => {
+        // check for time clash with another event
+        if (req.eventTime) {
+          for (let i in center.events) {
+            if (center.events[i].id !== req.eventId && center.events[i].eventTime.getTime() === req.eventTime.getTime()) {
+              return res.status(404).json({
+                message: 'date taken',
+                status: false,
+              });
+            }
+          }
+        }
+        const oldEvent = {...event.dataValues};
+        event.update({
+          eventName: req.eventName || event.eventName,
+          eventAmountPaid: req.eventAmountPaid || event.eventAmountPaid,
+          eventTime: req.eventTime || event.eventTime,
+          centerId: req.centerId || event.centerId,
+        }).then((event) => {
+          res.status(200).json({
+            message: 'event updated',
+            event,
+            status: true,
+          });
+
+          const logData = {
+            entityName: oldEvent.eventName,
+            entity: 'Event',
+            entityId: event.id,
+            userId: req.userId,
+            action: 'UPDATE',
+            before: JSON.stringify({
+              eventName: oldEvent.eventName,
+              eventTime: oldEvent.eventTime,
+              centerId: oldEvent.centerId,
+              userId: oldEvent.userId,
+            }),
+            after: JSON.stringify({
+              eventName: event.eventName,
+              eventTime: event.eventTime,
+              centerId: event.centerId,
+              userId: event.userId,
+            }),
+          };
+          log(logData);
+        }).catch((error) => {
+          const err = error.errors[0].message;
+          return res.status(400).json({
+            message: err,
+            status: false,
+          });
         });
-
-
-        const logData = {
-          entityName: oldEvent.eventName,
-          entity: 'Event',
-          entityId: event.id,
-          userId: req.userId,
-          action: 'UPDATE',
-          before: JSON.stringify({
-            eventName: oldEvent.eventName,
-            eventTime: oldEvent.eventTime,
-            centerId: oldEvent.centerId,
-            userId: oldEvent.userId,
-          }),
-          after: JSON.stringify({
-            eventName: event.eventName,
-            eventTime: event.eventTime,
-            centerId: event.centerId,
-            userId: event.userId,
-          }),
-        };
-
-        log(logData);
-
-
-      }).catch((error) => {
-        const err = error.errors[0].message;
-        return res.status(400).json({
-          message: err,
-          status: false,
-        });
-      });
+      })
     });
   },
 
@@ -170,6 +189,7 @@ module.exports = {
       attributes: [
       'id',
       'eventName',
+      'eventDescription',
       'eventStatus',
       'eventTime',
       'eventAmountPaid',
@@ -206,10 +226,11 @@ module.exports = {
       });
     }
     Event.findOne({
-      where: {id: req.eventId, userId: req.userId},
+      where: {id: req.eventId},
       attributes: [
       'id',
       'eventName',
+      'eventDescription',
       'eventStatus',
       'eventTime',
       'eventAmountPaid',
@@ -218,6 +239,11 @@ module.exports = {
       ],
     }).then((event) => {
       if (!event) {
+        return res.status(404).json({
+          message: 'event does not exist',
+          status: false,
+        });
+      } else if (event.userId != req.userId && req.userType !== 'admin') {
         return res.status(404).json({
           message: 'event does not exist',
           status: false,
@@ -239,6 +265,7 @@ module.exports = {
         action: 'DELETE',
         before: JSON.stringify({
           eventName: oldEvent.eventName,
+          eventDescription: oldEvent.eventDescription,
           eventTime: oldEvent.eventTime,
           centerId: oldEvent.centerId,
           userId: oldEvent.userId,
@@ -270,11 +297,13 @@ module.exports = {
             'id',
             'centerName',
             'centerAddress',
+            'centerRate',
           ],
         }],
         attributes: [
         'id',
         'eventName',
+        'eventDescription',
         'eventStatus',
         'eventTime',
         'eventAmountPaid',
@@ -282,17 +311,13 @@ module.exports = {
         'userId',
         ],
       }).then((events) => {
-        if (events.length > 0){
-          return res.status(200).json({
-            message: 'all events found',
-            status: true,
-            events,
-          });
-        }
-        return res.status(200).json({
-          message: 'no events',
-          status: true
-        })
+        return findEvents(events, finalParams, res);
+      }).catch((error) => {
+        console.log('error => ', error);
+        return res.status(400).json({
+          message: 'invalid query',
+          status: false,
+        });
       });
     } else {
       Event.findAll({
@@ -304,11 +329,13 @@ module.exports = {
             'id',
             'centerName',
             'centerAddress',
+            'centerRate',
           ],
         }],
         attributes: [
         'id',
         'eventName',
+        'eventDescription',
         'eventStatus',
         'eventTime',
         'eventAmountPaid',
@@ -318,7 +345,6 @@ module.exports = {
       }).then((events) => {
         return findEvents(events, finalParams, res);
       }).catch((error) => {
-        console.log('error => ', error);
         return res.status(400).json({
           message: 'invalid query',
           status: false,
@@ -335,41 +361,46 @@ const searchEvents = ((events, finalParams) => {
     const event = events[i];
     let foundIndex = 0;
     for (let key in finalParams) {
-      switch(key) {
-        case 'eventName': {
-          foundIndex = event[key].search(finalParams[key])
-          break;
-        }
-
-        case 'eventStatus': {
-          if (event[key] !== finalParams[key]){
-            foundIndex = -1;
+      if (finalParams[key]) {
+        switch(key) {
+          case 'eventName': {
+            foundIndex = event[key].toLowerCase().search(finalParams[key].toLowerCase())
+            break;
           }
-          break;
-        }
 
-        case 'eventAmountPaid': {
-          if (parseInt(event[key]) < parseInt(finalParams[key])){
-            foundIndex = -1;
+          case 'centerName': {
+            foundIndex = event.center[key].toLowerCase().search(finalParams[key].toLowerCase())
+            break;
           }
-          break;
-        }
 
-        case 'eventTime': {
-          const timeParam = JSON.parse(finalParams[key]);
-          const [low, mainTime, high] = [ new Date(timeParam['low']), new Date(event[key]) , new Date(timeParam['high']) ]; 
-          console.log('time parameters => ', 'low =', low, ' event\'s =', mainTime, ' high =', high);
-          if (low >= mainTime || mainTime > high){
-            foundIndex = -1;
+          case 'eventStatus': {
+            if (event[key] !== finalParams[key]){
+              foundIndex = -1;
+            }
+            break;
           }
-          break;
-        }
 
-        case 'centerId':{
-          if (parseInt(event[key]) !== parseInt(finalParams[key])){
-            foundIndex = -1;
+          case 'eventAmountPaidLower': {
+            if (parseInt(event.eventAmountPaid) < parseInt(finalParams[key])) {
+              foundIndex = -1;
+            }
+            break;
           }
-          break;
+
+          case 'eventAmountPaidUpper': {
+            if (parseInt(event.eventAmountPaid) > parseInt(finalParams[key])) {
+              foundIndex = -1;
+            }
+            break;
+          }
+
+          case 'eventTime': {
+            console.log('eventTime => ', finalParams[key]);
+            if (event[key].getTime() > finalParams[key].getTime()) {
+              foundIndex = -1;
+            }
+            break;
+          }
         }
       }
       if (foundIndex === -1) {
@@ -386,17 +417,16 @@ const searchEvents = ((events, finalParams) => {
 
 const findEvents = (( events, finalParams, res ) => {
   let retEvents = searchEvents(events, finalParams);
-
   if (finalParams['sort']) {
     const tempSortObj = JSON.parse(finalParams['sort'])
     retEvents.sort((a, b) => {
-      if (tempSortObj['order'] === 'decreasing'){
+      if (tempSortObj['order'] === 'DESC'){
         return b[tempSortObj['item']] - a[tempSortObj['item']];
       }
       return a[tempSortObj['item']] - b[tempSortObj['item']];
     });
   }
-  const n = retEvents.length;
+  const totalElement = retEvents.length;
   const [limit, page] = [parseInt(finalParams['limit']), parseInt(finalParams['page'])];
   if ( limit && limit > 0) {
     if (page && page > 0) {
@@ -411,7 +441,7 @@ const findEvents = (( events, finalParams, res ) => {
       message: 'events found',
       status: true,
       events: retEvents,
-      n,
+      totalElement,
     });
   }
   return res.status(404).json({

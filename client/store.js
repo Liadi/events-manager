@@ -11,4 +11,4 @@ const middleware = applyMiddleware(promise(), thunk, logger);
 
 const persistedState = loadState();
 
-export default createStore(reducer, persistedState, middleware);
+export default createStore(reducer, persistedState,  middleware);

@@ -50,8 +50,36 @@ main {
   border-radius: 3px;
 }
 
+.space-top-2x {
+  margin-top: 40px;
+}
+
+.space-bottom-2x {
+  margin-bottom: 40px;
+}
+
 .space-top {
-   margin-top: 20px;
+  margin-top: 20px;
+}
+
+.space-top-sm {
+   margin-top: 10px;
+}
+
+.space-bottom {
+   margin-bottom: 20px;
+}
+
+.space-bottom-sm {
+   margin-bottom: 10px;
+}
+
+.space-right {
+  margin-right: 20px;
+}
+
+.space-right-sm {
+  margin-right: 10px;
 }
 
 .div-price-range {
@@ -80,6 +108,17 @@ button {
   background-color: $primary-color;
   border-color: $primary-color; 
   color: white;
+}
+
+.fig-res {
+  width: 300px;
+  height: 300px;
+}
+
+.img-res {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 @import 'nav-main-footer';

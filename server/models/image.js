@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         len: {
           args: [0, 50],
-          msg: 'invalid input, image description should not be more than 30 characters',
+          msg: 'invalid input, image description should not be more than 50 characters',
         },
       },
     },
@@ -25,11 +25,11 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'invalid input, image order should be positive integers',
         },
         min: {
-          args: 0,
+          args:[0],
           msg: 'invalid input, negative image order not allowed',
         },
         max: {
-          args: 20,
+          args: [20],
           msg: 'invalid input, image order above 20 is discouraged, as a workaround give multiple images same order, order range[0, 20]',
         },
       },

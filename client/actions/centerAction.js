@@ -2,19 +2,31 @@ import axios from 'axios';
 import history from '../history';
 
 module.exports = {
-  fetchCenters() {
+  fetchAllCenters(tempParams = {}) {
     return function(dispatch, getState) {
-      const {center} = getState().center;
+      const centerParams = {
+        ...getState().center.center,
+        limit: getState().center.limit,
+        sort: JSON.stringify(getState().center.sort),
+        page: getState().center.page,
+        ...tempParams,
+      }
       dispatch({
         type: 'FETCH_CENTERS',
-        payload: axios.get('api/v1/centers', {params: center,})
+        payload: axios({
+          method: 'get',
+          url: 'api/v1/centers',
+          params: centerParams,
+          headers: {
+            'token': getState().user.userToken,
+          }
+        }),
       });
     }
 	},
 
   fetchCenter(id) {
     return function(dispatch, getState) {
-      console.log('fetching');
       dispatch({
         type: 'FETCH_CENTER',
         payload: axios({
@@ -28,7 +40,7 @@ module.exports = {
     }
   },
 
-  createCenter(inputFieldSetArg) {
+  createCenter(centerImageArray, srcArray) {
     return function(dispatch, getState) {
       const promiseFieldError = [];
       const fieldError = getState().center.error.fieldError;
@@ -105,7 +117,6 @@ module.exports = {
       }
 
       Promise.all(promiseFieldError).then(() =>{
-        console.log('set of promises or not => ', promiseFieldError);
         if (Object.keys(getState().center.error.fieldError).length > 0) {
           let temp = getState().center.error.fieldError;
           let msg = [];
@@ -122,30 +133,35 @@ module.exports = {
             }
           });
         } else {
+          const data = new FormData();
+          let centerData = getState().center.center;
+          for (let i in centerData) {
+            if (centerData[i] && centerData.hasOwnProperty(i)) {
+              data.append(i, centerData[i]);
+            }
+          }
+
+          for (let i in centerImageArray) {
+            data.append('file', centerImageArray[i]);
+          }
           dispatch({
             type: 'CREATE_CENTER',
             payload: axios({
               method: 'post',
               url: 'api/v1/centers',
-              data: getState().center.center,
+              data, 
               headers: {
                 'token': getState().user.userToken,
               }
             }),
           }).then( response => {
-            console.log(response, history);
-            dispatch({
-              type: 'RESET_CENTER_FIELDS',
-            })
-            dispatch({
-              type: 'RESET_APP_STATE',
-            })
-            for (let item of inputFieldSetArg) item.value = "";
+            for (let i in srcArray) {
+              window.URL.revokeObjectURL(srcArray[i]);
+            }
             history.push(`/centers/${response.value.data.center.id}`);
           }).catch(err =>{
-            console.log('checking 3', err);
             let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
-            console.log('checking 4');
+
             dispatch({
               type: 'OPEN_INFO_TAB',
               payload: {
@@ -159,6 +175,46 @@ module.exports = {
     }
   },
 
+  deleteCenter(centerId){
+    const func = () => {
+      return function(dispatch, getState) {
+        dispatch({
+          type: 'DELETE_CENTER',
+          payload: axios({
+            method: 'delete',
+            url: `/api/v1/centers/${centerId}`,
+            headers: {
+              'token': getState().user.userToken,
+            }
+          }),
+        }).then((res) => {
+          dispatch({
+            type: 'CHANGE_CENTER_PAGE',
+            payload: {
+              page: 1,
+            }
+          });
+          history.push('/centers');
+          dispatch({
+            type: 'OPEN_MODAL',
+            payload: {
+              htmlContent: '<h4>Center successfully deleted</h4>',
+            },
+          });
+        }).catch((err) => {
+          let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
+          dispatch({
+            type: 'OPEN_INFO_TAB',
+            payload: {
+              msg,
+            },
+          });
+        })
+      };
+    }
+    return func;
+  },
+
   centerFieldInputError(field, msg) {
     return{
       type: 'CENTER_FIELD_ERROR',
@@ -169,18 +225,15 @@ module.exports = {
     }
   },
 
-  resetCenterFields(inputFieldSetArg=null) {
-    if (inputFieldSetArg) {
-      for (let item of inputFieldSetArg){
-        if (item.type === 'checkbox'){
-          item.checked = false;
-        } else {
-          item.value = "";
-        }
-      }
-    }
+  resetCenterFields() {
     return {
       type: 'RESET_CENTER_FIELDS',
+    }
+  },
+
+  resetCenterEntries() {
+    return {
+      type: 'RESET_CENTER_ENTRIES',
     }
   },
 
@@ -203,7 +256,7 @@ module.exports = {
     }
   },
 
-  updateCenter(inputFieldSetArg, centerId) {
+  updateCenter(centerId, centerImageArray, srcArray) {
     return function(dispatch, getState) {
       const fieldError = getState().center.error.fieldError;
       const fieldInput = getState().center.center;
@@ -219,9 +272,10 @@ module.exports = {
         dispatch ({
           type: 'OPEN_INFO_TAB',
           payload: {
-            ErrorMsg,
+            msg: ErrorMsg,
           }
-        });      
+        });
+        return;     
       }
       for (let field in fieldInput) {
         if (fieldInput.hasOwnProperty(field) && fieldInput[field] !== '') {
@@ -230,7 +284,7 @@ module.exports = {
         }
       }
       // Object.keys(fieldError).length
-      if ( fieldsEmpty ) {
+      if ( fieldsEmpty && centerImageArray.length === 0 ) {
         let msg = ['fill one or more fields'];
         dispatch ({
           type: 'OPEN_INFO_TAB',
@@ -239,30 +293,42 @@ module.exports = {
           }
         });
       } else {
+        const data = new FormData();
+        let centerData = getState().center.center;
+        for (let i in centerData) {
+          if (centerData[i] && centerData.hasOwnProperty(i)) {
+            data.append(i, centerData[i]);
+          }
+        }
+        for (let i in centerImageArray) {
+          data.append('file', centerImageArray[i]);
+        }
         dispatch({
           type: 'UPDATE_CENTER',
           payload: axios({
             method: 'put',
             url: `/api/v1/centers/${centerId}`,
-            data: getState().center.center,
+            data,
             headers: {
               'token': getState().user.userToken,
             }
           }),
         }).then((response) => {
+          for (let i in srcArray) {
+            window.URL.revokeObjectURL(srcArray[i]);
+          }
           dispatch({
             type: 'RESET_CENTER_FIELDS',
           })
           dispatch({
             type: 'RESET_APP_STATE',
           })
-          for (let item of inputFieldSetArg){
-            if (item.type === 'checkbox'){
-              item.checked = false;
-            } else {
-              item.value = "";
-            }
-          }
+          dispatch({
+            type: 'OPEN_MODAL',
+            payload: {
+              htmlContent: '<h4>Center successfully updated</h4>',
+            },
+          });
         }).catch((error) => {
           dispatch ({
             type: 'OPEN_INFO_TAB',
@@ -273,5 +339,41 @@ module.exports = {
         })
       }
     }
-  }
+  },
+
+  changeCenterPage(page) {
+    return {
+      type: 'CHANGE_CENTER_PAGE',
+      payload: {
+        page,
+      }
+    }
+  },
+
+  updateCenterLimit(limit) {
+    return {
+      type: 'UPDATE_CENTER_LIMIT',
+      payload: {
+        limit,
+      }
+    }
+  },
+
+  updateCenterSortItem(item) {
+    return {
+      type: 'UPDATE_CENTER_SORT',
+      payload: {
+        item,
+      }
+    }
+  },
+
+  updateCenterSortOrder(order) {
+    return {
+      type: 'UPDATE_CENTER_SORT',
+      payload: {
+        order,
+      }
+    }
+  },
 }

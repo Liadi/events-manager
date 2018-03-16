@@ -1,7 +1,8 @@
 import axios from 'axios';
+import history from '../history';
 
 module.exports = {
-  userSignUp(inputFieldSetArg) {
+  createUser(admin=false) {
     return function(dispatch, getState) {
       const fieldError = getState().user.error.fieldError;
       if (!getState().user.user.userFirstName) {
@@ -57,32 +58,86 @@ module.exports = {
           }
         });
       } else {
-        dispatch({
-          type: 'USER_SIGNUP',
-          payload: axios.post('api/v1/users/signup', getState().user.user),
-        }).then(res => {
+        if (admin) {
           dispatch({
-            type: 'OPEN_MODAL',
-            payload: {
-              htmlContent: '<div><h4>Signup Successful</h4><Link to="/login">Log in</Link> to you account<div>',
-            },
+            type: 'CREATE_ADMIN_USER',
+            payload: axios({
+              method: 'post',
+              url: 'api/v1/users/admin',
+              data: getState().user.user,
+              headers: {
+                'token': getState().user.userToken,
+              }
+            }),
+          }).then(res => {
+            dispatch({
+              type: 'OPEN_MODAL',
+              payload: {
+                htmlContent: '<h4>Admin user successfully created</h4>',
+              },
+            });
+            dispatch({
+              type: 'RESET_USER_FIELDS',
+            });
+          }).catch(err =>{
+            let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
+            dispatch({
+              type: 'OPEN_INFO_TAB',
+              payload: {
+                msg
+              },
+            });
           });
+        } else {
           dispatch({
-            type: 'RESET_USER_FIELDS',
+            type: 'USER_SIGNUP',
+            payload: axios.post('api/v1/users/signup', getState().user.user),
+          }).then(res => {
+            dispatch({
+              type: 'OPEN_MODAL',
+              payload: {
+                htmlContent: '<div><h4>Signup Successful</h4>You can Log in with your details<div>',
+              },
+            });
+            dispatch({
+              type: 'RESET_USER_FIELDS',
+            });
+          }).catch(err =>{
+            let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
+            dispatch({
+              type: 'OPEN_INFO_TAB',
+              payload: {
+                msg
+              },
+            });
           });
-          for (let item of inputFieldSetArg) item.value = "";
-        }).catch(err =>{
-          let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
-          dispatch({
-            type: 'OPEN_INFO_TAB',
-            payload: {
-              msg
-            },
-          });
-        });
+        }
       }
     }
 	},
+
+  fetchAllUsers(tempParams = {}) {
+    return function(dispatch, getState) {
+      const userParams = {
+        ...getState().user.user,
+        limit: getState().user.limit,
+        sort: JSON.stringify(getState().user.sort),
+        page: getState().user.page,
+        ...tempParams,
+      }
+      dispatch({
+        type: 'FETCH_USERS',
+        payload: axios({
+          method: 'get',
+          url: 'api/v1/users',
+          params: userParams,
+          headers: {
+            'token': getState().user.userToken,
+          }
+        }),
+      });
+    }
+  },
 
   userLogin() {
     return function(dispatch, getState) {
@@ -139,9 +194,49 @@ module.exports = {
   },
 
   userLogout() {
+    history.push('/');
     return {
       type: 'USER_LOGOUT',
     }
+  },
+
+  deleteAccount() {
+    const func = () => {
+      return function(dispatch, getState) {
+        dispatch({
+          type: 'DELETE_ACCOUNT',
+          payload: axios({
+            method: 'delete',
+            url: `/api/v1/accounts`,
+            headers: {
+              'token': getState().user.userToken,
+            }
+          }),
+        }).then((res) => {
+          history.push('/');
+          dispatch({
+            type: 'OPEN_MODAL',
+            payload: {
+              htmlContent: '<h4>Account successfully deleted</h4>',
+            },
+          });
+        }).catch((err) => {
+          let msg;
+          try {
+            msg = [err.response.data.message];
+          } catch(error){
+            msg = ['Server error. If this persists contact our technical team'];
+          }
+          dispatch({
+            type: 'OPEN_INFO_TAB',
+            payload: {
+              msg,
+            },
+          });
+        })
+      };
+    }
+    return func;
   },
 
   userFieldInputError(field, msg) {
@@ -217,7 +312,7 @@ module.exports = {
     } 
   },
 
-  updateUser(inputFieldSetArg, type) {
+  updateUser(type) {
     return function(dispatch, getState) {
       let [userField, userFieldError] = [{}, {}];
       if (type === 'others') {
@@ -270,8 +365,9 @@ module.exports = {
         }
       }
       let nothingToChange = true;
-      for (let item of inputFieldSetArg) {
-        if (item.value !== "") {
+      for (let field in getState().user.user) {
+        if (getState().user.user.hasOwnProperty(field))
+        if (getState().user.user.field !== "") {
           nothingToChange = false;
         };
       }
@@ -321,7 +417,6 @@ module.exports = {
           dispatch({
             type: 'RESET_USER_FIELDS',
           });
-          for (let item of inputFieldSetArg) item.value = "";
         }).catch(err =>{
           let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
           dispatch({
@@ -335,25 +430,51 @@ module.exports = {
     }
   },
 
+  changeUserPage(page) {
+    return {
+      type: 'CHANGE_USER_PAGE',
+      payload: {
+        page,
+      }
+    }
+  },
+
+  updateUserLimit(limit) {
+    return {
+      type: 'UPDATE_USER_LIMIT',
+      payload: {
+        limit,
+      }
+    }
+  },
+
+  updateUserSortItem(item) {
+    return {
+      type: 'UPDATE_USER_SORT',
+      payload: {
+        item,
+      }
+    }
+  },
+
+  updateUserSortOrder(order) {
+    return {
+      type: 'UPDATE_USER_SORT',
+      payload: {
+        order,
+      }
+    }
+  },
+
   resetUserFields() {
     return {
       type: 'RESET_USER_FIELDS',
     }
   },
 
-  fetchUserLogs(param) {
-    return function(dispatch, getState) {  
-      dispatch({
-        type: 'FETCH_LOGS',
-        payload: axios({
-          method: 'get',
-          url: 'api/v1/logs',
-          params: param,
-          headers: {
-            'token': getState().user.userToken,
-          }
-        }),
-      });
+  resetUserEntries() {
+    return {
+      type: 'RESET_USER_ENTRIES',
     }
-  }
+  },
 }

@@ -18,12 +18,12 @@ const DashboardSideBar = (props) => {
       }
 
       {(props.userType === 'admin')? (<div>
-        <button className="tab-btn" onClick={ e => {props.changeDashboardContentFunc('recent')}}>
+        <button className="tab-btn" onClick={ e => {props.changeDashboardContentFunc('activities')}}>
           <span className="mx-auto">
             <span>
               <i className="fa fa-calendar-o fa-2x" aria-hidden="true"></i>
             </span>
-            <h3 className="d-inline">Recent</h3>
+            <h3 className="d-inline">Activities</h3>
           </span>
         </button>
       </div>) : (null)
@@ -51,16 +51,21 @@ const DashboardSideBar = (props) => {
         </button>
       </div>
       
-      {(props.userType === 'regular')? (<div>
-        <button className="tab-btn" onClick={ e => {props.changeDashboardContentFunc('security')}}>
-          <span className="mx-auto">
-            <span>
-              <i className="fa fa-lock fa-2x" aria-hidden="true"></i>
-            </span>
-            <h3 className="d-inline">Security</h3>
-          </span>
-        </button>
-      </div>) : (null)
+      {(props.userType === "admin")?
+        (
+          <div>
+            <button className="tab-btn" onClick={ e => {props.changeDashboardContentFunc('users')}}>      
+              <span className="mx-auto">
+                <span>
+                  <i className="fa fa-user fa-2x" aria-hidden="true"></i>
+                </span>
+                <h3 className="d-inline">Users Info</h3>
+              </span>
+            </button>
+          </div>
+        ):(
+          null
+        )
       }
     </div>
   );

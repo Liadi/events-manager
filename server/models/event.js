@@ -12,6 +12,16 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
 
+    eventDescription: {
+      type: DataTypes.TEXT,
+      validate: {
+        len: {
+          args: [0, 500],
+          msg: 'invalid input, event description should have at most 500 characters',
+        }
+      }
+    },
+
     eventStatus: {
       type: DataTypes.ENUM('upcoming', 'successful', 'cancelled'),
       defaultValue: 'upcoming',
