@@ -42,9 +42,9 @@ class EventForm extends React.Component {
     return (
       (fetching)?
       (
-        <PageFetching a={console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')}/>
+        <PageFetching />
       ):(
-        <div a={console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')} className="container">
+        <div className="container">
           <InfoTab className="col-12" infoTabMsg={this.props.infoTabMsg} showInfoTab={this.props.showInfoTab} closeInfoTabFunc={this.props.closeInfoTabFunc}/>
             
           <div className="row">

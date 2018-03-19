@@ -16,7 +16,7 @@ const Footer = () => {
         </div>
 
         <div className='text-center col-lg-4 space-top'>
-          <h2> <a href='/www.github.com/liadi/events-manager' className='link footer-link'> Project Info </a> </h2>
+          <h2> <a target='_blank' href='https://github.com/Liadi/events-manager#readme' className='link footer-link'> Project Info </a> </h2>
         </div>
       </div>
 
