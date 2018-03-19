@@ -8,18 +8,18 @@ const ModalView = (props) => {
 		return (
 			<div id='modal-main' onClick={ e => {if (e.target.id === 'modal-main') props.closeModalFunc();}}>
         <div id='modal-frame'>
-					<button onClick={ e => {props.closeModalFunc();}}>
+					<button className='btn' onClick={ e => {props.closeModalFunc();}}>
 						<i className="fa fa-times"></i>
 					</button>
-          <div dangerouslySetInnerHTML={{ __html: props.modalContent }}></div>
+          <div className='space-top-sm space-bottom' dangerouslySetInnerHTML={{ __html: props.modalContent }}></div>
           {(props.mode === 'decision' || props.mode === 'confirmation')?(
-            <div>
+            <div className='modal-grp-btn space-bottom'>
               <button className="btn btn-warning grp-btn" onClick={ e => {
                 e.preventDefault();
                 props.callback();
                 props.closeModalFunc();
               }}>{(props.mode === 'decision')?('YES'):('OK')}</button>
-              <button className="btn btn-danger grp-btn" onClick={ e => {props.closeModalFunc();}}>{(props.mode === 'decision')?('NO'):('CANCEL')}</button>
+              <button className="btn btn-danger grp-btn space-right-sm" onClick={ e => {props.closeModalFunc();}}>{(props.mode === 'decision')?('NO'):('CANCEL')}</button>
             </div> 
           ):(
             null

@@ -330,6 +330,7 @@ module.exports = {
         return res.status(400).json({
           message: 'invalid query',
           status: false,
+          error,
         });
       });
     }
