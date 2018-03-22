@@ -80,11 +80,10 @@ module.exports = {
               type: 'RESET_USER_FIELDS',
             });
           }).catch(err =>{
-            let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
             dispatch({
               type: 'OPEN_INFO_TAB',
               payload: {
-                msg
+                msg: [getState().user.error.serverError],
               },
             });
           });
@@ -103,18 +102,17 @@ module.exports = {
               type: 'RESET_USER_FIELDS',
             });
           }).catch(err =>{
-            let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
             dispatch({
               type: 'OPEN_INFO_TAB',
               payload: {
-                msg
+                msg: [getState().user.error.serverError],
               },
             });
           });
         }
       }
     }
-	},
+  },
 
   fetchAllUsers(tempParams = {}) {
     return function(dispatch, getState) {
@@ -180,11 +178,10 @@ module.exports = {
           type: 'USER_SIGNIN',
           payload: axios.post('api/v1/users/signin', getState().user.user),
         }).catch(err =>{
-          let msg = [err.response.data.message] || ['Server error. If this persists contact our technical team'];
           dispatch({
             type: 'OPEN_INFO_TAB',
             payload: {
-              msg
+              msg: [getState().user.error.serverError],
             },
           });
         });
@@ -221,16 +218,10 @@ module.exports = {
             },
           });
         }).catch((err) => {
-          let msg;
-          try {
-            msg = [err.response.data.message];
-          } catch(error){
-            msg = ['Server error. If this persists contact our technical team'];
-          }
           dispatch({
             type: 'OPEN_INFO_TAB',
             payload: {
-              msg,
+              msg: [getState().user.error.serverError],
             },
           });
         })
@@ -418,11 +409,10 @@ module.exports = {
             type: 'RESET_USER_FIELDS',
           });
         }).catch(err =>{
-          let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
           dispatch({
             type: 'OPEN_INFO_TAB',
             payload: {
-              msg
+              msg: [getState().user.error.serverError],
             },
           });
         });

@@ -18,7 +18,7 @@ export default function reducer(
   },
   action) {
 
-	switch (action.type) {
+  switch (action.type) {
     case 'CENTER_FIELD_ERROR': {
       let temp = state.error.fieldError;
       temp = {...temp};
@@ -77,12 +77,12 @@ export default function reducer(
     }
 
     case 'FETCH_CENTER_PENDING': {
-			return {
+      return {
         ...state,
         fetching: true,
         fetched: false,
       }
-		}
+    }
 
     case 'FETCH_CENTER_REJECTED': {
       return {
@@ -244,5 +244,5 @@ export default function reducer(
     default: {
       return state;
     }
-	}
+  }
 }

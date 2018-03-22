@@ -23,7 +23,7 @@ module.exports = {
         }),
       });
     }
-	},
+  },
 
   fetchCenter(id) {
     return function(dispatch, getState) {
@@ -160,12 +160,10 @@ module.exports = {
             }
             history.push(`/centers/${response.value.data.center.id}`);
           }).catch(err =>{
-            let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
-
             dispatch({
               type: 'OPEN_INFO_TAB',
               payload: {
-                msg,
+                msg: [getState().center.error.serverError],
               },
             });
           });
@@ -202,11 +200,10 @@ module.exports = {
             },
           });
         }).catch((err) => {
-          let msg = [err.response.data.message]  || ['Server error. If this persists contact our technical team'];
           dispatch({
             type: 'OPEN_INFO_TAB',
             payload: {
-              msg,
+              msg: [getState().center.error.serverError],
             },
           });
         })

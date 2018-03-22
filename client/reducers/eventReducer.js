@@ -26,7 +26,7 @@ export default function reducer(
   },
   action) {
 
-	switch (action.type) {
+  switch (action.type) {
     case 'CREATE_EVENT_PENDING': {
       return {
         ...state,
@@ -263,5 +263,5 @@ export default function reducer(
     default: {
       return state;
     }
-	}
+  }
 }

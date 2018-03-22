@@ -44,9 +44,9 @@ class Dashboard extends React.Component {
         loggedIn ? (
           <div>
             <Navbar userType={userType} userLogoutFunc={userLogoutFunc} />
-            <main className="container-fluid d-flex">
+            <main className="container-fluid row mx-auto">
               <DashboardSideBar changeDashboardContentFunc={changeDashboardContentFunc} userType={userType}/>
-              <div id="tabContentContainer" className='col-lg-6 col-md-8 mx-auto'>
+              <div className='col-md-8 mx-auto space-top'>
                 <TimelineContent show={ dashboardContent === 'timeline' ? true : false } events={events} />
 
                 <ActivitiesContent show={ dashboardContent === 'activities' ? true : false } />

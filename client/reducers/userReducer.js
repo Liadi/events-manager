@@ -95,7 +95,7 @@ export default function reducer(
       }
     }
 
-		case 'USER_SIGNUP_PENDING' : {
+    case 'USER_SIGNUP_PENDING' : {
       return {
         ...state,
         fetching: true,
@@ -217,7 +217,7 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: false,
-        error: Object.assign({}, state.error, {serverError: action.payload.message || 'Server error. If this persists contact our technical team'}),
+        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message || 'Server error. If this persists contact our technical team'}),
       }
     }
 
@@ -240,27 +240,6 @@ export default function reducer(
       }
     }
 
-    case 'CREATE_USER_PENDING' : {
-      return {
-        ...state,
-        user: action.payload,
-      }
-    }
-
-    case 'CREATE_USER_FULFILLED' : {
-      return {
-        ...state,
-        user: action.payload,
-      }
-    }
-
-    case 'CREATE_USER_REJECTED' : {
-      return {
-        ...state,
-        user: action.payload,
-      }
-    }
-
     case 'UPDATE_USER_PENDING' : {
       return {
         ...state,
@@ -274,7 +253,7 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: false,
-        error: Object.assign({}, state.error, {serverError: action.payload.message}),
+        error: Object.assign({}, state.error, {serverError: action.payload.response.data.message || 'Server error. If this persists contact our technical team'}),
       }
     }
 
@@ -314,6 +293,6 @@ export default function reducer(
     default: {
       return state;
     }
-	}
+  }
 
 }

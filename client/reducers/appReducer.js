@@ -10,7 +10,7 @@ export default function reducer(
   },
   action) {
 
-	switch (action.type) {
+  switch (action.type) {
     // NOTE: reset app doesn't reset dashboard content
     case 'RESET_APP_STATE': {
       return {
@@ -62,6 +62,6 @@ export default function reducer(
         dashboardContent: action.payload.newContent,
       }
     }
-	}
+  }
   return state
 }
