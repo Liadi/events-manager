@@ -163,6 +163,7 @@ module.exports = {
           break;
         }
       }
+
       if (nothingToChange) {
         return res.status(400).json({
           message: 'No new entry',
@@ -172,7 +173,7 @@ module.exports = {
 
       User.findOne({
         where: { 
-          userEmail: req.userEmail.toLowerCase(),
+          userEmail: req.userEmail,
         },
       }).then((tempUser) => {
         if (tempUser) {
@@ -239,6 +240,11 @@ module.exports = {
           });
         });
 
+      }).catch((error) => {
+        return res.status(400).json({
+          message: 'server error',
+          status: false, 
+        })
       });
     });
   },

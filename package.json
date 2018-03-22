@@ -4,7 +4,7 @@
   "description": "Event managing application",
   "main": "index.js",
   "scripts": {
-    "heroku-postbuild": "npm run migrate && rimraf ./dist/server/seeders",
+    "heroku-postbuild": "sequelize db:migrate && rimraf ./dist/server/seeders",
     "migrate": "sequelize db:migrate",
     "migrate:undo": "sequelize db:migrate:undo:all",
     "seed": "sequelize db:seed:undo:all && sequelize db:seed:all",
