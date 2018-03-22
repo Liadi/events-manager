@@ -171,13 +171,11 @@ module.exports = {
         });
       }
 
-      console.log(111);
       User.findOne({
         where: { 
           userEmail: req.userEmail,
         },
       }).then((tempUser) => {
-        console.log(111);
         if (tempUser) {
           if (tempUser.id === user.id) {
             return res.status(400).json({
@@ -191,7 +189,6 @@ module.exports = {
           })
         }
 
-        console.log(222);
         user.update({
           userFirstName: req.userFirstName || user.userFirstName,
           userLastName: req.userLastName || user.userLastName,

@@ -7,50 +7,22 @@ $secondary-color: lightgray;
 
 .tab-btn {
   background-color: white;
-  width: 100%;
+  width: auto;
   color: $primary-color;
   margin: 20px 0px;
   border: 0px;
 }
 
-#tabContentContainer{
-  margin: 30px 0px;
-}
-
-#side-bar {
-  min-width: 50px;
-  max-width: 200px;
-  margin-right: 10px;
-}
-
-@media screen and (min-width: 900px) {
-  #tabContentContainer{
-    width: 90%;
-    min-width: 600px;
+@media screen and (max-width: 715px) {
+  #side-bar {
+    width: auto;
   }
-}
 
-@media screen and (min-width: 720px) {
-  #tabContentContainer{
-    width: 80%;
-    min-width: 400px;
-  }
-}
-@media screen and (min-width: 420px) {
-  #tabContentContainer{
-    width: 90%;
-    min-width: 300px;
-  }
-}
-
-.tabSection {
-  margin: 30px 0px 0px;
-}
-
-.tab-content {
-  h4 {
-   color: $primary-color;
-   margin: 20px 0px;
+  .tab-btn {
+    margin: auto;
+    .tab-btn-descrip {
+      display: none;
+    }
   }
 }
 
