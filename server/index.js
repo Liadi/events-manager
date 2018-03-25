@@ -27,7 +27,7 @@ app.use(express.static('dist'));
 if (app.get('env') === 'development'){
   app.use(express.static('client'));
 } else if (app.get('env') === 'production') {
-  app.use(express.static('dist'));
+  app.use(express.static('dist/client'));
 }
 
 app.use(bodyParser.json());

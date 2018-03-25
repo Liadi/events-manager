@@ -17,23 +17,30 @@ class CenterSearchResult extends React.Component {
           </div>
         </div>
       );
-    } else if (this.props.centers.length > 0) {
+    } else {
       return(
         <div className='outputBox'>
           <button className='btn badge badge-warning space-top-sm form-cancel' onClick={ e => {
             e.preventDefault();
             this.props.resetCenterEntriesFunc();
+            this.props.toggleSearchResultFunc();
           }}>
             <i className="fa fa-times"></i>
           </button>
-          {this.props.centers.map((center) => 
-            <div key={center.id} className='container'>
-              <Link to={`centers/${center.id}`} className='link'><h3 className="mx-auto col-9">{center.centerName}</h3></Link>
-            </div>
-          )}
+
+          {(this.props.centers.length > 0? (
+            this.props.centers.map((center) => 
+              <div key={center.id} className='container'>
+                <Link to={`centers/${center.id}`} className='link'><h3 className="mx-auto col-9">{center.centerName}</h3></Link>
+              </div>
+            )
+          ):(
+            <h4>Nothing found</h4>
+          ))}
         </div>
       );
     }
+
     return null;
   }
 }

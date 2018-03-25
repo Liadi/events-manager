@@ -9,8 +9,8 @@ $secondary-color: lightgray;
   position: relative;
   top: 0;
   left: 0;
-  width: 500px;
-  height: 500px;
+  width: auto;
+  height: auto;
 }
 
 .img-res {
@@ -35,10 +35,6 @@ $secondary-color: lightgray;
   height: 100%;
 }
 
-#centerImage {
-  border: 1px, solid;
-  max-width: 720px;
-}
 
 label.custom-control {
   span.custom-control-indicator {
@@ -62,7 +58,7 @@ label.custom-control {
 }
 
 img {
-  width: 100%;
+  border-radius: 3px;
 }
 
 button {

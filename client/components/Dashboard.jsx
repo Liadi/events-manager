@@ -48,17 +48,14 @@ class Dashboard extends React.Component {
               <DashboardSideBar changeDashboardContentFunc={changeDashboardContentFunc} userType={userType}/>
               <div className='col-md-8 mx-auto space-top'>
                 <TimelineContent show={ dashboardContent === 'timeline' ? true : false } events={events} />
-
                 <ActivitiesContent show={ dashboardContent === 'activities' ? true : false } />
                 
                 <UsersContent show={ dashboardContent === 'users' ? true : false } />
-
                 <HowContent show={ dashboardContent === 'how' ? true : false } />
                 
                 <ProfileContent show={ dashboardContent === 'profile' ? true : false } />
               </div>
             </main>
-
             <Footer />
           </div>
         ) : (
@@ -66,7 +63,6 @@ class Dashboard extends React.Component {
             pathname: '/'
           }}/>
         )
-
       )}/>
     )
   }

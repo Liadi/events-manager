@@ -22,7 +22,7 @@ class TimelineContent extends React.Component {
                 Events
               </h4>
             ):(
-              <h4>No events! Check out our <Link className='link' to='/centers'>centers</Link></h4>
+              <h4>No event! Check out our <Link className='link' to='/centers'>centers</Link></h4>
             )
           }
           <div className="tabSection">

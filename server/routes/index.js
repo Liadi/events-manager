@@ -3,10 +3,10 @@ import multer from 'multer';
 import { centerControllers, eventControllers, userControllers, logControllers } from '../controllers';
 import { centerMiddlewares, eventMiddlewares, userMiddlewares, cleanData } from '../middlewares/';
 import app from '../index';
-
+import path from 'path';
 
 const storage = multer.diskStorage({
-  destination: './client/images',
+  destination: path.join(__dirname, '..', '..', 'client', 'images'),
 
   filename: (req, file, cb) => {
     console.log("Multer called");

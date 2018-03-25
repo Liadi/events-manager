@@ -13,9 +13,11 @@ class CenterSearch extends React.Component {
     this.props = props;
     this.state = {
       showAdvanced: false,
+      showResult: false,
     };
 
     this.toggleAdvancedSearchFunc = this.toggleAdvancedSearchFunc.bind(this);
+    this.toggleSearchResultFunc = this.toggleSearchResultFunc.bind(this);
   }
 
   toggleAdvancedSearchFunc(){
@@ -27,6 +29,12 @@ class CenterSearch extends React.Component {
     
     this.setState((prevState) => ({
       showAdvanced: !prevState.showAdvanced,
+    }));
+  }
+
+  toggleSearchResultFunc(){
+    this.setState((prevState) => ({
+      showResult: !prevState.showResult,
     }));
   }
 
@@ -43,6 +51,7 @@ class CenterSearch extends React.Component {
             <span className="input-group-btn">
               <button type="submit" className={jumbo?("btn btn-lg search-widget"):("btn")} onClick={ e => {
                 e.preventDefault();
+                this.toggleSearchResultFunc();
                 fetchSearchedCenterFunc();
               }}>
                 {jumbo?("Search"):(<i className="fa fa-search fa-1x mx-auto" aria-hidden="true"></i>)
@@ -128,8 +137,8 @@ class CenterSearch extends React.Component {
           </div>
         </div>
         <CenterAdvancedSearch loggedIn={loggedIn} showAdvanced={this.state.showAdvanced} updateCenterFieldFunc={updateCenterFieldFunc} center={center}/>
-        {panel?(
-            <CenterSearchResult resetCenterEntriesFunc={resetCenterEntriesFunc} fetching={fetching} fetched={fetched} centers={centers}/>
+        {(panel && this.state.showResult)?(
+            <CenterSearchResult toggleSearchResultFunc={this.toggleSearchResultFunc} resetCenterEntriesFunc={resetCenterEntriesFunc} fetching={fetching} fetched={fetched} centers={centers}/>
           ):(
             null
           )

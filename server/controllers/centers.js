@@ -1,8 +1,10 @@
 import fs from 'fs';
+import path from 'path';
 import db from './../models';
 import { log } from './util';
 
 const { Center, Event, Image } = db;
+const imagePathBase = path.join(__dirname, '..', '..', 'client', 'images', '/');
 
 module.exports = {
   createCenter(req, res) {
@@ -41,7 +43,7 @@ module.exports = {
             }
           }).catch((error) => {
             console.log('error => ', error);
-            fs.unlink(process.cwd()+ '/client/images/' + req.centerImagePropArray[i].path, (err) => {if (err) console.log('Ooops, ', err)});
+            fs.unlink(imagePathBase + req.centerImagePropArray[i].path, (err) => {if (err) console.log('Ooops, ', err)});
             imageCreatePromise += 1;
             if (imageCreatePromise === req.centerImagePropArray.length) {
               centerCreatedResponse(req, res, {...center.dataValues}, images);
@@ -55,7 +57,7 @@ module.exports = {
       if (req.centerImagePropArray){
         for (let i in req.centerImagePropArray) {
           // delete image file
-          fs.unlink(process.cwd() + '/client/images/' + req.centerImagePropArray[i].path, (err) => {if (err) console.log('Ooops, ', err)});
+          fs.unlink(imagePathBase + req.centerImagePropArray[i].path, (err) => {if (err) console.log('Ooops, ', err)});
         }
       }
       let err
@@ -76,7 +78,7 @@ module.exports = {
       if (req.centerImagePropArray){
         for (let i in req.centerImagePropArray) {
           // delete image file
-          fs.unlink(process.cwd() + '/client/images/' + req.centerImagePropArray[i].path, (err) => {if (err) console.log('Ooops, ', err)});
+          fs.unlink(imagePathBase + req.centerImagePropArray[i].path, (err) => {if (err) console.log('Ooops, ', err)});
         }
       }
       return res.status(400).json({
@@ -124,7 +126,7 @@ module.exports = {
             Image.findById(center.images[i].dataValues.id).then((singleImage) => {
               if (singleImage) {
                 console.log('destroying!!!');
-                fs.unlink(process.cwd() + '/client/images/' + singleImage.imagePath, (err) => {if (err) console.log('Ooops, ', err)});
+                fs.unlink(imagePathBase + singleImage.imagePath, (err) => {if (err) console.log('Ooops, ', err)});
                 singleImage.destroy();
               }  
             })
@@ -145,7 +147,7 @@ module.exports = {
               }
             }).catch((error) => {
               console.log('error => ', error);
-              fs.unlink(process.cwd()+ '/client/images/' + req.centerImagePropArray[i].path, (err) => {if (err) console.log('Ooops, ', err)});
+              fs.unlink(imagePathBase + req.centerImagePropArray[i].path, (err) => {if (err) console.log('Ooops, ', err)});
               imageCreatePromise += 1;
               if (imageCreatePromise === req.centerImagePropArray.length) {
                 centerUpdatedResponse(req, res, {...center.dataValues}, oldCenter, images);
@@ -160,7 +162,7 @@ module.exports = {
         if (req.centerImagePropArray){
           for (let i in req.centerImagePropArray) {
             // delete image file
-            fs.unlink(process.cwd() + '/client/images/' + req.centerImagePropArray[i].path, (err) => {if (err) console.log('Ooops, ', err)});
+            fs.unlink(imagePathBase + req.centerImagePropArray[i].path, (err) => {if (err) console.log('Ooops, ', err)});
           }
         }
         let err;
@@ -261,7 +263,7 @@ module.exports = {
       const oldCenter = {...center.dataValues};
       for (let i in center.images) {
         // delete image file
-        fs.unlink(process.cwd() + '/client/images/' + center.images[i].imagePath, (err) => {if (err) console.log('Ooops, ', err)});
+        fs.unlink(imagePathBase + center.images[i].imagePath, (err) => {if (err) console.log('Ooops, ', err)});
       }
 
       // images casceded and deleted;
