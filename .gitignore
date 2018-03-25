@@ -2,3 +2,9 @@
 node_modules
 .sass-cache
 dist
+template
+client/images/*
+!client/images/Landing-Page-Large-Image.jpeg
+!client/images/pic2.jpg
+!client/images/pic3.jpg
+!client/images/pic7.jpg

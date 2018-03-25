@@ -1,6 +1,5 @@
 import React from 'react';
 import EventAdvancedSearch from './EventAdvancedSearch.jsx';
-import CenterSearchResult from './CenterSearchResult.jsx';
 import '../style/index.scss';
 import { connect } from 'react-redux';
 import { updateEventField, fetchEvents, updateEventSortOrder, updateEventSortItem, updateEventLimit, setEventTime, changeEventPage, resetEventAdvancedFields } from '../actions/eventAction';
